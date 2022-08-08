@@ -90,27 +90,27 @@
     }
     
     
-    /*####Media Queries##### mobile phones*/
-    @media screen and (max-width:600px) {
-        .about__me{
-            width:60%;
-            margin: 0rem auto 3rem;
-        }
-        .about__cards {
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-        .about__me-image{
-            width: 70%;
-            margin-left:15%;
-        }
-        .about__content{
-            text-align: center;
-        }
-        .about__content p{
-            margin: 1.5rem 0;
-        }
+/*####Media Queries##### mobile phones*/
+@media screen and (max-width:600px) {
+    .about__me{
+        width:60%;
+        margin: 0rem auto 3rem;
     }
+    .about__cards {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    .about__me-image{
+        width: 70%;
+        margin-left:15%;
+    }
+    .about__content{
+        text-align: center;
+    }
+    .about__content p{
+        margin: 1.5rem 0;
+    }
+}
 
 
 
