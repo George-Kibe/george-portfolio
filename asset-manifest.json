@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/george-portfolio/static/css/main.24c8d7a3.css",
+    "main.js": "/george-portfolio/static/js/main.8163b7e0.js",
+    "static/media/george_kibe1.jpg": "/george-portfolio/static/media/george_kibe1.90ffc87d235008c9ce02.jpg",
+    "static/media/george_kibe.jpg": "/george-portfolio/static/media/george_kibe.bc3e06b8366a8e49d13d.jpg",
+    "static/media/mobile_image.png": "/george-portfolio/static/media/mobile_image.85b642e25ab350960276.png",
+    "static/media/George_Resume.pdf": "/george-portfolio/static/media/George_Resume.a7e0c6777d6b91f4953a.pdf",
+    "static/media/website_image.jpg": "/george-portfolio/static/media/website_image.9bd33c15b6f15162b85f.jpg",
+    "index.html": "/george-portfolio/index.html",
+    "main.24c8d7a3.css.map": "/george-portfolio/static/css/main.24c8d7a3.css.map",
+    "main.8163b7e0.js.map": "/george-portfolio/static/js/main.8163b7e0.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.24c8d7a3.css",
+    "static/js/main.8163b7e0.js"
+  ]
+}
