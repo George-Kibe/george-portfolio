@@ -1,0 +1,16 @@
+{
+  "resourceName": "imageswebsite",
+  "policyUUID": "8c8644cf",
+  "bucketName": "buenasapp-images-bucket",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}
