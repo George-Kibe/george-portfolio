@@ -3,6 +3,7 @@ import GeorgeAbout from "../../assets/george_kibe1.jpg"
 import {FaAward} from "react-icons/fa"
 import {FiUsers} from "react-icons/fi"
 import {VscFolderLibrary} from "react-icons/vsc"
+import {FaUniversity} from "react-icons/fa"
 
 import "./about.css"
 
@@ -33,6 +34,14 @@ const About = () => {
               <VscFolderLibrary className='about__icon' />
               <h5>Projects</h5>
               <small>80+ Completed</small>
+            </article>
+            <article className="about__card">
+              <FaUniversity className='about__icon' />
+              <h5>Education</h5>
+              <ul>
+                <li><small>University of Nairobi</small></li>
+                <li><small>EDSA</small></li>
+              </ul>
             </article>
           </div>
           <p>
