@@ -18,15 +18,15 @@ const Services = () => {
           <ul className="service__list">
             <li>
               <BiCheck className="service__list-icon"/> 
-              <p>Lorem ipsum dolor sit amet consectetur.</p>
+              <p>Variety of websites ranging from single-page websites, blogs, portals, and e-commerce websites</p>
             </li>
             <li>
               <BiCheck className="service__list-icon"/> 
-              <p>Lorem ipsum dolor sit amet consectetur.</p>
+              <p>Professional development and designs</p>
             </li>
             <li>
               <BiCheck className="service__list-icon"/> 
-              <p>Lorem ipsum dolor sit amet consectetur.</p>
+              <p>Business Dashboards and Company Profiles</p>
             </li>
           </ul>
         </article>
@@ -38,15 +38,19 @@ const Services = () => {
           <ul className="service__list">
             <li>
               <BiCheck className="service__list-icon"/> 
-              <p>Lorem ipsum dolor sit amet consectetur.</p>
+              <p>Chat based applications, Payment integration-stripe and paypal, Map-based tracking and google maps API, Calendar based applications</p>
             </li>
             <li>
               <BiCheck className="service__list-icon"/> 
-              <p>Lorem ipsum dolor sit amet consectetur.</p>
+              <p>Firebase and AWS amplify for backend, Camera-based applications, Service Based apps.</p>
             </li>
             <li>
               <BiCheck className="service__list-icon"/> 
-              <p>Lorem ipsum dolor sit amet consectetur.</p>
+              <p>E-commerce based applications and Push notifications</p>
+            </li>
+            <li>
+              <BiCheck className="service__list-icon"/> 
+              <p>Tasks automation</p>
             </li>
           </ul>
         </article>
@@ -58,15 +62,15 @@ const Services = () => {
           <ul className="service__list">
             <li>
               <BiCheck className="service__list-icon"/> 
-              <p>Lorem ipsum dolor sit amet consectetur.</p>
+              <p>Setting up data pipelines</p>
             </li>
             <li>
               <BiCheck className="service__list-icon"/> 
-              <p>Lorem ipsum dolor sit amet consectetur.</p>
+              <p>Data cleaning, Data mining and website scrapping</p>
             </li>
             <li>
               <BiCheck className="service__list-icon"/> 
-              <p>Lorem ipsum dolor sit amet consectetur.</p>
+              <p>Data analysis, visualization and modelling</p>
             </li>
           </ul>
         </article>

@@ -45,8 +45,14 @@ const About = () => {
             </article>
           </div>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis voluptates vitae blanditiis iure illum quisquam, tempore eos cupiditate, obcaecati libero enim repudiandae et perferendis unde aperiam placeat neque illo laboriosam?
+            Hola! I'm George Kibe. I am a tech enthusiast. 
+            I enjoy coming up with tech solutions and automation, especially the boring stuff.
+            I am a graduate of the University of Nairobi-Kenya. Am also an expert in Mobile and website development, data engineering and data science.
+            I am passionate about innovatie startups. 
+            If you are interested in any of the solutions above, I got you.
+            I also enjoy creative reading and writing, playing chess and traveling, just in case you don't find me online.
           </p>
+          <p>Thank you, George Kibe</p>
           <a href='#contact' className='btn btn-primary'>Let's Talk</a>
         </div>
       </div>
