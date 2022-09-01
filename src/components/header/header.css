@@ -40,6 +40,10 @@ header{
     border-radius: 3rem; 
     padding:1.5rem; 
 }
+.image__container{
+    display: flex;
+    flex-direction: row;
+}
 
 .scroll__down{
     position: absolute;
@@ -52,9 +56,13 @@ header{
 
 /*####Media Queries##### Tablets*/
 @media screen and (max-width:1024px) {
-header{
-    height: 68vh;
-}
+    header{
+        height: 68vh;
+    }
+    .myimage{
+        width: 80%;
+        left: 10%;
+    }
 }
 
 
@@ -62,6 +70,13 @@ header{
 @media screen and (max-width:600px) {
     header{
         height: 100vh;
+    }
+    .myimage{
+        width: 90%;
+        left: 5%;
+    }
+    .image__container{
+        flex-direction: column;
     }
     .header__socials,
     .scroll__down{

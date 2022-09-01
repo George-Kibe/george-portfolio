@@ -24,9 +24,9 @@
     transform: rotate(0);
     transition:var(--transition);
 }
-.about__me-image:hover{    
+/* .about__me-image:hover{    
     transform: rotate(10deg);
-}
+} */
 
 .about__cards{
     display: grid;

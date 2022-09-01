@@ -1,32 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { Storage, API, graphqlOperation } from 'aws-amplify'
 import { v4 as uuid } from 'uuid'
-import { withAuthenticator } from '@aws-amplify/ui-react'
+//import { withAuthenticator } from '@aws-amplify/ui-react'
 
-import { createProduct as CreateProduct } from './graphql/mutations'
-import { listProducts as ListProducts } from './graphql/queries'
-import config from './aws-exports'
+import { createProduct as CreateProduct } from '../../graphql/mutations'
+import { listProducts as ListProducts } from '../../graphql/queries'
+import config from '../../aws-exports'
 
 const {
   aws_user_files_s3_bucket_region: region,
   aws_user_files_s3_bucket: bucket
 } = config
 
-function ImagesPage () {
+const ImagesPage = () => {
   const [file, updateFile] = useState(null)
   const [productName, updateProductName] = useState('')
   const [products, updateProducts] = useState([])
+  const [loading, setLoading] = useState(false)
+
   useEffect(() => {
     listProducts()
   }, [])
 
   // Query the API and save them to the state
-  async function listProducts() {
+  const listProducts = async () => {
     const products = await API.graphql(graphqlOperation(ListProducts))
     updateProducts(products.data.listProducts.items)
   }
 
-  function handleChange(event) {
+  const handleChange = (event) => {
     const { target: { value, files } } = event
     const fileForUpload = files[0]
     updateProductName(fileForUpload.name.split(".")[0])
@@ -34,7 +36,9 @@ function ImagesPage () {
   }
 
   // upload the image to S3 and then save it in the GraphQL API
-  async function createProduct() {
+  const  createProduct = async () => {
+    if(loading){return}
+    setLoading(true)
     if (file) {
       const extension = file.name.split(".")[1]
       const { type: mimeType } = file
@@ -51,6 +55,7 @@ function ImagesPage () {
         console.log('error: ', err)
       }
     }
+    setLoading(false)
   }
 
   return (
@@ -67,13 +72,13 @@ function ImagesPage () {
       />
       <button
         style={styles.button}
-        onClick={createProduct}>Create Product</button>
+        onClick={createProduct}>{loading? "Loading..." : "Create Product"}</button>
 
       {
         products.map((p, i) => (
           <img
             style={styles.image}
-            key={i}
+            key={i} alt={p.name}
             src={p.image}
           />
         ))
