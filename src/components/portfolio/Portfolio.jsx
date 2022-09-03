@@ -1,7 +1,7 @@
 import React from 'react'
-import WebImage from "../../assets/website_image.jpg"
+import WebImage from "../../assets/comparables-website-map.PNG"
 import MobileImage from "../../assets/mobile_image.png"
-
+import EcommerceImage from "../../assets/ecommerce.png"
 
 
 import "./portfolio.css"
@@ -10,15 +10,22 @@ import "./portfolio.css"
 const data = [
   {
     id:1,
-    image:WebImage,
-    title:"This a just a test Title",
+    image:EcommerceImage,
+    title:"E-Commerce Mobile Application",
     github:"https://github.com",
     demo:"https://comparables.co.ke"
   },
   {
     id:2,
+    image:WebImage,
+    title:"Django Website for Comparables Kenya",
+    github:"https://github.com",
+    demo:"https://comparables.co.ke"
+  },
+  {
+    id:3,
     image:MobileImage,
-    title:"This is a portfolio item title",
+    title:"React, Node E-commerce Website",
     github:"https://github.com",
     demo:"https://comparables.co.ke"
   },

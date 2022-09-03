@@ -38,11 +38,19 @@ const Services = () => {
           <ul className="service__list">
             <li>
               <BiCheck className="service__list-icon"/> 
-              <p>Chat based applications, Payment integration-stripe and paypal, Map-based tracking and google maps API, Calendar based applications</p>
+              <p>Chat based applications, Payment integration-stripe and paypal</p>
             </li>
             <li>
               <BiCheck className="service__list-icon"/> 
-              <p>Firebase and AWS amplify for backend, Camera-based applications, Service Based apps.</p>
+              <p>Map-based tracking and google maps API, Calendar based applications</p>
+            </li>
+            <li>
+              <BiCheck className="service__list-icon"/> 
+              <p>Firebase, AWS amplify, Digital ocean and custom servers for backend</p>
+            </li>
+            <li>
+              <BiCheck className="service__list-icon"/> 
+              <p>Camera-based applications, Service Based apps</p>
             </li>
             <li>
               <BiCheck className="service__list-icon"/> 
