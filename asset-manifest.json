@@ -1,18 +1,19 @@
 {
   "files": {
-    "main.css": "/george-portfolio/static/css/main.d0e214be.css",
-    "main.js": "/george-portfolio/static/js/main.16bd3adf.js",
+    "main.css": "/george-portfolio/static/css/main.04d35649.css",
+    "main.js": "/george-portfolio/static/js/main.205779ba.js",
     "static/media/george_kibe1.jpg": "/george-portfolio/static/media/george_kibe1.90ffc87d235008c9ce02.jpg",
     "static/media/george_kibe.jpg": "/george-portfolio/static/media/george_kibe.bc3e06b8366a8e49d13d.jpg",
+    "static/media/comparables-website-map.PNG": "/george-portfolio/static/media/comparables-website-map.51063876ba8d746f883d.PNG",
     "static/media/mobile_image.png": "/george-portfolio/static/media/mobile_image.85b642e25ab350960276.png",
-    "static/media/website_image.jpg": "/george-portfolio/static/media/website_image.9bd33c15b6f15162b85f.jpg",
+    "static/media/ecommerce.png": "/george-portfolio/static/media/ecommerce.f1e3dca52bfadc9c2098.png",
     "static/media/George_Resume.pdf": "/george-portfolio/static/media/George_Resume.d67cb0d6ffdca625cdde.pdf",
     "index.html": "/george-portfolio/index.html",
-    "main.d0e214be.css.map": "/george-portfolio/static/css/main.d0e214be.css.map",
-    "main.16bd3adf.js.map": "/george-portfolio/static/js/main.16bd3adf.js.map"
+    "main.04d35649.css.map": "/george-portfolio/static/css/main.04d35649.css.map",
+    "main.205779ba.js.map": "/george-portfolio/static/js/main.205779ba.js.map"
   },
   "entrypoints": [
-    "static/css/main.d0e214be.css",
-    "static/js/main.16bd3adf.js"
+    "static/css/main.04d35649.css",
+    "static/js/main.205779ba.js"
   ]
 }
