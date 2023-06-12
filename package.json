@@ -4,8 +4,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@aws-amplify/ui-react": "^3.4.1",
-    "aws-amplify": "^4.3.33",
     "cra-template": "1.2.0",
     "emailjs-com": "^3.2.0",
     "react": "^18.2.0",
