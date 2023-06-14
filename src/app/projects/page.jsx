@@ -16,7 +16,6 @@ const FeaturedProject = ({type, title, summary, image, link, github}) => {
   return(
     <article className="w-full flex items-center justify-between relative rounded-br-2xl
         rounded-3xl border border-solid border-dark bg-light dark:bg-black shadow-2xl p-4 md:p-10">
-      <div className="absolute top-0 -right-3 -z-10 w-[101%] h-[103%] rounded-[2.5rem] bg-dark" />
       <Link href={link} target='_blank' className='w-full md:w-1/2 cursor-pointer overflow-hidden rounded-lg'>
         <FramerImage title={title} image={image}
         />
@@ -40,7 +39,6 @@ const Project = ({type, title, summary, image, link, github}) => {
   return(
     <article className="w-full flex flex-col gap-4 items-center justify-center
      rounded-3xl border border-solid border-dark bg-light dark:bg-dark shadow-2xl p-4 md:p-10">
-      <div className="absolute top-0 -right-3 -z-10 w-[101%] h-[102%] rounded-[2rem] bg-dark" />
       <Link href={link} target='_blank' className='w-full cursor-pointer overflow-hidden rounded-lg'>
         <FramerImage title={title} image={image}
         />

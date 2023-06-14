@@ -3,11 +3,13 @@ import React from 'react'
 
 const HireMe = () => {
   return (
-    <div className='fixed left-4 bottom-4 flex items-center justify-center overflow-hidden'>
-      <div className="w-28 md:w-40 h-auto flex items-center justify-center relative">
+    <div className='right-2 top-2 left-auto bottom-auto fixed flex items-center justify-center overflow-hidden
+           md:left-4 md:bottom-4 md:right-auto md:top-auto
+    '>
+      <div className="w-24 md:w-40 h-auto flex items-center justify-center relative">
         <CircularText className={"fill-dark dark:fill-light animate-spin-slow"} />
         <Link href={"mailto:georgekibew@gmail.com"} 
-          className='flex items-center absolute justify-center left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-dark text-light shadow-md border-2 border-solid border-dark w-16 h-16 md:w-24 md:h-24 rounded-full font-semibold hover:bg-light hover:text-dark dark:border-light
+          className='flex items-center absolute justify-center left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-dark text-light shadow-md border-2 border-solid border-dark px-1 md:w-24 md:h-24 rounded-full font-semibold hover:bg-light hover:text-dark dark:border-light
           '>
           Hire&nbsp;Me
         </Link>

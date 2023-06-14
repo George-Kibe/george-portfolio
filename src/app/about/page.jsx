@@ -18,7 +18,7 @@ const AboutPage = () => {
     <div>
       <main className="items-center">
         <AnimatedText text={"Passion Fuels Purpose! Why Fuels How!"} />
-        <div className="grid w-full grid-cols-8 gap-16">
+        <div className="flex flex-col md:grid w-full grid-cols-8 gap-16">
             <div className="col-span-3 flex flex-col items-start justify-start">
               <h2 className="mb-4 text-lg font-bold uppercase">About Me</h2>
               <p className="font-medium text-justify my-4">
@@ -40,16 +40,16 @@ const AboutPage = () => {
                 <div className="absolute top-0 -right-3 -z-10 w-[102%] h-[103%] rounded-[2rem] bg-dark" />
               <Image src={ProfilePic} alt='profile photo' className='w-full h-auto rounded-2xl'/>
             </div>
-            <div className="flex flex-col colspan-2 items-center justify-between">
-              <div className="flex flex-col items-start justify-center">
+            <div className="flex flex-col col-span-2 items-center justify-between ">
+              <div className="flex flex-col items-center justify-center">
                 <span className="inline-block text-5xl font-bold"><AnimatedNumbers value={25}/>+</span>
                 <h2 className="text-xl font-medium capitalize text-dark/75 dark:text-light">Satisfied Clients</h2>
               </div>
-              <div className="flex flex-col items-start justify-center">
+              <div className="flex flex-col items-center justify-center">
                 <span className="inline-block text-5xl font-bold"><AnimatedNumbers value={30}/>+</span>
                 <h2 className="text-xl font-medium capitalize text-dark/75 dark:text-light">Completed Projects</h2>
               </div>
-              <div className="flex flex-col items-start justify-center">
+              <div className="flex flex-col items-center justify-center">
                 <span className="inline-block text-5xl font-bold"><AnimatedNumbers value={4}/>+</span>
                 <h2 className="text-xl font-medium capitalize text-dark/75 dark:text-light">Years of Experience Clients</h2>
               </div>
