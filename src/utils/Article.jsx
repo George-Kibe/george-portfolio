@@ -24,11 +24,11 @@ const MovingImage = ({title, image, link})=> {
     }
     return(
         <Link href={link} onMouseMove={handleMouse} onMouseLeave={handleMouseLeave}>
-          <h2 className="capitalize text-xl font-semibold hover:underline">{title}</h2>
+          <h2 className="capitalize text-xs md:text-xl font-semibold hover:underline">{title}</h2>
           <FramerImage style={{x:x, y:y}}
             initial={{opacity:0}}
             whileInView={{opacity:1, transition:{duration:0.2}}}
-           ref={imageRef} src={image} alt={title} className="z-10 w-96 h-auto hidden absolute rounded-lg" />
+           ref={imageRef} src={image} alt={title} className="z-10 w-48 md:w-96 h-auto hidden absolute rounded-lg" />
         </Link>
     )
 }
@@ -42,7 +42,7 @@ export const Article = ({image, title, date, link}) => {
         className="relative w-full p-4 py-6 my-4 rounded-xl flex items-center justify-between bg-light
       text-dark first:mt-0 border border-solid border-dark border-r-4 border-b-4">
         <MovingImage title={title} image={image} link={link}/>
-        <span className="text-primary font-semibold pl-4">{date}</span>
+        <span className="text-xs md:text-primary font-semibold pl-4">{date}</span>
       </motion.li>
     )
   }

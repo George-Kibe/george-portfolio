@@ -18,40 +18,38 @@ const AboutPage = () => {
     <div>
       <main className="items-center">
         <AnimatedText text={"Passion Fuels Purpose! Why Fuels How!"} />
-        <div className="flex flex-col md:grid w-full grid-cols-8 gap-16">
-            <div className="col-span-3 flex flex-col items-start justify-start">
+        <div className="flex flex-col md:flex-row  w-full gap-2 md:gap-8 lg:gap-16">
+            <div className="flex flex-col md:w-[40%] lg:w-[60%] items-start justify-start">
               <h2 className="mb-2 md:mb-4 text-lg font-bold uppercase">About Me</h2>
               <p className="font-medium text-justify my-2 md:my-4">
-                - Hi, I'm CodeBucks, a web developer and UI/UX designer with a passion for creating beautiful, functional, 
-                and user-centered digital experiences. With 4 years of experience in the field. I am always looking for 
-                new and innovative ways to bring my clients' visions to life.
-              </p>
-              <p className="font-medium text-justify my-2 md:my-4">
-                - I believe that design is about more than just making things look pretty – it's about solving problems and 
-                creating intuitive, enjoyable experiences for users. 
-              </p>
-              <p className="font-medium text-justify my-2 md:my-4">
-                - Whether I'm working on a website, mobile app, or 
-                other digital product, I bring my commitment to design excellence and user-centered thinking to 
-                every project I work on. I look forward to the opportunity to bring my skills and passion to your next project.
+                Hola! <br />
+                I'm George Kibe. I am a tech enthusiast. 
+                I enjoy coming up with tech solutions and automation, especially the boring stuff. <br />
+                I am a graduate of the University of Nairobi-Kenya. 
+                Am also an expert in Mobile and website development, data engineering and data science. 
+                I am passionate about innovatie startups. If you are interested in any of the solutions above, I got you. <br />
+                I also enjoy creative reading and writing, playing chess and traveling, just in case you don't find me online.
+                Thank you, George Kibe
               </p>
             </div>
-            <div className="col-span-3 relative h-max  rounded-2xl border-2 border-solid border-dark bg-light p-8 border-r-8 border-b-8" >
-                <div className="absolute top-0 -right-3 -z-10 w-[102%] h-[103%] rounded-[2rem] bg-dark" />
-              <Image src={ProfilePic} alt='profile photo' className='w-full h-auto rounded-2xl'/>
+            <div className="flex relative md:w-[40%] lg:w-[20%] rounded-2xl border-2 border-solid border-dark bg-light dark:border-light
+              dark:bg-dark mx-0 sm:mx-16 md:m-0 p-4 xl:p-8 border-r-8 border-b-8" >
+              <Image src={ProfilePic} alt='profile photo' className='w-full h-auto object-contain rounded-2xl'/>
             </div>
-            <div className="flex flex-col col-span-2 items-center justify-between ">
-              <div className="flex flex-col items-center justify-center">
-                <span className="inline-block text-5xl font-bold"><AnimatedNumbers value={25}/>+</span>
-                <h2 className="text-xl font-medium capitalize text-dark/75 dark:text-light">Satisfied Clients</h2>
+            <div className="flex flex-row md:flex-col md:w-[20%] items-start md:items-center justify-between ">
+              <div className="flex flex-col items-start md:items-center justify-center">
+                <span className="inline-block text-2xl md:text-5xl font-bold"><AnimatedNumbers value={25}/>+</span>
+                <h2 className="sm:text-xl font-medium capitalize text-dark/75 dark:text-light">Satisfied Clients</h2>
               </div>
-              <div className="flex flex-col items-center justify-center">
-                <span className="inline-block text-5xl font-bold"><AnimatedNumbers value={30}/>+</span>
-                <h2 className="text-xl font-medium capitalize text-dark/75 dark:text-light">Completed Projects</h2>
+              <div className="flex flex-col items-start md:items-center justify-center">
+                <span className="inline-block text-2xl md:text-5xl font-bold"><AnimatedNumbers value={30}/>+</span>
+                <h2 className="sm:text-xl font-medium capitalize text-dark/75 dark:text-light">Completed Projects</h2>
               </div>
-              <div className="flex flex-col items-center justify-center">
-                <span className="inline-block text-5xl font-bold"><AnimatedNumbers value={4}/>+</span>
-                <h2 className="text-xl font-medium capitalize text-dark/75 dark:text-light">Years of Experience Clients</h2>
+              <div className="flex flex-col items-start md:items-center justify-center">
+                <span className="inline-block text-2xl md:text-5xl font-bold"><AnimatedNumbers value={4}/>+</span>
+                <h2 className="sm:text-xl font-medium capitalize text-dark/75 dark:text-light">
+                  Years of Experience
+                </h2>
               </div>
             </div>
         </div>
