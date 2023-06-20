@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.theme {
+  transition: 3s all ease;
+}
+.light{
+  background-color: red;
+  color: #111;
+}
+
+#dark{
+  background-color: #111;
+  color: #bbb;
+}
