@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { SocialIcon } from 'react-social-icons';
 import React from 'react'
 import MernBnbImage from "../../../public/images/projects/mernbnb.png"
+import EcommerceImage from "../../../public/images/projects/ecommerce1.png"
+import CompanyImage from "../../../public/images/projects/company.png"
 import { FramerImage } from '@/utils/FramerImage';
 export const metadata = {
     title: 'Portfolio | Projects',
@@ -71,32 +73,32 @@ const page = () => {
         <div className="mb-2 md:mb-8">
           <FeaturedProject 
             type={"Web Application"}
-            title={"Mernbnb"}
-            summary={"Inspired by Airbnb, this is a web application where users can be able to book for holiday homes. People can book and view their accommodations. The projects leverages the MERN stack technologies(MongoDb, Express, React and Nodejs). It also uses AWS for cloud storage"}
-            image={MernBnbImage}
-            link={"https://mernbnb.vercel.app/"}
-            github={"https://github.com/George-Kibe/Mernbnbclone"}
+            title={"Ecommerce Web Application"}
+            summary={"This is an E-commerce application for an Electronics shop. It has all the main functionalities of an e-commerce application including displaying all products, latest products. Grouping the products by category. Adding to cart and checking out via stripe."}
+            image={EcommerceImage}
+            link={"https://buenas-ecommerce.vercel.app"}
+            github={"https://github.com/George-Kibe/Ecommerce-next"}  
           />
         </div>
         <div className="flex flex-col md:flex-row gap-2 md:gap-4">
           <div className="">
             <Project 
-                type={"Application"}
-                title={"RealHive"}
-                summary={"Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam velit quod odio dolorem "}
-                image={MernBnbImage}
-                link={"https://github.com/George-Kibe/Buenas-real-estate"}
-                github={"https://github.com/George-Kibe/Buenas-real-estate"}
-              />
+              type={"Web Application"}
+              title={"Mernbnb"}
+              summary={"Inspired by Airbnb, this is a web application where users can be able to book for holiday homes. People can book and view their accommodations. The projects leverages the MERN stack technologies(MongoDb, Express, React and Nodejs). It also uses AWS for cloud storage"}
+              image={MernBnbImage}
+              link={"https://mernbnb.vercel.app/"}
+              github={"https://github.com/George-Kibe/Mernbnbclone"}
+            />
           </div>
           <div className="">
             <Project 
               type={"Application"}
-              title={"RealHive"}
-              summary={"Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam velit quod odio dolorem "}
-              image={MernBnbImage}
-              link={"https://github.com/George-Kibe/Buenas-real-estate"}
-              github={"https://github.com/George-Kibe/Buenas-real-estate"}
+              title={"Buenas Consultants"}
+              summary={"This is a portfolio for a company. It is for an IT company listing all the servies offered by the company. It has the main project page and an additional blog for the trends relevant to the indusrty of the business."}
+              image={CompanyImage}
+              link={"https://buenas-portfolio.vercel.app/"}
+              github={"https://github.com/George-Kibe/Nextjs"}
             />
           </div>
         </div>

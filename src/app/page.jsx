@@ -35,7 +35,7 @@ export default function Home() {
           <div className="flex items-center mt-12 self-start">
             <Link href={"/George-Resume.pdf"} target='_blank' 
               className='flex items-center bg-dark text-light p-2 px-6 rounded-lg text-lg font-semibold
-                hover:bg-light hover:text-dark border-2 border-solid border-transparent hover:border-dark'
+                hover:bg-light hover:text-dark border-2 dark:bg-white dark:text-dark border-solid border-transparent hover:border-dark'
                 download={true}
             >Resume <RiExternalLinkFill className='ml-1 w-6'/> </Link>
             <Link href={"/contacts"}
