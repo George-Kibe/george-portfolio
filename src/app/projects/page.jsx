@@ -6,6 +6,8 @@ import React from 'react'
 import MernBnbImage from "../../../public/images/projects/mernbnb.png"
 import EcommerceImage from "../../../public/images/projects/ecommerce1.png"
 import CompanyImage from "../../../public/images/projects/company.png"
+import RealHiveImage from "../../../public/images/projects/realhive.png"
+import HauteCornerImage from "../../../public/images/projects/haute-corner.png"
 import { FramerImage } from '@/utils/FramerImage';
 export const metadata = {
     title: 'Portfolio | Projects',
@@ -81,7 +83,39 @@ const page = () => {
           />
         </div>
         <div className="flex flex-col md:flex-row gap-2 md:gap-4">
-          <div className="">
+          <div className="md:w-1/2">
+            <Project 
+              type={"Mobile Application"}
+              title={"RealHive"}
+              summary={"Inspired by Airbnb, this is a mobile application that leverages React Native to build a platform for match making between property seekers and property owners or landlords and tenants."}
+              image={RealHiveImage}
+              link={"https://play.google.com/store/apps/details?id=com.realhive.app"}
+              github={"https://github.com/George-Kibe"}
+            />
+          </div>
+          <div className="md:w-1/2">
+            <Project 
+              type={"Website"}
+              title={"Buenas Consultants"}
+              summary={"This is a portfolio for a company. It is for an IT company listing all the servies offered by the company. It has the main project page and an additional blog for the trends relevant to the indusrty of the business."}
+              image={CompanyImage}
+              link={"https://buenas-portfolio.vercel.app/"}
+              github={"https://github.com/George-Kibe/Nextjs"}
+            />
+          </div>
+        </div>
+        <div className="my-2 md:my-8">
+          <FeaturedProject 
+            type={"Web Application"}
+            title={"Ecommerce Mobile Application"}
+            summary={"This is an E-commerce mobile application for an Electronics shop. The application is builtin React Native and AWS Amplify and has all the main functionalities of an e-commerce application including displaying all products, latest products. Grouping the products by category. Adding to cart and checking out via stripe."}
+            image={HauteCornerImage}
+            link={"https://play.google.com/store/apps/details?id=com.hautecorner.app"}
+            github={"https://github.com/George-Kibe/Haute-corner"}  
+          />
+        </div>
+        <div className="flex flex-col md:flex-row gap-2 md:gap-4">
+          <div className="md:w-1/2 ">
             <Project 
               type={"Web Application"}
               title={"Mernbnb"}
@@ -91,16 +125,16 @@ const page = () => {
               github={"https://github.com/George-Kibe/Mernbnbclone"}
             />
           </div>
-          <div className="">
+          {/* <div className="">
             <Project 
-              type={"Application"}
+              type={"Website"}
               title={"Buenas Consultants"}
               summary={"This is a portfolio for a company. It is for an IT company listing all the servies offered by the company. It has the main project page and an additional blog for the trends relevant to the indusrty of the business."}
               image={CompanyImage}
               link={"https://buenas-portfolio.vercel.app/"}
               github={"https://github.com/George-Kibe/Nextjs"}
             />
-          </div>
+          </div> */}
         </div>
       </main>
     </div>

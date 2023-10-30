@@ -8,7 +8,7 @@ const FramerImageView = motion(Image);
 
 export const FramerImage = ({image, title}) => {
   return (
-    <FramerImageView src={image} alt={title} className='w-full h-auto' 
+    <FramerImageView src={image} alt={title} className='w-full h-[40vh] object-contain' 
         whileHover={{scale:1.05}}
         transition={{duration:0.2}}
     />

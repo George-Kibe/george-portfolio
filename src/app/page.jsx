@@ -6,7 +6,7 @@ import {RiExternalLinkFill} from "react-icons/ri"
 import HireMe from '@/components/HireMe';
 
 export const metadata = {
-  title: 'Portfolio | Home',
+  title: 'George\'s Portfolio | Home',
   description: 'Powered by Nextjs',
 }
 export default function Home() {
