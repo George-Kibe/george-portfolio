@@ -32,6 +32,7 @@ const page = () => {
       return
     }    
   };
+  
   return (
     <div className="items-center p-4 md:p-8">
       <h5 className="text-center text-xs">Get In Touch</h5>
