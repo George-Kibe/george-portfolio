@@ -1,16 +1,66 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-.theme {
-  transition: 3s all ease;
-}
-.light{
-  background-color: red;
-  color: #111;
+/* Dark mode is driven by a class on <html>, set before first paint by the
+   inline script in the root layout and toggled by ThemeContext. The variant has
+   to match that element and everything beneath it. In v3 this was
+   `darkMode: 'class'`. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+
+  --color-dark: #1b1b1b;
+  --color-light: #f5f5f5;
+  --color-primary: #0000ff;
+  --color-primary-dark: #58e6d9;
+
+  --animate-spin-slow: spin 10s linear infinite;
 }
 
-#dark{
-  background-color: #111;
-  color: #bbb;
+/* v3's `backgroundImage` theme key has no equivalent namespace in v4, so the
+   repeating-radial backgrounds behind the Skills orbit are declared as real
+   utilities — Skills.jsx applies them through `md:` and `dark:` variants, which
+   plain CSS classes would not support. */
+@utility bg-circularLight {
+  background-image: repeating-radial-gradient(rgba(0, 0, 0, 0.4) 2px, #f5f5f5 5px, #f5f5f5 100px);
+}
+@utility bg-circularDark {
+  background-image: repeating-radial-gradient(rgba(255, 255, 255, 0.6) 2px, #1b1b1b 8px, #1b1b1b 100px);
+}
+@utility bg-circularLightLg {
+  background-image: repeating-radial-gradient(rgba(0, 0, 0, 0.4) 2px, #f5f5f5 5px, #f5f5f5 80px);
+}
+@utility bg-circularDarkLg {
+  background-image: repeating-radial-gradient(rgba(255, 255, 255, 0.5) 2px, #1b1b1b 8px, #1b1b1b 80px);
+}
+@utility bg-circularLightMd {
+  background-image: repeating-radial-gradient(rgba(0, 0, 0, 0.4) 2px, #f5f5f5 5px, #f5f5f5 60px);
+}
+@utility bg-circularDarkMd {
+  background-image: repeating-radial-gradient(rgba(255, 255, 255, 0.5) 2px, #1b1b1b 8px, #1b1b1b 60px);
+}
+@utility bg-circularLightSm {
+  background-image: repeating-radial-gradient(rgba(0, 0, 0, 0.4) 2px, #f5f5f5 5px, #f5f5f5 40px);
+}
+@utility bg-circularDarkSm {
+  background-image: repeating-radial-gradient(rgba(255, 255, 255, 0.5) 2px, #1b1b1b 8px, #1b1b1b 40px);
+}
+
+/* Theme changes animate colours only. The old rule transitioned `all` over 3s,
+   which dragged layout properties into the animation and felt broken. */
+.theme,
+.theme * {
+  transition:
+    background-color 300ms ease,
+    border-color 300ms ease,
+    color 300ms ease,
+    fill 300ms ease,
+    stroke 300ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme,
+  .theme * {
+    transition: none;
+  }
 }

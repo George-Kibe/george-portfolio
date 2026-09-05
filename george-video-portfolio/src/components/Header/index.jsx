@@ -1,6 +1,6 @@
-// app/components/Header.tsx
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Menu, X, Play } from "lucide-react";
 
@@ -34,33 +34,33 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <a href="#home" className="flex items-center gap-2 group">
+          <Link href="/" className="flex items-center gap-2 group" aria-label="GeorgeEditPro home">
             <div className="relative w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
               <Play className="w-5 h-5 text-white fill-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-white to-blue-400 bg-clip-text text-transparent">
               GeorgeEditPro
             </span>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             {navItems.map((item) => (
-              <a
+              <Link
                 key={item.name}
                 href={item.href}
                 className="relative text-sm font-medium text-gray-300 hover:text-white transition-colors duration-300 group"
               >
                 {item.name}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300" />
-              </a>
+              </Link>
             ))}
-            <a
+            <Link
               href="/contact"
               className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25"
             >
               Hire Me
-            </a>
+            </Link>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -81,22 +81,22 @@ export default function Header() {
       >
         <nav className="flex flex-col p-4 space-y-4">
           {navItems.map((item) => (
-            <a
+            <Link
               key={item.name}
               href={item.href}
               onClick={() => setIsMobileMenuOpen(false)}
               className="text-gray-300 hover:text-blue-400 font-medium py-2 px-4 rounded-lg hover:bg-blue-500/10 transition-all duration-300"
             >
               {item.name}
-            </a>
+            </Link>
           ))}
-          <a
-            href="#contact"
+          <Link
+            href="/contact"
             onClick={() => setIsMobileMenuOpen(false)}
             className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full text-center transition-all duration-300"
           >
             Hire Me
-          </a>
+          </Link>
         </nav>
       </div>
     </header>

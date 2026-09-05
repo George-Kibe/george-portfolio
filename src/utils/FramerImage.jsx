@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import React from 'react'
 
-const FramerImageView = motion(Image);
+const FramerImageView = motion.create(Image);
 
 export const FramerImage = ({image, title}) => {
   return (

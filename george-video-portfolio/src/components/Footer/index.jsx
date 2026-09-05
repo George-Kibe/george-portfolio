@@ -1,11 +1,12 @@
-// app/components/Footer.tsx
-"use client";
+import Link from "next/link";
+import { Play, Mail } from "lucide-react";
+import { Instagram, Linkedin, XTwitter, Youtube } from "@/components/BrandIcons";
 
-import { Play, Instagram, Twitter, Youtube, Linkedin, Mail } from "lucide-react";
-
+// TODO: replace "#" with the real profile URLs. Also add them to
+// SOCIAL_PROFILES in src/lib/site.js so they feed the Person schema's sameAs.
 const socialLinks = [
   { name: "Instagram", icon: Instagram, href: "#" },
-  { name: "Twitter", icon: Twitter, href: "#" },
+  { name: "X", icon: XTwitter, href: "#" },
   { name: "YouTube", icon: Youtube, href: "#" },
   { name: "LinkedIn", icon: Linkedin, href: "#" },
 ];
@@ -23,10 +24,10 @@ const footerLinks = [
   {
     title: "Services",
     links: [
-      { name: "Video Editing", href: "#" },
-      { name: "Color Grading", href: "#" },
-      { name: "Motion Graphics", href: "#" },
-      { name: "Sound Design", href: "#" },
+      { name: "Video Editing", href: "/about" },
+      { name: "Color Grading", href: "/about" },
+      { name: "Motion Graphics", href: "/about" },
+      { name: "Sound Design", href: "/about" },
     ],
   },
 ];
@@ -41,14 +42,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="space-y-6">
-            <a href="#home" className="flex items-center gap-2 group">
+            <Link href="/" className="flex items-center gap-2 group" aria-label="GeorgeEditPro home">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
                 <Play className="w-5 h-5 text-white fill-white" />
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-white to-blue-400 bg-clip-text text-transparent">
                 GeorgeEditPro
               </span>
-            </a>
+            </Link>
             <p className="text-gray-400 text-sm leading-relaxed">
               Crafting visual stories that captivate, inspire, and leave lasting impressions. Professional video editing for creators and brands.
             </p>
@@ -57,6 +58,7 @@ export default function Footer() {
                 <a
                   key={social.name}
                   href={social.href}
+                  aria-label={social.name}
                   className="w-10 h-10 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-gray-400 hover:text-blue-400 hover:border-blue-500 hover:bg-blue-500/20 transition-all duration-300 hover:scale-110"
                 >
                   <social.icon className="w-5 h-5" />
@@ -72,12 +74,12 @@ export default function Footer() {
               <ul className="space-y-3">
                 {section.links.map((link) => (
                   <li key={link.name}>
-                    <a
+                    <Link
                       href={link.href}
                       className="text-gray-400 hover:text-blue-400 transition-colors duration-300 text-sm"
                     >
                       {link.name}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -112,7 +114,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="mt-16 pt-8 border-t border-blue-500/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-500 text-sm">
-            © {new Date().getFullYear()} EditPro. All rights reserved.
+            © {new Date().getFullYear()} GeorgeEditPro. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm text-gray-500">
             <a href="#" className="hover:text-blue-400 transition-colors">Privacy Policy</a>

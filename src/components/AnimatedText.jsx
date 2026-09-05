@@ -29,10 +29,12 @@ const singleWord = {
     }
 }
 
-const AnimatedText = ({text, className=""}) => {
+// `as` keeps this reusable for section headings without minting extra <h1>s.
+const AnimatedText = ({text, className="", as="h1"}) => {
+  const MotionHeading = motion[as]
   return (
     <div className='flex-wrap mx-auto py-2 flex items-center justify-center text-justify overflow-hidden m-4'>
-      <motion.h1 className={`${className} inline-block text-dark dark:text-light font-bold capitalize text-[40px] lg:text-[60px] self-center`}
+      <MotionHeading className={`${className} inline-block text-dark dark:text-light font-bold capitalize text-[40px] lg:text-[60px] self-center`}
         variants={quote}
         initial="initial"
         animate="animate"
@@ -49,7 +51,7 @@ const AnimatedText = ({text, className=""}) => {
             )
         }
 
-      </motion.h1>
+      </MotionHeading>
     </div>
   )
 }

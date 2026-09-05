@@ -35,7 +35,7 @@ const Experience = () => {
   );
   return (
     <div className='my-2 md:my-40'>
-      <AnimatedText text={"Experience"}/>
+      <AnimatedText text={"Experience"} as="h2"/>
       <div ref={ref} className="md:w-[75%] mx-auto relative">
         <motion.div style={{scaleY: scrollYProgress*1.0}}
             className='absolute left-4 md:left-6 top-0 w-[2px] md:w-[4px] h-full bg-dark dark:bg-light origin-top'/>

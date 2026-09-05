@@ -6,9 +6,19 @@ import React from 'react'
 import MernBnbImage from "../../../public/images/projects/mernbnb.png"
 import { FramerImage } from '@/utils/FramerImage';
 export const metadata = {
-    title: 'Portfolio | Projects',
-    description: 'Powered by Nextjs',
-  }
+  title: 'Projects — Web & Mobile Apps',
+  description:
+    'Selected web and mobile projects by George Kibe, built with React, Next.js, ' +
+    'React Native, Node.js and Django — with live demos and source code on GitHub.',
+  alternates: { canonical: '/projects' },
+  openGraph: {
+    type: 'website',
+    url: '/projects',
+    title: 'Projects — Web & Mobile Apps by George Kibe',
+    description:
+      'Live demos and source code for web and mobile applications built by George Kibe.',
+  },
+}
 
 const style={width:40, height:40}
 

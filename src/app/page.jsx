@@ -4,10 +4,20 @@ import AnimatedText from '@/components/AnimatedText';
 import Link from 'next/link';
 import {RiExternalLinkFill} from "react-icons/ri"
 import HireMe from '@/components/HireMe';
+import { DEFAULT_DESCRIPTION, DEFAULT_TITLE } from '@/lib/site';
 
 export const metadata = {
-  title: 'Portfolio | Home',
-  description: 'Powered by Nextjs',
+  // `absolute` opts out of the layout's "%s | George Kibe" template, which
+  // would otherwise repeat the name on the home page.
+  title: { absolute: DEFAULT_TITLE },
+  description: DEFAULT_DESCRIPTION,
+  alternates: { canonical: '/' },
+  openGraph: {
+    type: 'profile',
+    url: '/',
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+  },
 }
 export default function Home() {
   return (
@@ -17,7 +27,11 @@ export default function Home() {
         rounded-3xl border-2 border-dark dark:border-light border-l-8 border-b-8"
         >
           <Image src="https://buenas-portfolio-bucket.s3.eu-west-1.amazonaws.com/george-cropped-rb.png" 
-            fill alt='ProfileArt' className='object-contain rounded-2xl'
+            fill
+            priority
+            sizes="(max-width: 768px) 70vw, 40vw"
+            alt='George Kibe, full-stack web and mobile developer'
+            className='object-contain rounded-2xl'
           />
         </div>
         <div className="w-full md:w-1/2 lg:w-2/3 lg:mx-16">
@@ -33,13 +47,13 @@ export default function Home() {
           I’m looking to collaborate on data science and data engineering projects, full stack web development projects, web apps and mobile apps
           </p>
           <div className="flex items-center mt-12 self-start">
-            <Link href={"/George-Resume.pdf"} target='_blank' 
+            <Link href={"/George-Kibe-Resume.pdf"} target='_blank' 
               className='flex items-center bg-dark text-light p-2 px-6 rounded-lg text-lg font-semibold
                 hover:bg-light hover:text-dark border-2 border-solid border-transparent hover:border-dark'
                 download={true}
             >Resume <RiExternalLinkFill className='ml-1 w-6'/> </Link>
             <Link href={"/contacts"}
-              className='ml-4 text-lg font-medium capitalize teaxt-dark underline'
+              className='ml-4 text-lg font-medium capitalize text-dark dark:text-light underline'
             >Contact</Link>
             {/* <Link href={"mailto:georgekibew@gmail.com"} target='_blank'>contact</Link> */}
           </div>

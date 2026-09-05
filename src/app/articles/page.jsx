@@ -11,8 +11,18 @@ import { Article } from '@/utils/Article'
 import { FramerImage } from '@/utils/FramerImage'
 
 export const metadata = {
-  title: 'Portfolio | Articles',
-  description: 'Powered by Nextjs',
+  title: 'Articles on Web Development',
+  description:
+    'Articles and technical write-ups by George Kibe on React, Next.js, mobile ' +
+    'development and data engineering.',
+  alternates: { canonical: '/articles' },
+  openGraph: {
+    type: 'website',
+    url: '/articles',
+    title: 'Articles on Web Development by George Kibe',
+    description:
+      'Technical writing by George Kibe on React, Next.js and data engineering.',
+  },
 }
 
 
@@ -36,7 +46,7 @@ const FeaturedArticle = ({image, title, time, summary, link}) => {
 }
 
 
-const page = () => {
+const ArticlesPage = () => {
   return (
     <div>
       <main className="w-full mb-16 flex flex-col items-center justify-center overflow-hidden">
@@ -85,4 +95,4 @@ const page = () => {
   )
 }
 
-export default page
+export default ArticlesPage
