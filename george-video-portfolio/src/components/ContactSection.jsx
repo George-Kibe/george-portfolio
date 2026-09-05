@@ -5,6 +5,9 @@ import { Mail, MapPin, Phone, Send } from "lucide-react";
 import { Instagram, Linkedin, XTwitter } from "@/components/BrandIcons";
 import { toast } from "react-toastify";
 import emailjs from "@emailjs/browser";
+import { createSubmissionGuard } from "@/lib/submissionGuard";
+
+const guard = createSubmissionGuard("contact");
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -36,7 +39,23 @@ export default function ContactSection() {
 
   const sendEmail = async(e) => {
     e.preventDefault();
-    console.log("Form submitted", formData)
+
+    // The EmailJS keys are public by necessity, so the send quota is the thing
+    // worth protecting. Bots are dropped silently; humans are told to wait.
+    if (guard.isBot({ website: e.target.website?.value })) {
+      return
+    }
+
+    const verdict = guard.check()
+    if (!verdict.allowed) {
+      toast.error(
+        verdict.reason === "too-fast"
+          ? `Please wait ${verdict.retryInSeconds}s before sending another message.`
+          : "Too many messages sent. Please try again later or email directly."
+      )
+      return
+    }
+
     toast.info("Sending your message")
     try {
       setIsSubmitting(true)
@@ -47,6 +66,7 @@ export default function ContactSection() {
         { publicKey: 'qO3BsJQp9qAyPG6LX' }
       )
       if(response.status === 200){
+        guard.record()
         toast.success("Message sent successfully. George will get back to you as soon as possible.")
         e.target.reset()
       }else{
@@ -163,6 +183,11 @@ export default function ContactSection() {
               className="p-8 rounded-3xl bg-linear-to-br from-blue-500/5 to-transparent border border-blue-500/10 backdrop-blur-sm"
             >
               <div className="space-y-6">
+                {/* Honeypot: hidden from people, irresistible to bots. */}
+                <div aria-hidden="true" className="absolute w-px h-px -m-px overflow-hidden opacity-0 pointer-events-none">
+                  <label htmlFor="contact-website">Leave this field empty</label>
+                  <input id="contact-website" type="text" name="website" tabIndex={-1} autoComplete="off" />
+                </div>
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
