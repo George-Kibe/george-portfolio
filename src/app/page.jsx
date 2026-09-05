@@ -1,5 +1,6 @@
 // "use client"
 import Image from 'next/image'
+import ProfileArt from '../../public/images/profile/george-cropped-rb.png'
 import AnimatedText from '@/components/AnimatedText';
 import Link from 'next/link';
 import {RiExternalLinkFill} from "react-icons/ri"
@@ -26,10 +27,16 @@ export default function Home() {
         <div className="relative mt-10 md:mt-0 w-[70%] h-[40vh] md:mx-8 lg:mx-12 sm:h-[60vh] md:h-[75vh] xl:w-[40%] 
         rounded-3xl border-2 border-dark dark:border-light border-l-8 border-b-8"
         >
-          <Image src="https://buenas-portfolio-bucket.s3.eu-west-1.amazonaws.com/george-cropped-rb.png" 
+          {/* Served from /public rather than S3: that bucket takes 10-15s to
+              return this file, which is well past the image optimizer's fetch
+              timeout, so the optimizer 500'd and nothing rendered. A static
+              import also gives build-time sizing and a blur placeholder. */}
+          <Image
+            src={ProfileArt}
             fill
             priority
             sizes="(max-width: 768px) 70vw, 40vw"
+            placeholder="blur"
             alt='George Kibe, full-stack web and mobile developer'
             className='object-contain rounded-2xl'
           />

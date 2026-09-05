@@ -66,7 +66,8 @@ Conventions in this app:
 - Design tokens live in `src/app/globals.css` under `@theme`: `--color-dark` (#1b1b1b), `--color-light` (#f5f5f5), `--color-primary`, `--color-primary-dark`, and `--animate-spin-slow` (used by HireMe). There is **no `tailwind.config.js`** — do not recreate one.
 - The `circularLight*` / `circularDark*` backgrounds behind the Skills orbit are `@utility` rules in `globals.css`. Tailwind v4 has no `backgroundImage` theme namespace, and they must stay real utilities because Skills.jsx applies them through `md:` and `dark:` variants.
 - Dark mode uses `@custom-variant dark (&:where(.dark, .dark *))`, matching the class `ThemeProvider` puts on a wrapper `<div className={"theme " + mode}>`. The `dark` class comes from React state, not from the OS or `localStorage`. Default mode is `"dark"`.
-- Remote images come from the S3 buckets listed in `next.config.js` `images.remotePatterns`.
+- All images are local static imports from `public/`. The homepage portrait used to be loaded from the `buenas-portfolio-bucket` S3 bucket, but that origin takes 10-15s to return the file — past the image optimizer's fetch timeout — so the optimizer returned 500 and nothing rendered. The S3 hosts remain in `next.config.js` `images.remotePatterns` but nothing uses them; don't reintroduce that bucket for anything render-critical.
+- `public/images/profile/gk.png` (8.4MB) and `gk1.png` (10MB) are very large sources. The `sizes` props keep the served variants small (~10KB at the rendered size), but they slow builds and bloat the repo — worth re-encoding.
 - Contact form posts through EmailJS (`@emailjs/browser`, `emailjs.sendForm`) with the service/template/public keys **hardcoded in the component**.
 
 ## Video portfolio — structure
