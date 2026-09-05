@@ -31,5 +31,8 @@
     "jsdom": "^30.0.1",
     "tailwindcss": "^4.3.3",
     "vitest": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=20.9.0"
   }
 }
