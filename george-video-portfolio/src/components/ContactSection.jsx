@@ -190,12 +190,13 @@ export default function ContactSection() {
                 </div>
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                    <label htmlFor="contact-name" className="block text-sm font-medium text-gray-300 mb-2">
                       Your Name
                     </label>
                     <input
                       type="text"
                       required
+                      id="contact-name"
                       value={formData.name}
                       onChange={(e) =>
                         setFormData({ ...formData, name: e.target.value })
@@ -205,12 +206,13 @@ export default function ContactSection() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                    <label htmlFor="contact-email" className="block text-sm font-medium text-gray-300 mb-2">
                       Your Email
                     </label>
                     <input
                       type="email"
                       required
+                      id="contact-email"
                       value={formData.email}
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
@@ -222,12 +224,13 @@ export default function ContactSection() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label htmlFor="contact-subject" className="block text-sm font-medium text-gray-300 mb-2">
                     Subject
                   </label>
                   <input
                     type="text"
                     required
+                    id="contact-subject"
                     value={formData.subject}
                     onChange={(e) =>
                       setFormData({ ...formData, subject: e.target.value })
@@ -238,12 +241,13 @@ export default function ContactSection() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label htmlFor="contact-message" className="block text-sm font-medium text-gray-300 mb-2">
                     Message
                   </label>
                   <textarea
                     required
                     rows={5}
+                    id="contact-message"
                     value={formData.message}
                     onChange={(e) =>
                       setFormData({ ...formData, message: e.target.value })
@@ -253,6 +257,9 @@ export default function ContactSection() {
                   />
                 </div>
 
+                <p aria-live="polite" className="sr-only">
+                  {isSubmitting ? "Sending your message" : ""}
+                </p>
                 <button
                   type="submit"
                   disabled={isSubmitting}
