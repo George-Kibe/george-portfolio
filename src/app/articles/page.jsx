@@ -33,12 +33,12 @@ const FeaturedArticle = ({image, title, time, summary, link}) => {
         <FramerImage title={title} image={image}
         />
       </Link>
-      <div className="flex flex-col md:w-[67%] md:px-4 py-4 md:py-0 gap-4">
+      <div className="flex flex-col md:w-[67%] md:px-6 py-6 md:py-0 gap-2">
         <Link href={link} target='_blank'>
-          <h2 className="capitalize text-2xl font-bold my-2 hover:underline">{title}</h2>
+          <h2 className="capitalize text-2xl leading-tight font-bold hover:underline">{title}</h2>
         </Link>
-        <p className="text-sm mb-2">{summary}</p>
-        <span className="text-primary font-semibold">{time}</span>
+        <p className="text-base leading-relaxed">{summary}</p>
+        <span className="text-primary dark:text-primary-dark font-semibold">{time}</span>
       </div>
       
     </li>
@@ -48,10 +48,10 @@ const FeaturedArticle = ({image, title, time, summary, link}) => {
 
 const ArticlesPage = () => {
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center md:mx-8 lg:mx-16">
       <main className="w-full mb-16 flex flex-col items-center justify-center overflow-hidden">
         <AnimatedText text={"Words can Change the World!"}/>
-        <ul className="flex flex-col gap-4">
+        <ul className="flex flex-col gap-8">
           <FeaturedArticle
             image={Artcile1}
             title={"Creating Stunning Loading Screens In React: Build 3 Types Of Loading Screens"}
@@ -67,10 +67,10 @@ const ArticlesPage = () => {
             link={""}
           />
         </ul>
-        <h2 className='font-bold text-4xl w-full text-center my-16 mt-32'>
+        <h2 className='font-bold text-3xl leading-tight w-full text-center mt-24 md:mt-32 mb-8 md:mb-12'>
           All Articles
         </h2>
-        <ul className="w-full mb-8 md:mb-32">
+        <ul className="w-full">
           <Article 
             image={Artcile3}
             title={"Why you should adopt Nextjs for your Projects"}

@@ -26,21 +26,21 @@ export const metadata = {
 const ContactsPage = () => {
   return (
     <div className="items-center p-4 md:p-8">
-      <h5 className="text-center text-xs">Get In Touch</h5>
+      <p className="text-center text-xs uppercase tracking-widest">Get In Touch</p>
       <AnimatedText text={"Contact Me"} />
-      <div className="flex flex-col md:flex-row">
-        <address className="not-italic flex flex-col flex-1 md:items-center gap-4 mb-4 sm:mx-4 md:mx-0 xl:mx-24">
-          <article className="flex flex-col items-center justify-center border-2 dark:border-light p-2 w-full rounded-xl">
-            <MdOutlineEmail className="text-[25px] md:text-[40px]" aria-hidden="true" />
-            <h2 className="text-center">Email</h2>
+      <div className="mx-auto mt-8 flex max-w-5xl flex-col gap-12 md:flex-row">
+        <address className="not-italic flex flex-col flex-1 md:items-center gap-4">
+          <article className="flex flex-col items-center justify-center gap-2 border-2 dark:border-light p-6 w-full rounded-2xl">
+            <MdOutlineEmail className="text-2xl md:text-4xl" aria-hidden="true" />
+            <h2 className="text-center text-xl font-semibold">Email</h2>
             <p className="text-center">{AUTHOR.email}</p>
             <a href={`mailto:${AUTHOR.email}`} className="items-center underline underline-offset-2">
               Send an Email
             </a>
           </article>
-          <article className="flex flex-col items-center justify-center border-2 dark:border-light p-2 w-full rounded-xl">
-            <ImTwitter className="text-[25px] md:text-[40px]" aria-hidden="true" />
-            <h2>Twitter</h2>
+          <article className="flex flex-col items-center justify-center gap-2 border-2 dark:border-light p-6 w-full rounded-2xl">
+            <ImTwitter className="text-2xl md:text-4xl" aria-hidden="true" />
+            <h2 className="text-xl font-semibold">Twitter</h2>
             <p>@KibeGeorge_</p>
             <a
               href="https://twitter.com/kibegeorge_"
@@ -51,9 +51,9 @@ const ContactsPage = () => {
               Message me on Twitter
             </a>
           </article>
-          <article className="flex flex-col items-center justify-center border-2 dark:border-light p-2 w-full rounded-xl">
-            <BsWhatsapp className="text-[25px] md:text-[40px]" aria-hidden="true" />
-            <h2>Whatsapp</h2>
+          <article className="flex flex-col items-center justify-center gap-2 border-2 dark:border-light p-6 w-full rounded-2xl">
+            <BsWhatsapp className="text-2xl md:text-4xl" aria-hidden="true" />
+            <h2 className="text-xl font-semibold">Whatsapp</h2>
             <p>+254 704 817 466</p>
             <a
               href="https://wa.link/rcnr3u"

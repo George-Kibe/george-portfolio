@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRef } from "react"
 
-const FramerImage = motion(Image);
+const FramerImage = motion.create(Image);
 
 const MovingImage = ({title, image, link})=> {
     const x = useMotionValue(0);
@@ -24,7 +24,7 @@ const MovingImage = ({title, image, link})=> {
     }
     return(
         <Link href={link} onMouseMove={handleMouse} onMouseLeave={handleMouseLeave}>
-          <h2 className="capitalize text-xs md:text-xl font-semibold hover:underline">{title}</h2>
+          <h2 className="capitalize text-base md:text-xl font-semibold hover:underline">{title}</h2>
           <FramerImage style={{x:x, y:y}}
             initial={{opacity:0}}
             whileInView={{opacity:1, transition:{duration:0.2}}}
@@ -36,13 +36,14 @@ const MovingImage = ({title, image, link})=> {
 export const Article = ({image, title, date, link}) => {
     return(
       <motion.li
-        initial={{y:200}}
-        whileInView={{y:0, transition:{duration: 0.5, ease:"easeInOut"}}}   
-        viewport={{once:true}}   
-        className="relative w-full p-4 py-6 my-4 rounded-xl flex items-center justify-between bg-light
-      text-dark first:mt-0 border border-solid border-dark border-r-4 border-b-4">
+        initial={{y:16}}
+        whileInView={{y:0, transition:{duration: 0.3, ease:[0.2, 0, 0, 1]}}}
+        viewport={{once:true}}
+        className="relative w-full px-6 py-6 my-4 rounded-2xl flex items-center justify-between bg-light
+      text-dark first:mt-0 border border-solid border-dark border-r-4 border-b-4
+      dark:bg-dark dark:text-light dark:border-light">
         <MovingImage title={title} image={image} link={link}/>
-        <span className="text-xs md:text-primary font-semibold pl-4">{date}</span>
+        <span className="shrink-0 text-sm text-primary dark:text-primary-dark font-semibold pl-4">{date}</span>
       </motion.li>
     )
   }

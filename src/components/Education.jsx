@@ -11,13 +11,14 @@ const Details = ({course, school, schoolLink, time, address, skills}) => {
     <li ref={ref} className="my-4 md:my-8 first:mt-0 last:mb-0 w-[90%] md:w-[80%] mx-auto flex flex-col items-start justify-center">
       <LiIcon reference={ref}/>
       <motion.div
-        initial={{y:50}}
+        initial={{y:16}}
         whileInView={{y:0}}
-        transition={{duration:0.5, type:"spring"}}
-        className="">
-        <h3 className="capitalize font-bold text-2xl">{course}&nbsp; <a href={schoolLink}>@{school}</a></h3>
+        viewport={{once:true}}
+        transition={{duration:0.3, ease:[0.2, 0, 0, 1]}}
+        className="flex flex-col gap-2">
+        <h3 className="capitalize font-bold text-2xl leading-tight">{course}&nbsp; <a href={schoolLink}>@{school}</a></h3>
         <span className="capitalize font-medium text-dark/75 dark:text-light/75"> {time} | {address}</span>
-        <p className="text-start font-medium w-full ">{skills}</p>
+        <p className="text-left font-normal leading-relaxed w-full ">{skills}</p>
       </motion.div>
     </li>
   )
@@ -32,11 +33,11 @@ const Education = () => {
     }
   );
   return (
-    <div className='my-2 md:my-40'>
+    <div className='mt-24 md:mt-32'>
       <AnimatedText text={"Education"} as="h2"/>
       <div ref={ref} className="md:w-[75%] mx-auto relative">
         <motion.div style={{scaleY: scrollYProgress*1.0}}
-            className='absolute left-4 md:left-6 top-0 w-[2px] md:w-[4px] h-full bg-dark dark:bg-light origin-top'/>
+            className='absolute left-4 md:left-6 top-0 w-0.5 md:w-1 h-full bg-dark dark:bg-light origin-top'/>
         <ul className="w-full flex flex-col items-start justify-between ml-2">
             <Details 
                 course={"Data Engineering"}

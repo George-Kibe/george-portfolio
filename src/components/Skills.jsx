@@ -6,11 +6,11 @@ import { motion } from 'framer-motion'
 const Skill = ({name, x, y}) => {
   return (
     <motion.div className="flex items-center justify-center rounded-full overflow-wrap
-     font-semibold bg-dark text-light md:py-2 px-1 md:px-4 dark:bg-light dark:text-dark
-    shadow-dark cursor-pointer absolute"
-      whileHover={{scale:1.2}}
+     font-semibold bg-dark text-light text-xs md:text-base px-2 py-0.5 md:py-2 md:px-4 dark:bg-light dark:text-dark
+    cursor-pointer absolute"
+      whileHover={{scale:1.05}}
       initial={{x:0, y:0}}
-      whileInView={{x:x, y:y, transition:{duration:1.5}}}
+      whileInView={{x:x, y:y, transition:{duration:0.3, ease:[0.2, 0, 0, 1]}}}
       viewport={{once: true}}
       >
         {name}
@@ -20,10 +20,12 @@ const Skill = ({name, x, y}) => {
 
 const Skills = () => {
   return (
-    <div className='mt-8 md:mt-24'>
-      <h2 className="font-bold text-4xl md:text-6xl w-full text-center sm:mb-16">Skills</h2>
+    <div className='mt-24 md:mt-32'>
+      <h2 className="font-bold text-3xl md:text-5xl leading-tight w-full text-center mb-8 md:mb-12">Skills</h2>
+      {/* Chips are offset up to ±34vw from the centre, so the height tracks the
+          viewport width rather than its height. */}
       <div className="w-full relative flex items-center justify-center rounded-full
-        sm:my-2 md:my-24 xl:my-48 h-[50vh] sm:h-[60vh] md:h-[70vh] lg:min-h-screen
+        h-[80vw]
         bg-circularLightSm dark:bg-circularDarkSm md:bg-circularLight md:dark:bg-circularDark">
         <Skill name="Web" />
         <Skill name="Python" x="-18vw" y="-5vw" />

@@ -2,11 +2,17 @@
 
 import React, { useRef, useState } from 'react'
 import emailjs from '@emailjs/browser'
-import { ToastContainer, toast } from 'react-toastify'
+import { Slide, ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { createSubmissionGuard } from '@/lib/submissionGuard'
 
 const guard = createSubmissionGuard('contact')
+
+// Tailwind v4's preflight makes form controls transparent and borderless, so
+// without an explicit fill and border the fields vanish into the page.
+const fieldClass =
+  'w-full rounded-lg border border-dark/50 bg-white px-4 py-3 text-dark placeholder:text-dark/65 ' +
+  'dark:border-light/40 dark:bg-dark dark:text-light dark:placeholder:text-light/65'
 
 const ContactForm = () => {
   const form = useRef(null)
@@ -68,11 +74,11 @@ const ContactForm = () => {
 
   return (
     <>
-      <ToastContainer />
+      <ToastContainer transition={Slide} />
       <form
         ref={form}
         onSubmit={sendEmail}
-        className="flex flex-1 flex-col items-start sm:items-center md:px-20 gap-2 mb-4 sm:mx-4 md:mx-0 xl:mx-24"
+        className="flex flex-1 flex-col items-start sm:items-center gap-4"
       >
         {/* Honeypot: hidden from people, irresistible to bots. */}
         <div aria-hidden="true" className="absolute w-px h-px -m-px overflow-hidden opacity-0 pointer-events-none">
@@ -85,7 +91,7 @@ const ContactForm = () => {
           type="text"
           name="name"
           autoComplete="name"
-          className="p-2 rounded-md w-full dark:text-dark"
+          className={fieldClass}
           placeholder="Your Name"
         />
         <label htmlFor="contact-email" className="sr-only">Your Email</label>
@@ -94,7 +100,7 @@ const ContactForm = () => {
           type="email"
           name="email"
           autoComplete="email"
-          className="p-2 rounded-md w-full dark:text-dark"
+          className={fieldClass}
           placeholder="Your Email"
         />
         <label htmlFor="contact-message" className="sr-only">Your Message</label>
@@ -102,13 +108,16 @@ const ContactForm = () => {
           id="contact-message"
           name="message"
           rows="6"
-          className="p-2 rounded-md w-full dark:text-dark"
+          className={fieldClass}
           placeholder="Your Message"
         />
         <button
           type="submit"
           disabled={isSending}
-          className="self-start bg-blue-500 hover:bg-blue-700 disabled:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="self-start rounded-lg bg-dark px-6 py-3 text-base font-semibold text-light hover:bg-dark/85
+            disabled:opacity-60 dark:bg-light dark:text-dark dark:hover:bg-light/85
+            focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
+            dark:focus-visible:outline-primary-dark"
         >
           {isSending ? 'Sending…' : 'Send Message'}
         </button>

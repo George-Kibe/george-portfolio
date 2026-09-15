@@ -2,9 +2,9 @@ import React from 'react';
 
 const LoadingPage = () => {
   return (
-    <div role="status" aria-live="polite" className="flex flex-col items-center justify-center h-screen">
-      <div className="w-24 h-24 border-8 border-t-8 border-gray-500 rounded-full animate-spin"></div>
-      <p className="mt-8 text-3xl font-semibold">Loading…</p>
+    <div role="status" aria-live="polite" className="flex flex-col items-center justify-center min-h-[60vh]">
+      <div className="size-8 border-2 border-dark dark:border-light border-t-transparent dark:border-t-transparent rounded-full motion-safe:animate-spin"></div>
+      <p className="mt-4 text-base text-dark/65 dark:text-light/65">Loading…</p>
     </div>
   );
 };

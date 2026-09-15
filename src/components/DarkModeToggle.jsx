@@ -7,20 +7,24 @@ const DarkModeToggle = () => {
   const {toggle, mode} = useContext(ThemeContext)
   const isDark = mode === "dark"
 
+  // 44px tall to meet the tap-target guideline. The green is dark enough to
+  // hold 3:1 against both page backgrounds (3.76 light, 5.13 dark); the old
+  // #53c58b fell to 1.98 on light.
+
   return (
     <button
       type="button"
       onClick={toggle}
       aria-pressed={isDark}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className='w-14 h-8 rounded-3xl items-center relative flex justify-between p-1 border-[#53c58b]
+      className='w-16 h-11 rounded-full items-center relative flex justify-between px-2 border-[#1d8f5a]
         border-2 border-solid cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2
-        focus-visible:outline-[#53c58b]'
+        focus-visible:outline-[#1d8f5a]'
     >
-      <span className="text-[14px]" aria-hidden="true">🌙</span>
-      <span className="text-[14px]" aria-hidden="true">🔆</span>
-      <span className={`absolute bg-[#53c28b] rounded-full w-4 h-4
-            ${isDark ? "right-1" : "left-1"}`}
+      <span className="text-sm" aria-hidden="true">🌙</span>
+      <span className="text-sm" aria-hidden="true">🔆</span>
+      <span className={`absolute left-1 bg-[#1d8f5a] rounded-full size-6 transition-transform duration-200 ease-out
+            ${isDark ? "translate-x-7" : "translate-x-0"}`}
         aria-hidden="true"
       />
     </button>

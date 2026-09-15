@@ -55,7 +55,7 @@ src/app/          layout.js, page.jsx, globals.css + routes: about/ projects/ ar
                   sitemap.js, robots.js, opengraph-image.jsx  <- SEO route handlers
 src/components/   Navbar, Footer, Logo, HireMe, AnimatedText, DarkModeToggle,
                   Skills, Experience, Education, LiIcon, ContactForm
-src/utils/        Article, AnimatedNumbers, FramerImage
+src/utils/        Article, FramerImage
 src/context/      ThemeContext (client-side dark/light provider)
 src/lib/site.js   URLs, author details, keywords, routes — used by metadata + JSON-LD
 public/           images/ (profile, projects, articles, svgs) + George-Kibe-Resume.pdf
@@ -63,7 +63,10 @@ public/           images/ (profile, projects, articles, svgs) + George-Kibe-Resu
 
 Conventions in this app:
 - Pages are server components by default and export `metadata`; add `"use client"` only when the component needs hooks or `framer-motion`. `contacts/page.jsx` is a client component, which is why its `metadata` export is commented out.
-- Design tokens live in `src/app/globals.css` under `@theme`: `--color-dark` (#1b1b1b), `--color-light` (#f5f5f5), `--color-primary`, `--color-primary-dark`, and `--animate-spin-slow` (used by HireMe). There is **no `tailwind.config.js`** — do not recreate one.
+- Design tokens live in `src/app/globals.css` under `@theme`: `--color-dark` (#1b1b1b), `--color-light` (#f5f5f5), `--color-primary` (#0066cc, for light surfaces) and `--color-primary-dark` (#2997ff, for dark surfaces — pair them as `text-primary dark:text-primary-dark` unless the element keeps a light background in dark mode), and `--animate-spin-slow` (HireMe's ring, deliberately kept for attention; applied as `motion-safe:animate-spin-slow`). There is **no `tailwind.config.js`** — do not recreate one.
+- Hand-written CSS in `globals.css` that sets properties utilities also set (like the `.theme *` colour transition) must go in `@layer base`. Unlayered CSS beats every Tailwind utility regardless of specificity, which previously cancelled all `transition-*` classes site-wide.
+- Motion defaults: 200–300ms, `cubic-bezier(0.2, 0, 0, 1)` (framer: `ease: [0.2, 0, 0, 1]`), small travel (~12–16px), `viewport={{once:true}}` on scroll reveals. The one deliberate exception is HireMe's slow spin.
+- Heading sizes come from `AnimatedText`'s `SIZES` map, keyed by the `as` level (h1 `text-4xl lg:text-6xl`, h2 `text-3xl md:text-5xl`). Don't pass font-size classes through its `className` — Tailwind decides which same-property utility wins, not string order, so such overrides silently fail.
 - The `circularLight*` / `circularDark*` backgrounds behind the Skills orbit are `@utility` rules in `globals.css`. Tailwind v4 has no `backgroundImage` theme namespace, and they must stay real utilities because Skills.jsx applies them through `md:` and `dark:` variants.
 - Dark mode uses `@custom-variant dark (&:where(.dark, .dark *))`, matching the class `ThemeProvider` puts on a wrapper `<div className={"theme " + mode}>`. The `dark` class comes from React state, not from the OS or `localStorage`. Default mode is `"dark"`.
 - All images are local static imports from `public/`. The homepage portrait used to be loaded from the `buenas-portfolio-bucket` S3 bucket, but that origin takes 10-15s to return the file — past the image optimizer's fetch timeout — so the optimizer returned 500 and nothing rendered. The S3 hosts remain in `next.config.js` `images.remotePatterns` but nothing uses them; don't reintroduce that bucket for anything render-critical.

@@ -13,13 +13,13 @@ export default function NotFound() {
         That page doesn&apos;t exist. It may have moved or never existed.
       </p>
       <nav className="flex flex-wrap gap-4 justify-center mt-4">
-        <Link href="/" className="bg-dark text-light dark:bg-light dark:text-dark p-2 px-6 rounded-lg text-lg font-semibold">
+        <Link href="/" className="bg-dark text-light dark:bg-light dark:text-dark py-3 px-6 rounded-lg text-base font-semibold">
           Go home
         </Link>
-        <Link href="/projects" className="p-2 px-6 text-lg font-medium underline underline-offset-2">
+        <Link href="/projects" className="py-3 px-6 text-base font-medium underline underline-offset-2">
           See projects
         </Link>
-        <Link href="/contacts" className="p-2 px-6 text-lg font-medium underline underline-offset-2">
+        <Link href="/contacts" className="py-3 px-6 text-base font-medium underline underline-offset-2">
           Get in touch
         </Link>
       </nav>

@@ -23,4 +23,17 @@ describe("AnimatedText", () => {
     render(<AnimatedText text="Experience" as="h2" />);
     expect(screen.getByRole("heading", { level: 2 })).toBeInTheDocument();
   });
+
+  it("sizes a section heading below the page heading", () => {
+    render(
+      <>
+        <AnimatedText text="Page" />
+        <AnimatedText text="Section" as="h2" />
+      </>
+    );
+    expect(screen.getByRole("heading", { level: 1 })).toHaveClass("text-4xl", "lg:text-6xl");
+    const h2 = screen.getByRole("heading", { level: 2 });
+    expect(h2).toHaveClass("text-3xl", "md:text-5xl");
+    expect(h2).not.toHaveClass("lg:text-6xl");
+  });
 });

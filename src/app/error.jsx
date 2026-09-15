@@ -21,16 +21,16 @@ export default function Error({ error, reset }) {
         <button
           type="button"
           onClick={reset}
-          className="bg-dark text-light dark:bg-light dark:text-dark p-2 px-6 rounded-lg text-lg font-semibold"
+          className="bg-dark text-light dark:bg-light dark:text-dark py-3 px-6 rounded-lg text-base font-semibold"
         >
           Try again
         </button>
-        <Link href="/" className="p-2 px-6 text-lg font-medium underline underline-offset-2">
+        <Link href="/" className="py-3 px-6 text-base font-medium underline underline-offset-2">
           Go home
         </Link>
       </div>
       {error?.digest ? (
-        <p className="text-xs opacity-60 mt-2">Reference: {error.digest}</p>
+        <p className="text-xs text-dark/65 dark:text-light/65 mt-2">Reference: {error.digest}</p>
       ) : null}
     </main>
   )

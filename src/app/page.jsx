@@ -3,7 +3,7 @@ import Image from 'next/image'
 import ProfileArt from '../../public/images/profile/george-cropped-rb.png'
 import AnimatedText from '@/components/AnimatedText';
 import Link from 'next/link';
-import {RiExternalLinkFill} from "react-icons/ri"
+import {RiDownload2Line} from "react-icons/ri"
 import HireMe from '@/components/HireMe';
 import { DEFAULT_DESCRIPTION, DEFAULT_TITLE } from '@/lib/site';
 
@@ -24,8 +24,8 @@ export default function Home() {
   return (
     <>
       <main className="flex dark:bg-black flex-col md:flex-row items-center justify-between w-full">
-        <div className="relative mt-10 md:mt-0 w-[70%] h-[40vh] md:mx-8 lg:mx-12 sm:h-[60vh] md:h-[75vh] xl:w-[40%] 
-        rounded-3xl border-2 border-dark dark:border-light border-l-8 border-b-8"
+        <div className="relative mt-10 md:mt-0 w-[70%] md:w-1/2 xl:w-[40%] aspect-417/598 max-h-[75vh] md:mx-8 lg:mx-12
+        overflow-hidden rounded-2xl border-2 border-dark dark:border-light border-r-8 border-b-8"
         >
           {/* Served from /public rather than S3: that bucket takes 10-15s to
               return this file, which is well past the image optimizer's fetch
@@ -38,29 +38,30 @@ export default function Home() {
             sizes="(max-width: 768px) 70vw, 40vw"
             placeholder="blur"
             alt='George Kibe, full-stack web and mobile developer'
-            className='object-contain rounded-2xl'
+            className='object-cover object-top'
           />
         </div>
         <div className="w-full md:w-1/2 lg:w-2/3 lg:mx-16">
           <AnimatedText text={'Turning Vision Into Reality With Code'} 
-            className="font-bold inline-block text-[25px] lg:text-[50px] mb-4" 
+            className="mb-4"
           />
-          <p className="text-justify font-medium">
+          <p className="max-w-prose text-left font-normal leading-relaxed">
             As a skilled full-stack mobile and web developer, I am dedicated to turning ideas into innovative mobile and web applications. 
             <br />
             Explore my latest projects and articles, showcasing my expertise in mobile and web development.
           </p>
-          <p className="text-justify font-medium">
+          <p className="mt-4 max-w-prose text-left font-normal leading-relaxed">
           I’m looking to collaborate on data science and data engineering projects, full stack web development projects, web apps and mobile apps
           </p>
           <div className="flex items-center mt-12 self-start">
             <Link href={"/George-Kibe-Resume.pdf"} target='_blank' 
-              className='flex items-center bg-dark text-light p-2 px-6 rounded-lg text-lg font-semibold
-                hover:bg-light hover:text-dark border-2 border-solid border-transparent hover:border-dark'
+              className='flex items-center bg-dark text-light py-3 px-6 rounded-lg text-base font-semibold
+                hover:bg-light hover:text-dark border-2 border-solid border-transparent hover:border-dark
+                dark:bg-light dark:text-dark dark:hover:bg-dark dark:hover:text-light dark:hover:border-light'
                 download={true}
-            >Resume <RiExternalLinkFill className='ml-1 w-6'/> </Link>
+            >Resume <RiDownload2Line className='ml-2 size-5' aria-hidden='true'/> </Link>
             <Link href={"/contacts"}
-              className='ml-4 text-lg font-medium capitalize text-dark dark:text-light underline'
+              className='ml-6 text-base font-medium capitalize text-dark dark:text-light underline'
             >Contact</Link>
             {/* <Link href={"mailto:georgekibew@gmail.com"} target='_blank'>contact</Link> */}
           </div>
