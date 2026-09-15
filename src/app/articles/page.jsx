@@ -48,7 +48,7 @@ const FeaturedArticle = ({image, title, time, summary, link}) => {
 
 const ArticlesPage = () => {
   return (
-    <div className="flex flex-col items-center justify-center md:mx-8 lg:mx-16">
+    <div className="flex flex-col items-center justify-center md:mx-8 lg:mx-32">
       <main className="w-full mb-16 flex flex-col items-center justify-center overflow-hidden">
         <AnimatedText text={"Words can Change the World!"}/>
         <ul className="flex flex-col gap-8">

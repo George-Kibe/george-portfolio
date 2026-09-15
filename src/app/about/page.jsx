@@ -32,7 +32,7 @@ const STATS = [
 
 const AboutPage = () => {
   return (
-    <div className="flex w-full flex-col items-center justify-center md:px-8 lg:px-16">
+    <div className="flex w-full flex-col items-center justify-center md:px-8 lg:px-32">
       <main className="items-center">
         <AnimatedText text={"Passion Fuels Purpose! Why Fuels How!"} />
         <div className="grid w-full items-start gap-8 md:grid-cols-2 lg:grid-cols-[3fr_2fr] lg:gap-16">

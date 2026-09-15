@@ -1,6 +1,6 @@
 import { MdOutlineEmail } from "react-icons/md"
 import { BsWhatsapp } from "react-icons/bs"
-import { ImTwitter } from "react-icons/im"
+import { FaXTwitter } from "react-icons/fa6"
 import AnimatedText from "@/components/AnimatedText"
 import ContactForm from "@/components/ContactForm"
 import { AUTHOR } from "@/lib/site"
@@ -39,16 +39,16 @@ const ContactsPage = () => {
             </a>
           </article>
           <article className="flex flex-col items-center justify-center gap-2 border-2 dark:border-light p-6 w-full rounded-2xl">
-            <ImTwitter className="text-2xl md:text-4xl" aria-hidden="true" />
-            <h2 className="text-xl font-semibold">Twitter</h2>
+            <FaXTwitter className="text-2xl md:text-4xl" aria-hidden="true" />
+            <h2 className="text-xl font-semibold">X</h2>
             <p>@KibeGeorge_</p>
             <a
-              href="https://twitter.com/kibegeorge_"
+              href="https://x.com/kibegeorge_"
               target="_blank"
               rel="noreferrer"
               className="underline underline-offset-2"
             >
-              Message me on Twitter
+              Message me on X
             </a>
           </article>
           <article className="flex flex-col items-center justify-center gap-2 border-2 dark:border-light p-6 w-full rounded-2xl">

@@ -1,7 +1,5 @@
 // app/sections/About.tsx
-"use client";
 
-import { useEffect, useRef, useState } from "react";
 import { Camera, Palette, Music, Zap, Award, Users } from "lucide-react";
 
 const skills = [
@@ -35,34 +33,13 @@ const services = [
 ];
 
 export default function AboutSection() {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <section
       id="about"
-      ref={sectionRef}
-      className="relative py-32 bg-black overflow-hidden"
+      className="relative py-20 md:py-32 bg-black overflow-hidden"
     >
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-blue-950/5 to-black" />
+      <div className="absolute inset-0 bg-linear-to-b from-black via-blue-950/5 to-black" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -88,10 +65,8 @@ export default function AboutSection() {
               {skills.map((skill, index) => (
                 <div
                   key={skill.name}
-                  className={`transition-all duration-700 ${
-                    isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
-                  }`}
-                  style={{ transitionDelay: `${index * 100}ms` }}
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: `${index * 60}ms` }}
                 >
                   <div className="flex justify-between mb-2">
                     <span className="text-white font-medium">{skill.name}</span>
@@ -99,10 +74,10 @@ export default function AboutSection() {
                   </div>
                   <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-1000 ease-out"
+                      className="h-full origin-left bg-linear-to-r from-blue-500 to-blue-600 rounded-full animate-grow-x"
                       style={{
-                        width: isVisible ? `${skill.level}%` : "0%",
-                        transitionDelay: `${index * 100 + 300}ms`,
+                        width: `${skill.level}%`,
+                        animationDelay: `${index * 60 + 150}ms`,
                       }}
                     />
                   </div>
@@ -116,10 +91,8 @@ export default function AboutSection() {
             {services.map((service, index) => (
               <div
                 key={service.title}
-                className={`group p-6 rounded-2xl bg-gradient-to-br from-blue-500/5 to-transparent border border-blue-500/10 hover:border-blue-500/30 transition-all duration-500 hover:transform hover:-translate-y-2 ${
-                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                }`}
-                style={{ transitionDelay: `${index * 150}ms` }}
+                className="group p-6 rounded-2xl bg-linear-to-br from-blue-500/5 to-transparent border border-blue-500/10 hover:border-blue-500/30 transition-all duration-200 hover:-translate-y-1 animate-fade-in-up"
+                style={{ animationDelay: `${index * 60}ms` }}
               >
                 <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-4 group-hover:bg-blue-500/20 transition-colors">
                   <service.icon className="w-6 h-6 text-blue-400" />
@@ -127,7 +100,7 @@ export default function AboutSection() {
                 <h2 className="text-xl font-semibold text-white mb-2">
                   {service.title}
                 </h2>
-                <p className="text-gray-400 text-sm leading-relaxed">
+                <p className="text-gray-400 text-base leading-relaxed">
                   {service.description}
                 </p>
               </div>
@@ -151,8 +124,10 @@ export default function AboutSection() {
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-500/5 border border-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/10 group-hover:border-blue-500/40 transition-all duration-300">
                   <item.icon className="w-8 h-8 text-blue-400" />
                 </div>
-                <h2 className="text-white font-semibold mb-1">{item.label}</h2>
-                <p className="text-gray-500 text-sm">{item.event}</p>
+                {/* An award badge is not a section heading — it was competing
+                    with the service headings for the same level. */}
+                <p className="text-white font-semibold mb-1">{item.label}</p>
+                <p className="text-gray-400 text-sm">{item.event}</p>
               </div>
             ))}
           </div>

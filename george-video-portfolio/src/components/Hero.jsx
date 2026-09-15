@@ -9,12 +9,14 @@ export default function Hero() {
     >
       {/* Animated Background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-black to-black" />
+        <div className="absolute inset-0 bg-linear-to-br from-blue-900/20 via-black to-black" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
         
         {/* Floating Elements */}
+        {/* `delay-1000` sets transition-delay, which does nothing to a CSS
+            animation — these needed animationDelay to actually stagger. */}
         <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1000ms" }} />
         
         {/* Grid Pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:100px_100px]" />
@@ -32,7 +34,7 @@ export default function Hero() {
           {/* Main Heading */}
           <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight">
             <span className="block text-white mb-2">Crafting</span>
-            <span className="block bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent">
+            <span className="block bg-linear-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent">
               Visual Stories
             </span>
           </h1>
@@ -46,17 +48,17 @@ export default function Hero() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
             <Link
               href="/projects"
-              className="group relative px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25 overflow-hidden"
+              className="group relative px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full transition-all duration-200 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25 overflow-hidden"
             >
               <span className="relative z-10 flex items-center gap-2">
                 <Play className="w-5 h-5 fill-white" />
                 View My Work
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-linear-to-r from-blue-600 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
             </Link>
             <Link
               href="/contact"
-              className="px-8 py-4 border border-blue-500/30 hover:border-blue-500 text-white font-semibold rounded-full transition-all duration-300 hover:bg-blue-500/10"
+              className="px-8 py-4 border border-blue-500/30 hover:border-blue-500 text-white font-semibold rounded-full transition-all duration-200 hover:bg-blue-500/10"
             >
               Get In Touch
             </Link>
@@ -72,13 +74,13 @@ export default function Hero() {
             ].map((stat, index) => (
               <div
                 key={stat.label}
-                className="text-center group"
-                style={{ animationDelay: `${index * 100}ms` }}
+                className="text-center group animate-fade-in-up"
+                style={{ animationDelay: `${index * 60}ms` }}
               >
                 <div className="text-3xl sm:text-4xl font-bold text-white mb-1 group-hover:text-blue-400 transition-colors">
                   {stat.value}
                 </div>
-                <div className="text-sm text-gray-500">{stat.label}</div>
+                <div className="text-sm text-gray-400">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -89,7 +91,7 @@ export default function Hero() {
           <Link
             href="/about"
             aria-label="Read more about GeorgeEditPro"
-            className="text-gray-500 hover:text-blue-400 transition-colors"
+            className="text-gray-400 hover:text-blue-400 transition-colors"
           >
             <ArrowDown className="w-6 h-6" />
           </Link>
@@ -100,7 +102,7 @@ export default function Hero() {
       <div className="absolute top-1/4 left-10 hidden lg:block animate-float">
         <Film className="w-12 h-12 text-blue-500/20" />
       </div>
-      <div className="absolute bottom-1/4 right-10 hidden lg:block animate-float delay-1000">
+      <div className="absolute bottom-1/4 right-10 hidden lg:block animate-float" style={{ animationDelay: "1000ms" }}>
         <Scissors className="w-12 h-12 text-blue-500/20" />
       </div>
     </section>

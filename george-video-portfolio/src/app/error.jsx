@@ -31,7 +31,7 @@ export default function Error({ error, reset }) {
         </Link>
       </div>
       {error?.digest ? (
-        <p className="text-xs text-gray-600">Reference: {error.digest}</p>
+        <p className="text-xs text-gray-400">Reference: {error.digest}</p>
       ) : null}
     </section>
   );

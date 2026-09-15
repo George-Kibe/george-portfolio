@@ -62,7 +62,7 @@ const Project = ({type, title, summary, image, link, github}) => {
         </Link>
         <p className="mt-4 font-normal leading-relaxed">{summary}</p>
         <div className="mt-6 flex items-center">
-          <div className="border-1 dark:bg-white border-transparent dark:border-light rounded-full p-1">
+          <div className="border dark:bg-white border-transparent dark:border-light rounded-full p-1">
             <SocialIcon url={github} style={style} target={"_blank"} />
           </div>
           <Link href={link} target='_blank' className='ml-4 rounded-lg bg-dark text-light py-3 px-6 text-base
@@ -75,7 +75,7 @@ const Project = ({type, title, summary, image, link, github}) => {
 
 const page = () => {
   return (
-    <div className="flex flex-col items-center justify-center md:mx-8 lg:mx-16">
+    <div className="flex flex-col items-center justify-center md:mx-8 lg:mx-32">
       <main className='items-center'>
         <AnimatedText text={"A demo is worth a thousand words"}/> 
         <div className="mb-8">

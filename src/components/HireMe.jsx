@@ -5,7 +5,7 @@ const HireMe = () => {
   return (
     // Bottom corner on every size: at the top right on mobile it sat on top of
     // the header and competed with the logo.
-    <div className='right-4 bottom-4 fixed z-40 flex items-center justify-center overflow-hidden
+    <div className='right-4 bottom-4 fixed z-50 flex items-center justify-center overflow-hidden
            md:left-4 md:right-auto
     '>
       <div className="w-24 md:w-40 h-auto flex items-center justify-center relative">

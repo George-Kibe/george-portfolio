@@ -14,7 +14,7 @@ One git repo holding **two independent Next.js portfolio sites** for George Kibe
 | React | 19.2.8 | 19.2.8 |
 | Tailwind | v4 (CSS-first, no config file) | v4 (CSS-first, no config file) |
 | Icons | `react-icons`, `react-social-icons` | `lucide-react` + local `BrandIcons.jsx` |
-| Animation | `framer-motion` 13 | CSS transitions + `IntersectionObserver` |
+| Animation | `framer-motion` 13 | CSS animations + transitions |
 | Font | Poppins (`next/font/google`, weights 300–700) | Poppins (`next/font/google`, weights 300–700) |
 | Package manager | npm (`package-lock.json`) | bun (`bun.lock`) |
 
@@ -87,10 +87,12 @@ AGENTS.md         Next.js-version warning; CLAUDE.md there is just "@AGENTS.md"
 ```
 
 Conventions in this app:
-- Routes are server components that export `metadata` and render a matching section component from `src/components/`. The sections were originally the route files themselves and were all `"use client"`, which made per-page metadata impossible. `Hero` and `Footer` need no hooks and are now server components; `Header`, `AboutSection`, `ProjectsSection` and `ContactSection` stay client for scroll/`IntersectionObserver`/form state.
+- Routes are server components that export `metadata` and render a matching section component from `src/components/`. The sections were originally the route files themselves and were all `"use client"`, which made per-page metadata impossible. `Hero`, `Footer` and `AboutSection` need no hooks and are server components; `Header` (scroll state), `ProjectsSection` (category filter) and `ContactSection` (form state) stay client.
 - Fixed dark theme: black backgrounds, blue-500/600 accents, gradient text. Not user-switchable.
 - Tailwind v4: all theming is in `src/app/globals.css` via `@import "tailwindcss"` and `@theme inline`. There is **no `tailwind.config.js`** — do not create one; add design tokens to `@theme` instead.
-- Reveal-on-scroll is hand-rolled: `useState(isVisible)` + `IntersectionObserver` + conditional opacity/translate classes.
+- Reveals are CSS animations (`animate-fade-in-up`, `animate-grow-x` in `globals.css`) with a staggered inline `animationDelay`. They previously used `useState(isVisible)` + `IntersectionObserver` + `opacity-0` classes, which left the skills, service cards, project cards and contact form invisible until JS hydrated — and permanently invisible without it. Don't reintroduce JS-gated opacity; the reduced-motion block at the end of `globals.css` already neutralises these animations.
+- Motion defaults: 200–300ms, `cubic-bezier(0.2, 0, 0, 1)`, 60ms stagger. The ambient Hero animations (`animate-float`, `animate-pulse`, `animate-bounce`) are deliberately slow and looping. A CSS animation needs an inline `animationDelay` — Tailwind's `delay-*` sets `transition-delay` and does nothing here.
+- The page background is fixed dark: `--background`/`--foreground` in `:root` are the dark values with no `prefers-color-scheme` switch, matching `colorScheme: "dark"` in the root layout. Don't reintroduce a light default — it showed white bands wherever a section didn't cover the page on light-mode devices.
 - Project data (`projects` array in `projects/page.jsx`) and stats are hardcoded placeholders with Unsplash thumbnails.
 - `AGENTS.md` warns that this Next.js version differs from training data — consult `node_modules/next/dist/docs/` before writing framework-level code. That directory is the authoritative, version-matched Next docs and is worth reading for both projects, since they are on the same Next version.
 - `lucide-react` v1 removed every brand/social glyph, so Instagram / X / YouTube / LinkedIn live in `src/components/BrandIcons.jsx` as local filled SVGs (paths from simple-icons). They take colour from `currentColor` and ignore stroke utilities, unlike lucide's stroked icons.
@@ -118,7 +120,7 @@ Developer portfolio:
 - `npm run lint` is clean. Next 16 no longer lints during `next build`, so run it explicitly.
 
 Video portfolio:
-- Mixed gradient syntax: `bg-gradient-to-*` (v3 spelling) in most files, `bg-linear-to-*` (v4 spelling) in `ContactSection.jsx`. Both still resolve under v4, which keeps the old names as aliases.
+- Gradients all use the v4 `bg-linear-to-*` spelling; the old `bg-gradient-to-*` aliases have been removed.
 - `bun run lint` is clean.
 - **Social links are still `href="#"`** in `Footer/index.jsx` and `ContactSection.jsx`, and `SOCIAL_PROFILES` in `src/lib/site.js` is an empty array. Real profile URLs are needed in both places — `sameAs` is how search engines tie this site to the same person elsewhere. Left empty on purpose: guessing handles would point users and crawlers at accounts that may not be George's.
 - The footer newsletter `<form>` has no submit handler, so subscribing reloads the page.
@@ -128,7 +130,8 @@ Video portfolio:
 ## Working rules
 
 - Keep the two projects isolated. Never import across the boundary, and never add a dependency to one because the other has it.
-- Match the surrounding style of whichever app you're in — the two still have different idioms (framer-motion vs. IntersectionObserver, `react-icons` vs. `lucide-react`), even though they now share Next, React and Tailwind versions.
+- Match the surrounding style of whichever app you're in — the two still have different idioms (framer-motion vs. plain CSS animations, `react-icons` vs. `lucide-react`), even though they now share Next, React and Tailwind versions.
+- Both apps target WCAG AA: 4.5:1 for body text, 3:1 for large or bold text and for control boundaries. On the video portfolio's black background that rules out `text-gray-500` (4.34) and `border-blue-500/20` (1.20); use `text-gray-400` (8.07) and `border-gray-500` on form fields. Tap targets are 44px.
 - ESLint is pinned to 9.x in both projects. ESLint 10 installs cleanly but crashes (`scopeManager.addGlobals is not a function`) against the plugins `eslint-config-next` 16.3.4 pulls in. Re-test before bumping.
 - `framer-motion` v13 deprecated `motion(Component)`; use `motion.create(Component)` (already done in `Logo.jsx` and `FramerImage.jsx`).
 - Run `npm run lint` / `bun run lint` in the affected project after changes; there is nothing else to verify against.

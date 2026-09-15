@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { Play, ExternalLink, Clock, Calendar } from "lucide-react";
 
 const categories = ["All", "Commercial", "Music Video", "Documentary", "Corporate"];
@@ -65,26 +65,6 @@ const projects = [
 
 export default function ProjectsSection() {
   const [activeCategory, setActiveCategory] = useState("All");
-  const [hoveredProject, setHoveredProject] = useState(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
 
   const filteredProjects =
     activeCategory === "All"
@@ -94,8 +74,7 @@ export default function ProjectsSection() {
   return (
     <section
       id="projects"
-      ref={sectionRef}
-      className="relative py-32 bg-black overflow-hidden"
+      className="relative py-20 md:py-32 bg-black overflow-hidden"
     >
       {/* Background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.05),transparent_70%)]" />
@@ -119,10 +98,11 @@ export default function ProjectsSection() {
             <button
               key={category}
               onClick={() => setActiveCategory(category)}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+              aria-pressed={activeCategory === category}
+              className={`min-h-11 px-6 py-3 rounded-full text-sm font-medium transition-colors duration-200 ${
                 activeCategory === category
                   ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25"
-                  : "bg-blue-500/5 text-gray-400 hover:bg-blue-500/10 hover:text-white border border-blue-500/20"
+                  : "bg-blue-500/5 text-gray-300 hover:bg-blue-500/10 hover:text-white border border-blue-500/40"
               }`}
             >
               {category}
@@ -135,12 +115,8 @@ export default function ProjectsSection() {
           {filteredProjects.map((project, index) => (
             <div
               key={project.id}
-              className={`group relative rounded-2xl overflow-hidden bg-gradient-to-br from-blue-500/5 to-transparent border border-blue-500/10 hover:border-blue-500/30 transition-all duration-500 ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              }`}
-              style={{ transitionDelay: `${index * 100}ms` }}
-              onMouseEnter={() => setHoveredProject(project.id)}
-              onMouseLeave={() => setHoveredProject(null)}
+              className="group relative rounded-2xl overflow-hidden bg-linear-to-br from-blue-500/5 to-transparent border border-blue-500/10 hover:border-blue-500/30 transition-colors duration-200 animate-fade-in-up"
+              style={{ animationDelay: `${index * 60}ms` }}
             >
               {/* Thumbnail */}
               <div className="relative aspect-video overflow-hidden">
@@ -149,9 +125,9 @@ export default function ProjectsSection() {
                   alt={`${project.title} — ${project.category.toLowerCase()} edited by GeorgeEditPro`}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="object-cover transition-transform duration-300 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
                 
                 {/* Play Button */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-75 group-hover:scale-100">
@@ -174,15 +150,16 @@ export default function ProjectsSection() {
                   </h2>
                   <a
                     href="#"
-                    className="text-gray-500 hover:text-blue-400 transition-colors"
+                    aria-label={`Open ${project.title}`}
+                    className="-m-2 p-2 text-gray-400 hover:text-blue-400 transition-colors"
                   >
-                    <ExternalLink className="w-5 h-5" />
+                    <ExternalLink className="w-5 h-5" aria-hidden="true" />
                   </a>
                 </div>
-                <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                <p className="text-gray-400 text-base mb-4 line-clamp-2">
                   {project.description}
                 </p>
-                <div className="flex items-center gap-4 text-xs text-gray-500">
+                <div className="flex items-center gap-4 text-sm text-gray-400">
                   <span className="flex items-center gap-1">
                     <Clock className="w-4 h-4" />
                     {project.duration}
@@ -202,7 +179,7 @@ export default function ProjectsSection() {
 
         {/* View All Button */}
         <div className="text-center mt-12">
-          <button className="px-8 py-4 border border-blue-500/30 hover:border-blue-500 text-white font-semibold rounded-full transition-all duration-300 hover:bg-blue-500/10 inline-flex items-center gap-2 group">
+          <button className="px-8 py-4 border border-blue-500/50 hover:border-blue-500 text-white font-semibold rounded-full transition-colors duration-200 hover:bg-blue-500/10 inline-flex items-center gap-2 group">
             View All Projects
             <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>

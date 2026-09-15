@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
+/* This site is fixed-dark (see `colorScheme: "dark"` in the root layout), so the
+   page background can't depend on the OS setting. It used to default to white
+   and only go dark under `prefers-color-scheme: dark`, which left white bands
+   on light-mode devices wherever a section didn't cover the page. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #ededed;
 }
 
 @theme inline {
@@ -13,7 +17,8 @@
   /* `animate-float` and `animate-fade-in-up` were used on the home page but
      never defined, so those elements sat static. */
   --animate-float: float 6s ease-in-out infinite;
-  --animate-fade-in-up: fade-in-up 700ms ease-out both;
+  --animate-fade-in-up: fade-in-up 300ms cubic-bezier(0.2, 0, 0, 1) both;
+  --animate-grow-x: grow-x 300ms cubic-bezier(0.2, 0, 0, 1) both;
 }
 
 @keyframes float {
@@ -26,6 +31,17 @@
   }
 }
 
+/* Skill bars grow from the left. Using transform (not width) keeps the
+   animation off the layout path. */
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -34,13 +50,6 @@
   to {
     opacity: 1;
     transform: none;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
   }
 }
 

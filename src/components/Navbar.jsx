@@ -3,7 +3,7 @@ import Link from 'next/link'
 import React, {useState} from 'react'
 import Logo from './Logo'
 import { usePathname, useRouter } from 'next/navigation'
-import { SocialIcon } from 'react-social-icons';
+import SocialLinks from './SocialLinks'
 import DarkModeToggle from './DarkModeToggle'
 import {FaBars} from "react-icons/fa"
 import {GiTireIronCross} from "react-icons/gi"
@@ -42,10 +42,11 @@ const CustomMobileLink = ({href, title, className="", toggle}) => {
     </button>
   )
 }
-// Desktop is pointer-driven, so 32px is plenty; the mobile menu is touch, so
-// its icons meet the 44px tap-target guideline.
-const style={width:32, height:32}
-const smallStyle={width:44, height:44}
+// Desktop is pointer-driven, so 36px is plenty — it also matches the height of
+// the theme toggle beside it. The mobile menu is touch, so its icons are 44px,
+// dropping to 40 under 360px where five of them no longer fit across the panel.
+const DESKTOP_SIZE = "size-8"
+const MOBILE_SIZE = "size-10 min-[360px]:size-11"
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -53,7 +54,7 @@ const Navbar = () => {
     setIsOpen(!isOpen)
   }
   return (
-    <header className="w-full lg:px-8 py-8 font-normal flex items-center justify-between relative">
+    <header className="w-full lg:px-32 py-8 font-normal flex items-center justify-between relative">
       <button
         type="button"
         className="flex absolute -left-3 p-3 md:hidden"
@@ -66,8 +67,8 @@ const Navbar = () => {
           :<FaBars className='text-xl' aria-hidden="true" />
         }
       </button>
-      {/* Tighter spacing at md: at 768px the links, toggle and six icons don't
-          fit on one row with desktop gaps. */}
+      {/* Tighter spacing at md: at 768px the links, toggle and icons don't fit
+          on one row with desktop gaps. */}
       <div className="w-full justify-between items-center gap-4 hidden md:flex">
         <nav className='flex items-center gap-5 lg:gap-8'>
           <CustomLink href={"/"} title={"Home"}/>
@@ -78,14 +79,7 @@ const Navbar = () => {
         </nav>
         <nav className="flex items-center justify-center gap-2 lg:gap-3">
           <DarkModeToggle />
-          <div className="border-1 dark:bg-white border-transparent dark:border-light ml-1 lg:ml-2 rounded-full p-1">
-            <SocialIcon  url="https://github.com/George-Kibe" style={style} target={"_blank"} />
-          </div> 
-          <SocialIcon url="https://stackoverflow.com/users/17756485/george-kibe-w" style={style} target={"_blank"}/>
-          <SocialIcon url="https://dribbble.com/GeorgeKibe" style={style} target={"_blank"}/>
-          <SocialIcon url="https://www.linkedin.com/in/george-kibe-17b431110" style={style} target={"_blank"}/>
-          <SocialIcon url="https://twitter.com/kibegeorge_" style={style} target={"_blank"}/>        
-          <SocialIcon url="https://web.whatsapp.com/send?phone=+254795288155" style={style} target={"_blank"} />
+          <SocialLinks sizeClass={DESKTOP_SIZE} />
         </nav>
       </div>
       {/* mobile menu */}
@@ -109,15 +103,10 @@ const Navbar = () => {
             <CustomMobileLink href={"/articles"} title={"Articles"} toggle={handleClick} className=''/>
           </nav>
           <DarkModeToggle />
-          <nav className="flex items-center justify-center flex-wrap gap-3 px-6">
-            <div className="border-1 bg-light border-transparent dark:border-light rounded-full p-1">
-              <SocialIcon  url="https://github.com/George-Kibe" style={smallStyle} target={"_blank"} />
-            </div> 
-            <SocialIcon url="https://stackoverflow.com/users/17756485/george-kibe-w" style={smallStyle} target={"_blank"}/>
-            <SocialIcon url="https://dribbble.com/GeorgeKibe" style={smallStyle} target={"_blank"}/>
-            <SocialIcon url="https://www.linkedin.com/in/george-kibe-17b431110" style={smallStyle} target={"_blank"}/>
-            <SocialIcon url="https://twitter.com/kibegeorge_" style={smallStyle} target={"_blank"}/>        
-            <SocialIcon url="https://web.whatsapp.com/send?phone=+254795288155" style={smallStyle} target={"_blank"} />
+          {/* Tight gap and padding: five targets only fit on one row inside the
+              80vw panel on a 320px-wide screen. */}
+          <nav className="flex items-center justify-center flex-wrap gap-2 px-2">
+            <SocialLinks sizeClass={MOBILE_SIZE} />
           </nav>
         </motion.div>
 

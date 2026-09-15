@@ -36,17 +36,17 @@ export default function Footer() {
   return (
     <footer className="bg-black border-t border-blue-500/20 relative overflow-hidden">
       {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-t from-blue-900/10 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-t from-blue-900/10 to-transparent pointer-events-none" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="space-y-6">
             <Link href="/" className="flex items-center gap-2 group" aria-label="GeorgeEditPro home">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+              <div className="w-10 h-10 bg-linear-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
                 <Play className="w-5 h-5 text-white fill-white" />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-white to-blue-400 bg-clip-text text-transparent">
+              <span className="text-xl font-bold bg-linear-to-r from-white to-blue-400 bg-clip-text text-transparent">
                 GeorgeEditPro
               </span>
             </Link>
@@ -59,7 +59,7 @@ export default function Footer() {
                   key={social.name}
                   href={social.href}
                   aria-label={social.name}
-                  className="w-10 h-10 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-gray-400 hover:text-blue-400 hover:border-blue-500 hover:bg-blue-500/20 transition-all duration-300 hover:scale-110"
+                  className="size-11 rounded-full bg-blue-500/10 border border-blue-500/40 flex items-center justify-center text-gray-400 hover:text-blue-400 hover:border-blue-500 hover:bg-blue-500/20 transition-all duration-200 hover:scale-105"
                 >
                   <social.icon className="w-5 h-5" />
                 </a>
@@ -94,16 +94,16 @@ export default function Footer() {
             </p>
             <form className="space-y-3">
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="w-full pl-10 pr-4 py-3 bg-blue-500/5 border border-blue-500/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-300"
+                  className="w-full pl-10 pr-4 py-3 bg-blue-500/5 border border-gray-500 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400 transition-colors duration-200"
                 />
               </div>
               <button
                 type="submit"
-                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25"
+                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 hover:shadow-lg hover:shadow-blue-500/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
               >
                 Subscribe
               </button>
@@ -113,10 +113,10 @@ export default function Footer() {
 
         {/* Bottom */}
         <div className="mt-16 pt-8 border-t border-blue-500/10 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-400 text-sm">
             © {new Date().getFullYear()} GeorgeEditPro. All rights reserved.
           </p>
-          <div className="flex gap-6 text-sm text-gray-500">
+          <div className="flex gap-6 text-sm text-gray-400">
             <a href="#" className="hover:text-blue-400 transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-blue-400 transition-colors">Terms of Service</a>
           </div>

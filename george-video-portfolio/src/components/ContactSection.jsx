@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { Mail, MapPin, Phone, Send } from "lucide-react";
 import { Instagram, Linkedin, XTwitter } from "@/components/BrandIcons";
 import { toast } from "react-toastify";
@@ -17,25 +17,6 @@ export default function ContactSection() {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
 
   const sendEmail = async(e) => {
     e.preventDefault();
@@ -105,8 +86,7 @@ export default function ContactSection() {
   return (
     <section
       id="contact"
-      ref={sectionRef}
-      className="relative py-32 bg-black overflow-hidden"
+      className="relative py-20 md:py-32 bg-black overflow-hidden"
     >
       {/* Background */}
       <div className="absolute inset-0 bg-linear-to-t from-blue-950/10 via-black to-black" />
@@ -115,11 +95,7 @@ export default function ContactSection() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16">
           {/* Left Content */}
-          <div
-            className={`space-y-8 transition-all duration-700 ${
-              isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
-            }`}
-          >
+          <div className="space-y-8 animate-fade-in-up">
             <div>
               <p className="text-sm font-semibold text-blue-500 uppercase tracking-wider mb-4">
                 Get In Touch</p>
@@ -134,18 +110,17 @@ export default function ContactSection() {
 
             {/* Contact Info */}
             <div className="space-y-6">
-              {contactInfo.map((item, index) => (
+              {contactInfo.map((item) => (
                 <a
                   key={item.label}
                   href={item.href}
                   className="flex items-center gap-4 group"
-                  style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/20 group-hover:border-blue-500/40 transition-all duration-300">
                     <item.icon className="w-5 h-5 text-blue-400" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">{item.label}</p>
+                    <p className="text-sm text-gray-400">{item.label}</p>
                     <p className="text-white font-medium group-hover:text-blue-400 transition-colors">
                       {item.value}
                     </p>
@@ -156,14 +131,14 @@ export default function ContactSection() {
 
             {/* Social Links */}
             <div className="pt-8 border-t border-blue-500/10">
-              <p className="text-sm text-gray-500 mb-4">Follow me on</p>
+              <p className="text-sm text-gray-400 mb-4">Follow me on</p>
               <div className="flex gap-4">
                 {[Instagram, XTwitter, Linkedin].map((Icon, index) => (
                   <a
                     key={index}
                     href="#"
                     aria-label={`GeorgeEditPro on ${Icon.name}`}
-                    className="w-10 h-10 rounded-full bg-blue-500/5 border border-blue-500/20 flex items-center justify-center text-gray-400 hover:text-blue-400 hover:border-blue-500 hover:bg-blue-500/10 transition-all duration-300 hover:scale-110"
+                    className="size-11 rounded-full bg-blue-500/5 border border-blue-500/40 flex items-center justify-center text-gray-400 hover:text-blue-400 hover:border-blue-500 hover:bg-blue-500/10 transition-all duration-200 hover:scale-105"
                   >
                     <Icon className="w-5 h-5" />
                   </a>
@@ -173,11 +148,7 @@ export default function ContactSection() {
           </div>
 
           {/* Contact Form */}
-          <div
-            className={`transition-all duration-700 delay-200 ${
-              isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
-            }`}
-          >
+          <div className="animate-fade-in-up" style={{ animationDelay: "100ms" }}>
             <form
               onSubmit={sendEmail}
               className="p-8 rounded-3xl bg-linear-to-br from-blue-500/5 to-transparent border border-blue-500/10 backdrop-blur-sm"
@@ -201,7 +172,7 @@ export default function ContactSection() {
                       onChange={(e) =>
                         setFormData({ ...formData, name: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-black/50 border border-blue-500/20 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-300"
+                      className="w-full px-4 py-3 rounded-xl bg-black/50 border border-gray-500 text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400 transition-colors duration-200"
                       placeholder="John Doe"
                     />
                   </div>
@@ -217,7 +188,7 @@ export default function ContactSection() {
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-black/50 border border-blue-500/20 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-300"
+                      className="w-full px-4 py-3 rounded-xl bg-black/50 border border-gray-500 text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400 transition-colors duration-200"
                       placeholder="john@example.com"
                     />
                   </div>
@@ -235,7 +206,7 @@ export default function ContactSection() {
                     onChange={(e) =>
                       setFormData({ ...formData, subject: e.target.value })
                     }
-                    className="w-full px-4 py-3 rounded-xl bg-black/50 border border-blue-500/20 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-300"
+                    className="w-full px-4 py-3 rounded-xl bg-black/50 border border-gray-500 text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400 transition-colors duration-200"
                     placeholder="Project Inquiry"
                   />
                 </div>
@@ -252,7 +223,7 @@ export default function ContactSection() {
                     onChange={(e) =>
                       setFormData({ ...formData, message: e.target.value })
                     }
-                    className="w-full px-4 py-3 rounded-xl bg-black/50 border border-blue-500/20 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-300 resize-none"
+                    className="w-full px-4 py-3 rounded-xl bg-black/50 border border-gray-500 text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400 transition-colors duration-200 resize-none"
                     placeholder="Tell me about your project..."
                   />
                 </div>
@@ -263,7 +234,7 @@ export default function ContactSection() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white font-semibold rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 flex items-center justify-center gap-2 group"
+                  className="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white font-semibold rounded-xl transition-colors duration-200 hover:shadow-lg hover:shadow-blue-500/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400 flex items-center justify-center gap-2 group"
                 >
                   {isSubmitting ? (
                     <>
