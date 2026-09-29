@@ -1,8 +1,8 @@
 // Single source of truth for anything that needs an absolute URL or appears in
 // metadata. Override the origin per environment with NEXT_PUBLIC_SITE_URL;
-// the fallback is the Vercel default domain for this repo.
+// the fallback is the production domain.
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://george-portfolio.vercel.app"
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://georgekibe.site"
 ).replace(/\/$/, "");
 
 export const SITE_NAME = "George Kibe";

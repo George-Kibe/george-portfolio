@@ -102,7 +102,7 @@ Conventions in this app:
 
 Both apps follow the same pattern, so changes should be mirrored:
 
-- `src/lib/site.js` is the single source of truth for the origin, author details, keywords and the route list. **Set `NEXT_PUBLIC_SITE_URL`** per environment; the fallback is the project's Vercel default domain. Getting this wrong points every canonical tag at the wrong host.
+- `src/lib/site.js` is the single source of truth for the origin, author details, keywords and the route list. **Set `NEXT_PUBLIC_SITE_URL`** per environment; the fallback is the production domain (`georgekibe.site` / `v.georgekibe.site`). Getting this wrong points every canonical tag at the wrong host.
 - The root layout sets `metadataBase`, a `title.template`, Open Graph, Twitter card and `robots` directives. Pages override with their own `title`, `description`, `alternates.canonical` and `openGraph`.
 - Page titles must not repeat the site name — the layout template appends it. Keep the rendered title under ~60 characters.
 - `sitemap.js` and `robots.js` generate `/sitemap.xml` and `/robots.txt` from `ROUTES`; add new routes there, not by hand.

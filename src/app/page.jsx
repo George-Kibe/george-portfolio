@@ -23,8 +23,8 @@ export const metadata = {
 export default function Home() {
   return (
     <>
-      <main className="flex dark:bg-black flex-col md:flex-row items-center justify-between w-full">
-        <div className="relative mt-10 md:mt-0 w-[70%] md:w-1/2 xl:w-[40%] aspect-417/598 max-h-[75vh] md:mx-8 lg:mx-12
+      <main className="flex dark:bg-black flex-col md:flex-row items-center justify-between w-full lg:px-32">
+        <div className="relative mt-10 md:mt-0 w-[70%] md:w-1/2 xl:w-[45%] aspect-417/598 max-h-[75vh] md:mx-8 lg:mx-12
         overflow-hidden rounded-2xl border-2 border-dark dark:border-light border-r-8 border-b-8"
         >
           {/* Served from /public rather than S3: that bucket takes 10-15s to
