@@ -1,6 +1,4 @@
 import { Poppins } from 'next/font/google'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
 import { ThemeProvider } from '@/context/ThemeContext'
 import {
   AUTHOR,
@@ -151,9 +149,7 @@ export default function RootLayout({ children }) {
       <body className="font-sans">
         <ThemeProvider>
           <div className="theme flex bg-light dark:bg-black dark:text-white flex-col justify-between p-4 text-dark w-full min-h-screen">
-            <Navbar />
             {children}
-            <Footer />
           </div>
         </ThemeProvider>
       </body>

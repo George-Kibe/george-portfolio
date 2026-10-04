@@ -1,11 +1,10 @@
 "use client"
 
 import React, { useRef, useState } from 'react'
-import emailjs from '@emailjs/browser'
 import { Slide, ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { createSubmissionGuard } from '@/lib/submissionGuard'
-import { EMAILJS } from '@/lib/emailjs'
+import { sendContactMessage } from '@/app/actions/contact'
 
 const guard = createSubmissionGuard('contact')
 
@@ -31,8 +30,9 @@ const ContactForm = () => {
       return
     }
 
-    // The EmailJS keys are public by necessity, so the send quota is the thing
-    // worth protecting. Bots get dropped silently; humans get told to wait.
+    // Each message sends a real email from the site's Gmail account, so the
+    // send quota is worth protecting. Bots get dropped silently; humans get
+    // told to wait.
     if (guard.isBot({ website: formEl.website?.value })) {
       return
     }
@@ -51,20 +51,17 @@ const ContactForm = () => {
     toast.info('Sending your message')
 
     try {
-      const response = await emailjs.sendForm(
-        EMAILJS.serviceId,
-        EMAILJS.templateId,
-        form.current,
-        { publicKey: EMAILJS.publicKey }
-      )
-      if (response.status === 200) {
+      const result = await sendContactMessage({
+        name: name.value, email: email.value, message: message.value, website: formEl.website?.value,
+      })
+      if (result.ok) {
         guard.record()
         toast.success(
           'Message sent successfully. George will get back to you as soon as possible.'
         )
         formEl.reset()
       } else {
-        toast.error('Message sending Error! Try sending again or send a direct Email')
+        toast.error(result.error)
       }
     } catch {
       toast.error('Message sending Error! Try sending again or send a direct Email')

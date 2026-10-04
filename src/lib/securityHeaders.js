@@ -21,8 +21,9 @@ const CSP = [
   // next/font self-hosts its files, so no external font origin is needed.
   "font-src 'self' data:",
   "img-src 'self' data: blob: https:",
-  // EmailJS is the only third-party the browser talks to.
-  "connect-src 'self' https://api.emailjs.com",
+  // Email goes out from the server (Nodemailer); the only third party the
+  // browser talks to is Cloudinary, for admin image uploads.
+  "connect-src 'self' https://api.cloudinary.com",
   "upgrade-insecure-requests",
 ].join("; ");
 

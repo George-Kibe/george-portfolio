@@ -5,8 +5,9 @@ export default function robots() {
     rules: {
       userAgent: '*',
       allow: '/',
-      // Next's internal endpoints have no business in an index.
-      disallow: ['/api/', '/_next/'],
+      // Next's internals, the admin panel and account pages have no business
+      // in an index (those pages also send noindex).
+      disallow: ['/api/', '/_next/', '/admin', '/login', '/signup', '/forgot-password', '/reset-password', '/verify-email'],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
     host: SITE_URL,

@@ -1,5 +1,9 @@
 // Pricing for the "Get a quote" builder (/quote).
 //
+// The public form asks for type, features and timeline only; size and design
+// stay at their defaults (medium, client has designs) but remain supported so
+// the rates can be tuned without touching the form.
+//
 // PLACEHOLDER RATES: every number below is a starting point for George to
 // adjust, not a published price list. Ranges are in USD. Change them here;
 // the builder, the emailed summary and the tests all read from this file.
@@ -106,33 +110,6 @@ export function estimateQuote(selection) {
 
 export const formatMoney = (n) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: CURRENCY, maximumFractionDigits: 0 }).format(n);
-
-// Plain-text summary for the email George receives.
-export function quoteSummary(estimate, { name, email, company, details, reference }) {
-  const lines = [
-    `Quote request ${reference}`,
-    "",
-    `Name: ${name}`,
-    `Email: ${email}`,
-    company ? `Company: ${company}` : null,
-    "",
-    `Project: ${estimate.type.label}`,
-    `Size: ${estimate.size.label}`,
-    `Design: ${estimate.design.label}`,
-    `Timeline: ${estimate.timeline.label}`,
-    `Features: ${estimate.features.map((f) => f.label).join(", ") || "None selected"}`,
-    "",
-    "Breakdown:",
-    ...estimate.items.map((i) => `  - ${i.label}: ${formatMoney(i.low)} – ${formatMoney(i.high)}`),
-    "",
-    `Estimate: ${formatMoney(estimate.low)} – ${formatMoney(estimate.high)}`,
-    `Duration: ${estimate.weeks[0]}–${estimate.weeks[1]} weeks`,
-    "",
-    "Project details:",
-    details || "(none given)",
-  ];
-  return lines.filter((l) => l !== null).join("\n");
-}
 
 // Short, human-readable reference, e.g. Q-261005-4K7P.
 export function makeReference(date = new Date(), random = Math.random) {

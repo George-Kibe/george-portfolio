@@ -17,6 +17,7 @@ One git repo holding **two independent Next.js portfolio sites** for George Kibe
 | Animation | `framer-motion` 13 | CSS animations + transitions |
 | Font | Poppins (`next/font/google`, weights 300–700) | Poppins (`next/font/google`, weights 300–700) |
 | Package manager | npm (`package-lock.json`) | bun (`bun.lock`) |
+| Backend | MongoDB (Mongoose), Cloudinary, Nodemailer/Gmail, JWT sessions | none (EmailJS from the browser) |
 
 Both were upgraded to Next 16.3.4 together; before that the root app was on Next 13 / React 18 / Tailwind v3.
 
@@ -31,7 +32,13 @@ npm run dev      # next dev  → http://localhost:3000
 npm run build
 npm run start
 npm run lint     # eslint (flat config in eslint.config.mjs)
+npm test         # vitest (pure helpers: quote pricing, slugs, tokens, HTML, Cloudinary URLs)
+npm run seed     # admin from ADMIN_EMAIL/ADMIN_PASSWORD, starter posts (with covers), brands, testimonial drafts
 ```
+
+Env vars are documented in `.env.example` (MONGODB_URI, CLOUDINARY_URL, SENDER_EMAIL,
+EMAIL_PASSWORD, SESSION_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD). `MAIL_DRY_RUN=1` logs emails
+instead of sending them; use it for any local testing so nothing goes out from the real Gmail.
 
 **Video portfolio:**
 ```bash
@@ -45,12 +52,13 @@ bun run lint     # eslint (flat config, eslint-config-next core-web-vitals)
 Next 16 removed `next lint`, so both projects call the ESLint CLI directly. The root
 config ignores `george-video-portfolio/**` — each project lints itself.
 
-There are no tests, no CI, and no type checking in either project.
+The root app has Vitest unit tests; the video app has its own. There is no CI and no type checking.
 
 ## Developer portfolio — structure
 
 ```
-src/app/          layout.js, page.jsx, globals.css + routes: about/ projects/ articles/ contacts/
+src/app/          layout.js, globals.css; public pages in (site)/ (page.jsx, about/ projects/ articles/ contacts/ quote/
+                  login/ signup/ forgot-password/ reset-password/ verify-email/); admin/ panel; actions/ (server actions)
                   (each route has a page.jsx and a loading.jsx)
                   sitemap.js, robots.js, opengraph-image.jsx  <- SEO route handlers
 src/components/   Navbar, Footer, Logo, HireMe, AnimatedText, DarkModeToggle,
@@ -79,9 +87,21 @@ Conventions in this app:
 - `Skills` positions chips as % offsets inside a box capped at `max-w-3xl` (square on phones, 5:4 from `sm`). Don't go back to vw offsets: the orbit grew to ~1150px tall on desktop.
 - `CareerGraph` plots main roles as a stepped line; roles with `alongside: true` (e.g. the Explore internship during Dowell) get their own lane under it. It rounds "now" to the start of the month so server and client agree on path coordinates; the path is drawn in measured pixels (ResizeObserver), not a stretched viewBox.
 - The Projects page mirrors the RealHive Consultants portfolio (`/mnt/extra/Projects/RealHive-Website`, same copy and images in `public/images/projects/`) plus PearlMarilyn, whose card image is a composite of three screenshots from the `pearl-maddison` app. Data is the `PROJECTS` array in `projects/page.jsx`; `featured` entries take a full row, the rest pair up.
-- `ProjectCta` (home + contacts) offers "Book a consultation" (`CALENDLY_URL` in `site.js`, new tab) and "Get a quote" (`/quote`). The quote builder is `QuoteBuilder.jsx`; all prices, features and multipliers live in `src/lib/quote.js` (placeholder USD rates, covered by `quote.test.js`). Submitting emails the summary through the contact form's EmailJS template as `{ name, email, message, reference }`.
-- EmailJS ids come from `src/lib/emailjs.js`, which reads `NEXT_PUBLIC_EMAILJS_SERVICE_ID` / `_TEMPLATE_ID` / `_PUBLIC_KEY` and falls back to the old hardcoded values. Don't put the ids anywhere else.
-- Contact form posts through EmailJS (`@emailjs/browser`, `emailjs.sendForm`) with the service/template/public keys **hardcoded in the component**.
+- `ProjectCta` (home + contacts) offers "Book a consultation" (`CALENDLY_URL` in `site.js`, new tab) and "Get a quote" (`/quote`). The quote builder asks three things (type, features, timeline) plus name/email; prices live in `src/lib/quote.js` (placeholder USD rates, covered by `quote.test.js`).
+
+## Developer portfolio — backend
+
+- **Routes:** public pages are in the `src/app/(site)` route group (its layout adds Navbar/Footer). The admin panel is `src/app/admin/(panel)` with its own layout; `/admin/login` sits outside that group so the auth check can't redirect it to itself.
+- **Data:** `src/lib/db.js` caches one Mongoose connection on `globalThis`. Models in `src/models/` (User, Quote, Post, Comment, Testimonial, Brand) are registered through `defineModel()`, which rebuilds a model in development when its schema changes. Don't go back to `mongoose.models.X || mongoose.model(...)`: after a schema edit the dev server kept the old schema and silently dropped new fields (password-reset tokens were emailed but never saved). Public reads go through `src/lib/queries.js`, which returns empty results instead of throwing, so a DB outage or a build without `MONGODB_URI` degrades to empty sections.
+- **Writes are server actions** in `src/app/actions/` (auth, quotes, content, contact). Every admin action calls `assertAdmin()`; every admin page calls `requireAdminPage()` (layouts don't re-run on client navigation, so the layout check alone isn't enough). Admin rights are re-read from the DB on each request, not trusted from the JWT.
+- **Auth:** `src/lib/session.js` — HS256 JWT in an httpOnly cookie (`SESSION_SECRET`), 7 days. Passwords use bcrypt via `bcryptjs` (cost 12). Email verification and password reset use random tokens stored only as SHA-256 hashes (`src/lib/tokens.js`), 24h and 1h expiry. Verification is optional: unverified members can sign in and comment. Verify → welcome email. Failed logins lock an email for 15 min after 5 tries (in memory).
+- **Email:** `src/lib/mailer.js` (Nodemailer, Gmail SMTP with an app password). Links use the request's origin (`siteOrigin()`), so dev emails point at localhost. Notifications go to `ADMIN_EMAIL`. Mail failures are logged via `sendSafely` and never fail the action that triggered them.
+- **Blog:** posts are HTML from the Tiptap editor (`components/admin/RichTextEditor.jsx`), sanitised with `sanitize-html` on save and again on render (`src/lib/html.js`). `/articles` is ISR (5 min) and revalidated on every admin save; `/articles/[slug]` is dynamic because of comments. Starter posts live in `scripts/seed-posts.mjs` as Markdown and are converted with `marked` when seeded.
+- **Images:** uploads go straight from the browser to Cloudinary with a signature from `getUploadSignature()` (admin only; folder `gk-portfolio/blog`), which is why the CSP allows `connect-src https://api.cloudinary.com`. Display goes through `src/lib/cloudinaryUrl.js` (`f_auto,q_auto`, width/crop) and `components/CloudImage.jsx` (next/image with a Cloudinary loader, blurred 40px placeholder, fade-in).
+- **Blog lists** are paginated and searchable: `/articles?q=&page=` (9 per page, featured post only on the unfiltered first page) and `/admin/blog` (20 per page), both via `postSearchFilter()` and `components/Pagination.jsx` (server-rendered links, works without JS).
+- **Testimonials** show on the home page as a single scroll-snap row (`TestimonialCarousel.jsx`: 1/2/3 per view, chevrons on the sides on desktop and below on mobile), ISR and revalidated on save, only when at least one is published. The seed adds 5 *hidden drafts* (`scripts/seed-home.mjs`); they are illustrative, not real client quotes, so never publish them as-is.
+- **Brands** (`models/Brand.js`, `/admin/brands`) feed the home page marquee (`components/BrandMarquee.jsx`, CSS in `globals.css` `.marquee`): the list renders twice and slides by -50% for a seamless loop, pauses on hover, and becomes a static wrapped row under Reduce Motion. Logos upload to Cloudinary `gk-portfolio/brands`; without a logo the name shows as a wordmark.
+- **Blog covers** for the starter posts are Cloudinary images `gk-portfolio/blog/cover-<slug>`; their URLs are in `scripts/blog-covers.json`, which the seed uses.
 
 ## Video portfolio — structure
 
@@ -125,8 +145,7 @@ Both apps follow the same pattern, so changes should be mirrored:
 Do not silently "fix" these while doing unrelated work; they are listed so you recognise them as pre-existing.
 
 Developer portfolio:
-- Articles page repeats the same featured article twice with empty `link=""`. Left alone deliberately: deduping or filling in URLs is a content decision, and duplicated entries with no destination are worth fixing for SEO.
-- EmailJS credentials are committed in the source of both apps (now `@emailjs/browser` v4, which takes `{ publicKey }` as its fourth argument rather than a bare string).
+- The video app still sends its contact form through EmailJS with the ids committed in source (`@emailjs/browser` v4). The developer portfolio no longer uses EmailJS.
 - `npm run lint` is clean. Next 16 no longer lints during `next build`, so run it explicitly.
 
 Video portfolio:
@@ -145,4 +164,4 @@ Video portfolio:
 - ESLint is pinned to 9.x in both projects. ESLint 10 installs cleanly but crashes (`scopeManager.addGlobals is not a function`) against the plugins `eslint-config-next` 16.3.4 pulls in. Re-test before bumping.
 - `framer-motion` v13 deprecated `motion(Component)`; use `motion.create(Component)` (already done in `Logo.jsx` and `FramerImage.jsx`).
 - Run `npm run lint` / `bun run lint` in the affected project after changes; there is nothing else to verify against.
-- Secrets (EmailJS IDs) are currently in source. If you touch that code, prefer moving them to `NEXT_PUBLIC_*` env vars rather than copying the hardcoded values into new files.
+- Secrets live in `.env.local` (git-ignored); `.env.example` lists them. The video app's EmailJS ids are still in source; if you touch that code, move them to `NEXT_PUBLIC_*` env vars.

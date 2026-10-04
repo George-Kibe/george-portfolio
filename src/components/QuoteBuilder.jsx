@@ -1,13 +1,12 @@
 "use client"
 
-import React, { useMemo, useState } from 'react'
-import emailjs from '@emailjs/browser'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { TbCalendarEvent, TbCheck, TbCircleCheckFilled } from 'react-icons/tb'
 import {
-  DEFAULT_SELECTION, DESIGN, PROJECT_TYPES, SIZES, TIMELINES,
-  estimateQuote, featuresFor, formatMoney, makeReference, quoteSummary,
+  DEFAULT_SELECTION, PROJECT_TYPES, TIMELINES,
+  estimateQuote, featuresFor, formatMoney,
 } from '@/lib/quote'
-import { EMAILJS } from '@/lib/emailjs'
+import { submitQuote } from '@/app/actions/quotes'
 import { CALENDLY_URL } from '@/lib/site'
 import { createSubmissionGuard } from '@/lib/submissionGuard'
 import { reportError } from '@/lib/reportError'
@@ -63,6 +62,15 @@ const QuoteBuilder = () => {
   const [selection, setSelection] = useState(DEFAULT_SELECTION)
   const [status, setStatus] = useState({ state: 'idle' })
   const estimate = useMemo(() => estimateQuote(selection), [selection])
+  const doneRef = useRef(null)
+
+  // The confirmation replaces a long form, so bring it into view (and give it
+  // focus for screen readers) instead of leaving the visitor at the footer.
+  useEffect(() => {
+    if (status.state !== 'sent') return
+    doneRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' })
+    doneRef.current?.focus({ preventScroll: true })
+  }, [status.state])
   const available = featuresFor(selection.type)
 
   const set = (key) => (value) => setSelection((s) => ({ ...s, [key]: value }))
@@ -95,43 +103,37 @@ const QuoteBuilder = () => {
       return
     }
 
-    const reference = makeReference()
-    const message = quoteSummary(estimate, {
-      name: data.name.trim(),
-      email: data.email.trim(),
-      company: data.company?.trim(),
-      details: data.details?.trim(),
-      reference,
-    })
-
+    const contact = { name: data.name.trim(), email: data.email.trim(), details: data.details?.trim() }
     setStatus({ state: 'sending' })
+
+    // Saved to the database, then emailed to George and the client from the
+    // server (see submitQuote).
+    let saved
     try {
-      await emailjs.send(
-        EMAILJS.serviceId,
-        EMAILJS.templateId,
-        { name: data.name.trim(), email: data.email.trim(), message, reference },
-        { publicKey: EMAILJS.publicKey }
-      )
-      guard.record()
-      setStatus({ state: 'sent', reference, estimate, name: data.name.trim() })
+      saved = await submitQuote({ ...contact, ...selection })
     } catch (error) {
       reportError(error, { where: 'QuoteBuilder.submit' })
-      setStatus({
-        state: 'error',
-        message: 'The request didn’t go through. Please try again, or book a consultation instead.',
-      })
+      saved = { ok: false, error: 'The request didn’t go through. Please try again, or book a consultation instead.' }
     }
+    if (!saved.ok) {
+      setStatus({ state: 'error', message: saved.error })
+      return
+    }
+    guard.record()
+
+    setStatus({ state: 'sent', reference: saved.reference, estimate, name: contact.name })
   }
 
   if (status.state === 'sent') {
     const sent = status.estimate
     return (
-      <div role="status" className="mx-auto max-w-2xl rounded-3xl border border-dark/15 bg-white p-8 text-center dark:border-light/15 dark:bg-dark md:p-12">
+      <div ref={doneRef} tabIndex={-1} role="status" className="mx-auto max-w-2xl rounded-3xl focus:outline-none border border-dark/15 bg-white p-8 text-center dark:border-light/15 dark:bg-dark md:p-12">
         <TbCircleCheckFilled className="mx-auto size-12 text-primary dark:text-primary-dark" aria-hidden="true" />
         <h2 className="mt-4 text-2xl font-bold md:text-3xl">Thanks, {status.name}. Your request is in.</h2>
         <p className="mt-3 leading-relaxed text-dark/80 dark:text-light/80">
           Your reference is <strong className="tabular-nums text-dark dark:text-light">{status.reference}</strong>.
-          I&apos;ll review the details and reply by email with a firm quote, usually within two working days.
+          A copy is on its way to your inbox. I&apos;ll review the details and reply with a firm quote, usually within
+          two working days.
         </p>
         <p className="mt-6 text-sm font-medium text-dark/70 dark:text-light/70">Your estimate</p>
         <p className="text-3xl font-bold tabular-nums">{formatMoney(sent.low)} – {formatMoney(sent.high)}</p>
@@ -182,19 +184,11 @@ const QuoteBuilder = () => {
           </div>
         </Step>
 
-        <Step n="3" title="How big is it?">
-          <RadioCards name="size" options={SIZES} value={selection.size} onChange={set('size')} cols="sm:grid-cols-3" />
-        </Step>
-
-        <Step n="4" title="Do you have designs?">
-          <RadioCards name="design" options={DESIGN} value={selection.design} onChange={set('design')} />
-        </Step>
-
-        <Step n="5" title="When do you need it?">
+        <Step n="3" title="When do you need it?">
           <RadioCards name="timeline" options={TIMELINES} value={selection.timeline} onChange={set('timeline')} cols="sm:grid-cols-3" />
         </Step>
 
-        <Step n="6" title="Where should I send the quote?">
+        <Step n="4" title="Where should I send the quote?">
           <div className="grid gap-4 sm:grid-cols-2">
             {/* Honeypot: hidden from people, irresistible to bots. */}
             <div aria-hidden="true" className="absolute -m-px h-px w-px overflow-hidden opacity-0 pointer-events-none">
@@ -210,17 +204,11 @@ const QuoteBuilder = () => {
               <input id="quote-email" name="email" type="email" required autoComplete="email" className={fieldClass} />
             </div>
             <div className="sm:col-span-2">
-              <label htmlFor="quote-company" className="mb-1.5 block text-sm font-semibold">
-                Company <span className="font-normal text-dark/65 dark:text-light/65">(optional)</span>
-              </label>
-              <input id="quote-company" name="company" type="text" autoComplete="organization" className={fieldClass} />
-            </div>
-            <div className="sm:col-span-2">
               <label htmlFor="quote-details" className="mb-1.5 block text-sm font-semibold">
                 Tell me about the project <span className="font-normal text-dark/65 dark:text-light/65">(optional)</span>
               </label>
-              <textarea id="quote-details" name="details" rows={5} className={fieldClass}
-                placeholder="Who is it for, what problem does it solve, and is there anything already built?" />
+              <textarea id="quote-details" name="details" rows={3} className={fieldClass}
+                placeholder="Anything I should know? Who it's for, what exists already…" />
             </div>
           </div>
         </Step>

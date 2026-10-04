@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
 
 export const metadata = {
   title: 'Page not found',
@@ -6,7 +8,11 @@ export const metadata = {
 }
 
 export default function NotFound() {
+  // Unmatched URLs render outside the (site) group, so this brings its own
+  // navbar and footer.
   return (
+    <>
+    <Navbar />
     <main className="flex flex-col items-center justify-center gap-4 py-24 text-center">
       <h1 className="text-3xl md:text-5xl font-bold">404 — Page not found</h1>
       <p className="max-w-prose">
@@ -24,5 +30,7 @@ export default function NotFound() {
         </Link>
       </nav>
     </main>
+    <Footer />
+    </>
   )
 }

@@ -1,10 +1,12 @@
 import Image from 'next/image'
-import ProfileArt from '../../public/images/profile/george-cropped-rb.png'
+import ProfileArt from '../../../public/images/profile/george-cropped-rb.png'
 import AnimatedText from '@/components/AnimatedText';
 import Link from 'next/link';
 import {RiArrowRightLine, RiDownload2Line} from "react-icons/ri"
 import HireMe from '@/components/HireMe';
 import ProjectCta from '@/components/ProjectCta';
+import Testimonials from '@/components/Testimonials';
+import BrandMarquee from '@/components/BrandMarquee';
 import { DEFAULT_DESCRIPTION, DEFAULT_TITLE, RESUME_PATH } from '@/lib/site';
 
 export const metadata = {
@@ -20,6 +22,10 @@ export const metadata = {
     description: DEFAULT_DESCRIPTION,
   },
 }
+// Brands and testimonials come from MongoDB: cached, refreshed every five
+// minutes and immediately when one is saved in the admin panel.
+export const revalidate = 300
+
 export default function Home() {
   return (
     <>
@@ -69,6 +75,8 @@ export default function Home() {
           </div>
         </div>
       </main>
+      <BrandMarquee />
+      <Testimonials />
       <div className="mt-16 w-full md:mt-24 lg:px-32">
         <ProjectCta />
       </div>

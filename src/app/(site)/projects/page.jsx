@@ -2,12 +2,12 @@ import AnimatedText from '@/components/AnimatedText'
 import Link from 'next/link'
 import { SocialIcon } from 'react-social-icons';
 import React from 'react'
-import PearlMarilynImage from "../../../public/images/projects/pearlmarilyn.jpg"
-import EcommerceImage from "../../../public/images/projects/ecommerce1.png"
-import RealHiveImage from "../../../public/images/projects/realhive.jpg"
-import CompanyImage from "../../../public/images/projects/company.png"
-import HauteCornerImage from "../../../public/images/projects/haute-corner.jpg"
-import MernBnbImage from "../../../public/images/projects/mernbnb.png"
+import PearlMarilynImage from "../../../../public/images/projects/pearlmarilyn.jpg"
+import EcommerceImage from "../../../../public/images/projects/ecommerce1.png"
+import RealHiveImage from "../../../../public/images/projects/realhive.jpg"
+import CompanyImage from "../../../../public/images/projects/company.png"
+import HauteCornerImage from "../../../../public/images/projects/haute-corner.jpg"
+import MernBnbImage from "../../../../public/images/projects/mernbnb.png"
 import { FramerImage } from '@/utils/FramerImage';
 
 export const metadata = {

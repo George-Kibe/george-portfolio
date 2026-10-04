@@ -4,7 +4,6 @@ import {
   estimateQuote,
   featuresFor,
   makeReference,
-  quoteSummary,
 } from "./quote";
 
 const quote = (overrides) => estimateQuote({ ...DEFAULT_SELECTION, ...overrides });
@@ -54,18 +53,6 @@ describe("estimateQuote", () => {
       expect(q.low).toBeLessThanOrEqual(q.high);
       expect(q.weeks[0]).toBeLessThanOrEqual(q.weeks[1]);
     }
-  });
-});
-
-describe("quoteSummary", () => {
-  it("includes the contact details, breakdown and total", () => {
-    const q = quote({ type: "website", features: ["cms"] });
-    const text = quoteSummary(q, { name: "Ada", email: "ada@example.com", details: "A bakery site", reference: "Q-1" });
-    expect(text).toContain("Quote request Q-1");
-    expect(text).toContain("Email: ada@example.com");
-    expect(text).toContain("Blog or content management");
-    expect(text).toContain("A bakery site");
-    expect(text).not.toContain("Company:");
   });
 });
 

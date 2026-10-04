@@ -67,7 +67,7 @@ Each app reads it from `src/lib/site.js`. The `.env.local` files are gitignored.
 | `/about` | Biography, stats, skills orbit, experience and education timelines |
 | `/projects` | Featured and regular project cards |
 | `/articles` | Article cards |
-| `/contacts` | Contact form (EmailJS) and social links |
+| `/contacts` | Contact form (emailed via Nodemailer) and social links |
 
 Every route has a `loading.jsx` skeleton. The app also provides `error.jsx`, `global-error.jsx` and `not-found.jsx`.
 
