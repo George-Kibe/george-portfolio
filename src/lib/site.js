@@ -64,9 +64,11 @@ export const ROUTES = [
   { path: "/projects", label: "Projects", priority: 0.9, changeFrequency: "monthly" },
   { path: "/articles", label: "Articles", priority: 0.7, changeFrequency: "weekly" },
   { path: "/contacts", label: "Contact", priority: 0.6, changeFrequency: "yearly" },
+  { path: "/quote", label: "Get a Quote", priority: 0.7, changeFrequency: "monthly" },
 ];
 
 export const RESUME_PATH = "/George-Kibe-Resume.pdf";
 export const WHATSAPP_URL = "https://wa.link/rcnr3u";
+export const CALENDLY_URL = "https://calendly.com/georgekibe";
 
 export const absoluteUrl = (path = "/") => `${SITE_URL}${path}`;

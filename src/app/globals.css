@@ -96,3 +96,53 @@
     }
   }
 }
+
+/* Theme switch: DarkModeToggle wraps the class change in a view transition and
+   sets --theme-x/-y/-r to the button's centre and the distance to the farthest
+   corner. The new theme is revealed as a growing circle over the old one. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-new(root) {
+  animation: theme-reveal 450ms cubic-bezier(0.2, 0, 0, 1);
+}
+@keyframes theme-reveal {
+  from {
+    clip-path: circle(0 at var(--theme-x, 50%) var(--theme-y, 0));
+  }
+  to {
+    clip-path: circle(var(--theme-r, 150%) at var(--theme-x, 50%) var(--theme-y, 0));
+  }
+}
+
+/* Browser-drawn surfaces follow the theme too: native scrollbars and form
+   controls, the selection highlight and the caret. */
+@layer base {
+  html.light {
+    color-scheme: light;
+    accent-color: var(--color-primary);
+  }
+  html.dark {
+    color-scheme: dark;
+    accent-color: var(--color-primary-dark);
+  }
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-primary-dark) 35%, transparent);
+  }
+  input,
+  textarea {
+    caret-color: var(--color-primary);
+  }
+  .dark input,
+  .dark textarea {
+    caret-color: var(--color-primary-dark);
+  }
+
+  /* Set for the length of a view-transition theme switch (see above). */
+  .theme-switching,
+  .theme-switching * {
+    transition: none !important;
+  }
+}

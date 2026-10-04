@@ -5,6 +5,7 @@ import emailjs from '@emailjs/browser'
 import { Slide, ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { createSubmissionGuard } from '@/lib/submissionGuard'
+import { EMAILJS } from '@/lib/emailjs'
 
 const guard = createSubmissionGuard('contact')
 
@@ -51,10 +52,10 @@ const ContactForm = () => {
 
     try {
       const response = await emailjs.sendForm(
-        'service_zejea4b',
-        'template_d1kc1do',
+        EMAILJS.serviceId,
+        EMAILJS.templateId,
         form.current,
-        { publicKey: 'qO3BsJQp9qAyPG6LX' }
+        { publicKey: EMAILJS.publicKey }
       )
       if (response.status === 200) {
         guard.record()

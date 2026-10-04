@@ -77,7 +77,7 @@ Every route has a `loading.jsx` skeleton. The app also provides `error.jsx`, `gl
 src/
   app/          layout.js, page.jsx, globals.css, one folder per route,
                 sitemap.js, robots.js, opengraph-image.jsx, icon.png, apple-icon.png
-  components/   Navbar, Footer, Logo, HireMe, AnimatedText, DarkModeToggle, Skills,
+  components/   Navbar, Footer, Logo, HireMe, AnimatedText, DarkModeToggle, Skills, Process, Toolbox, CareerGraph,
                 Experience, Education, LiIcon, ContactForm, SocialLinks (+ *.test.jsx)
   context/      ThemeContext.jsx (light/dark provider)
   lib/          site.js, securityHeaders.js, submissionGuard.js, reportError.js (+ tests)

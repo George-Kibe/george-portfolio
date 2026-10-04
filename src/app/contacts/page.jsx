@@ -3,6 +3,7 @@ import { BsWhatsapp } from "react-icons/bs"
 import { FaXTwitter } from "react-icons/fa6"
 import AnimatedText from "@/components/AnimatedText"
 import ContactForm from "@/components/ContactForm"
+import ProjectCta from "@/components/ProjectCta"
 import { AUTHOR } from "@/lib/site"
 
 // This page is a server component so it can export metadata; only the form
@@ -28,6 +29,8 @@ const ContactsPage = () => {
     <div className="items-center p-4 md:p-8">
       <p className="text-center text-xs uppercase tracking-widest">Get In Touch</p>
       <AnimatedText text={"Contact Me"} />
+      <ProjectCta className="mx-auto mt-8 max-w-5xl" />
+      <h2 className="mx-auto mt-16 max-w-5xl text-center text-2xl font-bold">Or reach me directly</h2>
       <div className="mx-auto mt-8 flex max-w-5xl flex-col gap-12 md:flex-row">
         <address className="not-italic flex flex-col flex-1 md:items-center gap-4">
           <article className="flex flex-col items-center justify-center gap-2 border-2 dark:border-light p-6 w-full rounded-2xl">

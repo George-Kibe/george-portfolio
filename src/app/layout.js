@@ -67,10 +67,9 @@ export const metadata = {
 }
 
 export const viewport = {
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#f5f5f5' },
-    { media: '(prefers-color-scheme: dark)', color: '#1b1b1b' },
-  ],
+  // Dark by default regardless of the OS setting, matching the theme script
+  // below; the script and ThemeContext swap it when someone picks light.
+  themeColor: '#000000',
 }
 
 // Person + WebSite structured data. This is what lets Google show a richer
@@ -119,18 +118,22 @@ const jsonLd = {
   ],
 }
 
-// Applies the stored theme before first paint so the page never flashes the
-// wrong colours. Must stay synchronous and in <head>.
+// Applies the theme before first paint so the page never flashes the wrong
+// colours. Must stay synchronous and in <head>.
+//
+// Dark is the default for everyone, whatever their OS prefers; light only
+// applies once a visitor has chosen it with the toggle (stored in
+// localStorage by ThemeContext).
 const themeScript = `
 (function () {
+  var mode = 'dark';
   try {
-    var stored = localStorage.getItem('theme');
-    var mode = stored === 'light' || stored === 'dark'
-      ? stored
-      : (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-    document.documentElement.classList.add(mode);
-  } catch (e) {
-    document.documentElement.classList.add('dark');
+    if (localStorage.getItem('theme') === 'light') mode = 'light';
+  } catch (e) {}
+  document.documentElement.classList.add(mode);
+  if (mode === 'light') {
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', '#f5f5f5');
   }
 })();
 `

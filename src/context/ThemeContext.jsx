@@ -28,6 +28,9 @@ export const ThemeProvider = ({ children }) => {
     const root = document.documentElement
     root.classList.remove("light", "dark")
     root.classList.add(next)
+    // Keep the browser's toolbar colour in step with the page.
+    document.querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", next === "light" ? "#f5f5f5" : "#000000")
     try {
       window.localStorage.setItem("theme", next)
     } catch {

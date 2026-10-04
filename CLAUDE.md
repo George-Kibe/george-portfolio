@@ -54,7 +54,10 @@ src/app/          layout.js, page.jsx, globals.css + routes: about/ projects/ ar
                   (each route has a page.jsx and a loading.jsx)
                   sitemap.js, robots.js, opengraph-image.jsx  <- SEO route handlers
 src/components/   Navbar, Footer, Logo, HireMe, AnimatedText, DarkModeToggle,
-                  Skills, Experience, Education, LiIcon, ContactForm
+                  Skills, Process, Toolbox, Experience, CareerGraph, Education,
+                  LiIcon, ContactForm
+src/lib/experience.js  tech roles from the CV (banking/valuation roles left out on purpose);
+                  Experience (list) and CareerGraph both read it
 src/utils/        Article, FramerImage
 src/context/      ThemeContext (client-side dark/light provider)
 src/lib/site.js   URLs, author details, keywords, routes — used by metadata + JSON-LD
@@ -71,6 +74,13 @@ Conventions in this app:
 - Dark mode uses `@custom-variant dark (&:where(.dark, .dark *))`, matching the class `ThemeProvider` puts on a wrapper `<div className={"theme " + mode}>`. The `dark` class comes from React state, not from the OS or `localStorage`. Default mode is `"dark"`.
 - All images are local static imports from `public/`. The homepage portrait used to be loaded from the `buenas-portfolio-bucket` S3 bucket, but that origin takes 10-15s to return the file — past the image optimizer's fetch timeout — so the optimizer returned 500 and nothing rendered. The S3 hosts remain in `next.config.js` `images.remotePatterns` but nothing uses them; don't reintroduce that bucket for anything render-critical.
 - `public/images/profile/gk.png` (8.4MB) and `gk1.png` (10MB) are very large sources. The `sizes` props keep the served variants small (~10KB at the rendered size), but they slow builds and bloat the repo — worth re-encoding.
+- The About page runs: bio + stats aside, `Process` (six-layer stack, client), `Skills` orbit, `Toolbox` (server, grouped tools — only list tools George actually uses), `Experience` (`CareerGraph` above the list), `Education`. No portrait there; it lives on the home page.
+- `DarkModeToggle` is a round sun/moon button with a fixed "Dark mode" label plus `aria-pressed`. Where `document.startViewTransition` exists (and Reduce Motion is off) it reveals the new theme as a circle from the button; the keyframes and the `.theme-switching` transition kill-switch are in `globals.css`.
+- `Skills` positions chips as % offsets inside a box capped at `max-w-3xl` (square on phones, 5:4 from `sm`). Don't go back to vw offsets: the orbit grew to ~1150px tall on desktop.
+- `CareerGraph` plots main roles as a stepped line; roles with `alongside: true` (e.g. the Explore internship during Dowell) get their own lane under it. It rounds "now" to the start of the month so server and client agree on path coordinates; the path is drawn in measured pixels (ResizeObserver), not a stretched viewBox.
+- The Projects page mirrors the RealHive Consultants portfolio (`/mnt/extra/Projects/RealHive-Website`, same copy and images in `public/images/projects/`) plus PearlMarilyn, whose card image is a composite of three screenshots from the `pearl-maddison` app. Data is the `PROJECTS` array in `projects/page.jsx`; `featured` entries take a full row, the rest pair up.
+- `ProjectCta` (home + contacts) offers "Book a consultation" (`CALENDLY_URL` in `site.js`, new tab) and "Get a quote" (`/quote`). The quote builder is `QuoteBuilder.jsx`; all prices, features and multipliers live in `src/lib/quote.js` (placeholder USD rates, covered by `quote.test.js`). Submitting emails the summary through the contact form's EmailJS template as `{ name, email, message, reference }`.
+- EmailJS ids come from `src/lib/emailjs.js`, which reads `NEXT_PUBLIC_EMAILJS_SERVICE_ID` / `_TEMPLATE_ID` / `_PUBLIC_KEY` and falls back to the old hardcoded values. Don't put the ids anywhere else.
 - Contact form posts through EmailJS (`@emailjs/browser`, `emailjs.sendForm`) with the service/template/public keys **hardcoded in the component**.
 
 ## Video portfolio — structure

@@ -1,36 +1,68 @@
 "use client"
 
 import React, { useContext } from 'react'
+import { flushSync } from 'react-dom'
+import { TbMoon, TbSun } from 'react-icons/tb'
 import { ThemeContext } from '@/context/ThemeContext'
+
+// A round icon button: the sun shows in dark mode, the moon in light, each
+// naming the theme a click will switch to. The label stays fixed and
+// aria-pressed carries the state, which is how screen readers expect a toggle.
+//
+// Where the View Transitions API exists, the new theme spreads out from the
+// button as a circle (the clip-path keyframes live in globals.css). Everywhere
+// else, and under Reduce Motion, the switch is instant apart from the usual
+// colour fade.
+//
+// 44px below md, where it sits in the touch-driven mobile menu; 36px from md,
+// next to the 32px social icons.
+
+const iconClass = (visible) =>
+  `absolute size-5 md:size-[18px] transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.2,0,0,1)]
+  ${visible ? 'rotate-0 scale-100 opacity-100' : '-rotate-90 scale-50 opacity-0'}`
 
 const DarkModeToggle = () => {
   const {toggle, mode} = useContext(ThemeContext)
   const isDark = mode === "dark"
 
-  // 56x44 below md, where this renders inside the touch-driven mobile menu and
-  // has to meet the 44px tap-target guideline; 48x36 from md up, where it sits
-  // beside the 36px social icons and only ever takes a pointer.
-  //
-  // The green is dark enough to hold 3:1 against both page backgrounds
-  // (3.76 light, 5.13 dark); the old #53c58b fell to 1.98 on light.
+  const handleClick = (event) => {
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    if (!document.startViewTransition || reduce) {
+      toggle()
+      return
+    }
+
+    const root = document.documentElement
+    const { left, top, width, height } = event.currentTarget.getBoundingClientRect()
+    const x = left + width / 2
+    const y = top + height / 2
+    const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y))
+    root.style.setProperty('--theme-x', `${x}px`)
+    root.style.setProperty('--theme-y', `${y}px`)
+    root.style.setProperty('--theme-r', `${radius}px`)
+
+    // Colour transitions would otherwise be captured half-finished in the new
+    // snapshot; the reveal is the transition.
+    root.classList.add('theme-switching')
+    const transition = document.startViewTransition(() => flushSync(toggle))
+    transition.finished.finally(() => root.classList.remove('theme-switching'))
+  }
 
   return (
     <button
       type="button"
-      onClick={toggle}
+      onClick={handleClick}
       aria-pressed={isDark}
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className='w-14 h-11 md:w-12 md:h-9 rounded-full items-center relative flex justify-between px-1.5 border-[#1d8f5a]
-        border-2 border-solid cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2
-        focus-visible:outline-[#1d8f5a]'
+      aria-label="Dark mode"
+      title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      className='relative flex size-11 md:size-9 shrink-0 items-center justify-center rounded-full cursor-pointer
+        border border-dark/60 dark:border-light/60 text-dark dark:text-light
+        hover:bg-dark/5 dark:hover:bg-light/10 active:scale-95 transition-transform
+        focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
+        dark:focus-visible:outline-primary-dark'
     >
-      <span className="text-xs md:text-[10px]" aria-hidden="true">🌙</span>
-      <span className="text-xs md:text-[10px]" aria-hidden="true">🔆</span>
-      {/* Knob travel = track width - 2px border - 4px inset on each side - knob. */}
-      <span className={`absolute left-1 bg-[#1d8f5a] rounded-full size-6 md:size-5 transition-transform duration-200 ease-out
-            ${isDark ? "translate-x-5 md:translate-x-4" : "translate-x-0"}`}
-        aria-hidden="true"
-      />
+      <TbSun className={iconClass(isDark)} aria-hidden="true" />
+      <TbMoon className={iconClass(!isDark)} aria-hidden="true" />
     </button>
   )
 }
