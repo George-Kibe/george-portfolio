@@ -5,11 +5,11 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background"
     >
       {/* Animated Background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-linear-to-br from-blue-900/20 via-black to-black" />
+        <div className="absolute inset-0 bg-linear-to-br from-glow via-background to-background" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
         
         {/* Floating Elements */}
@@ -26,21 +26,21 @@ export default function Hero() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
         <div className="space-y-8">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium animate-fade-in-up">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-line text-accent-text text-sm font-medium animate-fade-in-up">
             <Sparkles className="w-4 h-4" />
             <span>Professional Video Editor</span>
           </div>
 
           {/* Main Heading */}
           <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight">
-            <span className="block text-white mb-2">Crafting</span>
-            <span className="block bg-linear-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent">
+            <span className="block text-foreground mb-2">Crafting</span>
+            <span className="block text-accent-text">
               Visual Stories
             </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="max-w-2xl mx-auto text-lg sm:text-xl text-gray-400 leading-relaxed">
+          <p className="max-w-2xl mx-auto text-lg sm:text-xl text-muted leading-relaxed">
             Transforming raw footage into cinematic masterpieces. Specializing in commercial, narrative, and creative video editing that captivates audiences.
           </p>
 
@@ -48,7 +48,7 @@ export default function Hero() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
             <Link
               href="/projects"
-              className="group relative px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full transition-all duration-200 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25 overflow-hidden"
+              className="group relative px-8 py-4 bg-accent hover:bg-accent-hover text-white font-semibold rounded-full transition-all duration-200 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25 overflow-hidden"
             >
               <span className="relative z-10 flex items-center gap-2">
                 <Play className="w-5 h-5 fill-white" />
@@ -57,30 +57,29 @@ export default function Hero() {
               <div className="absolute inset-0 bg-linear-to-r from-blue-600 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
             </Link>
             <Link
-              href="/contact"
-              className="px-8 py-4 border border-blue-500/30 hover:border-blue-500 text-white font-semibold rounded-full transition-all duration-200 hover:bg-blue-500/10"
+              href="/quote"
+              className="px-8 py-4 border border-line-strong hover:border-accent-text text-foreground font-semibold rounded-full transition-all duration-200 hover:bg-accent/10"
             >
-              Get In Touch
+              Get a Quote
             </Link>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-16 max-w-3xl mx-auto">
+          <div className="grid grid-cols-3 gap-6 sm:gap-8 pt-16 max-w-2xl mx-auto">
             {[
               { value: "50+", label: "Projects Completed" },
               { value: "5+", label: "Years Experience" },
               { value: "30+", label: "Happy Clients" },
-              { value: "15+", label: "Awards Won" },
             ].map((stat, index) => (
               <div
                 key={stat.label}
                 className="text-center group animate-fade-in-up"
                 style={{ animationDelay: `${index * 60}ms` }}
               >
-                <div className="text-3xl sm:text-4xl font-bold text-white mb-1 group-hover:text-blue-400 transition-colors">
+                <div className="text-3xl sm:text-4xl font-bold text-foreground mb-1 group-hover:text-accent-text transition-colors">
                   {stat.value}
                 </div>
-                <div className="text-sm text-gray-400">{stat.label}</div>
+                <div className="text-sm text-muted">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -91,7 +90,7 @@ export default function Hero() {
           <Link
             href="/about"
             aria-label="Read more about GeorgeEditPro"
-            className="text-gray-400 hover:text-blue-400 transition-colors"
+            className="text-muted hover:text-accent-text transition-colors"
           >
             <ArrowDown className="w-6 h-6" />
           </Link>

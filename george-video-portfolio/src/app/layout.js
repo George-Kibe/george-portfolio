@@ -1,9 +1,6 @@
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { ThemeProvider } from "@/context/ThemeContext";
 import {
   AUTHOR,
   DEFAULT_DESCRIPTION,
@@ -62,10 +59,27 @@ export const metadata = {
   category: "video production",
 };
 
+// Dark by default; the theme script and ThemeContext switch this when a
+// visitor picks light.
 export const viewport = {
   themeColor: "#000000",
-  colorScheme: "dark",
 };
+
+// Applies the theme before first paint so there's no flash. Dark for everyone
+// unless they've chosen light with the toggle (stored by ThemeContext).
+const themeScript = `
+(function () {
+  var mode = 'dark';
+  try {
+    if (localStorage.getItem('theme') === 'light') mode = 'light';
+  } catch (e) {}
+  document.documentElement.classList.add(mode);
+  if (mode === 'light') {
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', '#ffffff');
+  }
+})();
+`;
 
 // ProfessionalService carries the location and service list, which is what a
 // local search like "video editor Nairobi" is matched against.
@@ -125,18 +139,16 @@ const jsonLd = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${poppins.variable} h-full antialiased`}>
+    <html lang="en" className={`${poppins.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
       <body className="min-h-full flex flex-col font-sans">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <ToastContainer theme="dark" />
-        <Footer />
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

@@ -1,189 +1,62 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
-import { Play, ExternalLink, Clock, Calendar } from "lucide-react";
+import Link from "next/link";
+import ProjectGrid from "./ProjectGrid";
 
-const categories = ["All", "Commercial", "Music Video", "Documentary", "Corporate"];
-
-const projects = [
-  {
-    id: 1,
-    title: "Neon Dreams",
-    category: "Music Video",
-    thumbnail: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&h=600&fit=crop",
-    duration: "3:45",
-    year: "2024",
-    description: "A vibrant music video featuring dynamic editing and color grading.",
-  },
-  {
-    id: 2,
-    title: "Tech Forward",
-    category: "Commercial",
-    thumbnail: "https://images.unsplash.com/photo-1536240478700-b869070f9279?w=800&h=600&fit=crop",
-    duration: "1:30",
-    year: "2024",
-    description: "High-energy commercial for a leading tech brand launch.",
-  },
-  {
-    id: 3,
-    title: "Urban Stories",
-    category: "Documentary",
-    thumbnail: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=800&h=600&fit=crop",
-    duration: "15:00",
-    year: "2023",
-    description: "Documentary exploring urban culture and community narratives.",
-  },
-  {
-    id: 4,
-    title: "Brand Evolution",
-    category: "Corporate",
-    thumbnail: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=600&fit=crop",
-    duration: "2:00",
-    year: "2023",
-    description: "Corporate brand story highlighting company transformation.",
-  },
-  {
-    id: 5,
-    title: "Midnight Jazz",
-    category: "Music Video",
-    thumbnail: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=800&h=600&fit=crop",
-    duration: "4:20",
-    year: "2023",
-    description: "Atmospheric jazz performance with moody cinematography.",
-  },
-  {
-    id: 6,
-    title: "Product Launch",
-    category: "Commercial",
-    thumbnail: "https://images.unsplash.com/photo-1542744094-3a31f272c490?w=800&h=600&fit=crop",
-    duration: "0:45",
-    year: "2024",
-    description: "Fast-paced product reveal with motion graphics.",
-  },
-];
-
-export default function ProjectsSection() {
-  const [activeCategory, setActiveCategory] = useState("All");
-
-  const filteredProjects =
-    activeCategory === "All"
-      ? projects
-      : projects.filter((p) => p.category === activeCategory);
+// The Projects page body. Projects come from the database (managed in
+// /admin/projects); the filters are built from the categories actually in use.
+export default function ProjectsSection({ projects }) {
+  const categories = ["All", ...new Set(projects.map((p) => p.category))];
+  const [active, setActive] = useState("All");
+  const shown = active === "All" ? projects : projects.filter((p) => p.category === active);
 
   return (
-    <section
-      id="projects"
-      className="relative py-20 md:py-32 bg-black overflow-hidden"
-    >
-      {/* Background */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.05),transparent_70%)]" />
+    <section id="projects" className="relative overflow-hidden bg-background pt-32 pb-20 md:pb-28">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--glow),transparent_70%)] pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <p className="text-sm font-semibold text-blue-500 uppercase tracking-wider mb-4">
-            Portfolio</p>
-          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6">
-            Featured <span className="text-blue-500">Projects</span>
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl sm:text-5xl font-bold text-foreground">
+            Featured <span className="text-accent-text">Projects</span>
           </h1>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            A selection of my recent work across various genres and styles.
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted">
+            A selection of recent work across genres and styles. Click a project to play it.
           </p>
         </div>
 
-        {/* Filter Tabs */}
-        <div className="flex flex-wrap justify-center gap-2 mb-12">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              aria-pressed={activeCategory === category}
-              className={`min-h-11 px-6 py-3 rounded-full text-sm font-medium transition-colors duration-200 ${
-                activeCategory === category
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25"
-                  : "bg-blue-500/5 text-gray-300 hover:bg-blue-500/10 hover:text-white border border-blue-500/40"
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-
-        {/* Projects Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project, index) => (
-            <div
-              key={project.id}
-              className="group relative rounded-2xl overflow-hidden bg-linear-to-br from-blue-500/5 to-transparent border border-blue-500/10 hover:border-blue-500/30 transition-colors duration-200 animate-fade-in-up"
-              style={{ animationDelay: `${index * 60}ms` }}
-            >
-              {/* Thumbnail */}
-              <div className="relative aspect-video overflow-hidden">
-                <Image
-                  src={project.thumbnail}
-                  alt={`${project.title} — ${project.category.toLowerCase()} edited by GeorgeEditPro`}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-300 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
-                
-                {/* Play Button */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-75 group-hover:scale-100">
-                  <button className="w-16 h-16 rounded-full bg-blue-600/90 backdrop-blur-sm flex items-center justify-center text-white hover:bg-blue-500 transition-colors shadow-2xl shadow-blue-500/50">
-                    <Play className="w-6 h-6 fill-white ml-1" />
-                  </button>
-                </div>
-
-                {/* Category Badge */}
-                <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm border border-white/10 text-xs font-medium text-white">
-                  {project.category}
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <h2 className="text-xl font-semibold text-white group-hover:text-blue-400 transition-colors">
-                    {project.title}
-                  </h2>
-                  <a
-                    href="#"
-                    aria-label={`Open ${project.title}`}
-                    className="-m-2 p-2 text-gray-400 hover:text-blue-400 transition-colors"
+        {projects.length === 0 ? (
+          <div className="mx-auto max-w-xl rounded-2xl border border-dashed border-line-strong/60 p-10 text-center">
+            <p className="text-lg font-semibold text-foreground">The reel is being updated.</p>
+            <p className="mt-2 text-muted">New projects are on their way. In the meantime, I&apos;m happy to share recent work on a quick call.</p>
+            <Link href="/quote" className="mt-6 inline-flex h-12 items-center rounded-full bg-accent px-6 font-semibold text-white hover:bg-accent-hover">
+              Get a quote
+            </Link>
+          </div>
+        ) : (
+          <>
+            {categories.length > 2 && (
+              <div className="mb-10 flex flex-wrap justify-center gap-2" role="group" aria-label="Filter by category">
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    type="button"
+                    onClick={() => setActive(category)}
+                    aria-pressed={active === category}
+                    className={`min-h-11 rounded-full px-6 py-3 text-sm font-medium transition-colors duration-200 cursor-pointer ${
+                      active === category
+                        ? "bg-accent text-white shadow-lg shadow-blue-500/25"
+                        : "border border-line-strong/60 bg-accent/5 text-muted hover:bg-accent/10 hover:text-foreground"
+                    }`}
                   >
-                    <ExternalLink className="w-5 h-5" aria-hidden="true" />
-                  </a>
-                </div>
-                <p className="text-gray-400 text-base mb-4 line-clamp-2">
-                  {project.description}
-                </p>
-                <div className="flex items-center gap-4 text-sm text-gray-400">
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    {project.duration}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    {project.year}
-                  </span>
-                </div>
+                    {category}
+                  </button>
+                ))}
               </div>
-
-              {/* Hover Border Effect */}
-              <div className="absolute inset-0 rounded-2xl border-2 border-blue-500/0 group-hover:border-blue-500/30 transition-colors duration-300 pointer-events-none" />
-            </div>
-          ))}
-        </div>
-
-        {/* View All Button */}
-        <div className="text-center mt-12">
-          <button className="px-8 py-4 border border-blue-500/50 hover:border-blue-500 text-white font-semibold rounded-full transition-colors duration-200 hover:bg-blue-500/10 inline-flex items-center gap-2 group">
-            View All Projects
-            <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </button>
-        </div>
+            )}
+            <ProjectGrid key={active} projects={shown} priorityFirst />
+          </>
+        )}
       </div>
     </section>
   );

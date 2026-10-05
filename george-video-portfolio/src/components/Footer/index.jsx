@@ -1,125 +1,111 @@
 import Link from "next/link";
-import { Play, Mail } from "lucide-react";
+import { Play, Mail, CalendarDays } from "lucide-react";
 import { Instagram, Linkedin, XTwitter, Youtube } from "@/components/BrandIcons";
+import { AUTHOR, CALENDLY_URL, ROUTES, SERVICES, SOCIAL_LINKS } from "@/lib/site";
 
-// TODO: replace "#" with the real profile URLs. Also add them to
-// SOCIAL_PROFILES in src/lib/site.js so they feed the Person schema's sameAs.
-const socialLinks = [
-  { name: "Instagram", icon: Instagram, href: "#" },
-  { name: "X", icon: XTwitter, href: "#" },
-  { name: "YouTube", icon: Youtube, href: "#" },
-  { name: "LinkedIn", icon: Linkedin, href: "#" },
-];
-
-const footerLinks = [
-  {
-    title: "Navigation",
-    links: [
-      { name: "Home", href: "/" },
-      { name: "About", href: "/about" },
-      { name: "Projects", href: "/projects" },
-      { name: "Contact", href: "/contact" },
-    ],
-  },
-  {
-    title: "Services",
-    links: [
-      { name: "Video Editing", href: "/about" },
-      { name: "Color Grading", href: "/about" },
-      { name: "Motion Graphics", href: "/about" },
-      { name: "Sound Design", href: "/about" },
-    ],
-  },
-];
+const ICONS = { Instagram, LinkedIn: Linkedin, X: XTwitter, YouTube: Youtube };
 
 export default function Footer() {
   return (
-    <footer className="bg-black border-t border-blue-500/20 relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-linear-to-t from-blue-900/10 to-transparent pointer-events-none" />
-      
+    <footer className="bg-background border-t border-line relative overflow-hidden">
+      <div className="absolute inset-0 bg-linear-to-t from-glow to-transparent pointer-events-none" />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          {/* Brand */}
           <div className="space-y-6">
             <Link href="/" className="flex items-center gap-2 group" aria-label="GeorgeEditPro home">
               <div className="w-10 h-10 bg-linear-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
-                <Play className="w-5 h-5 text-white fill-white" />
+                <Play className="w-5 h-5 text-white fill-white" aria-hidden="true" />
               </div>
-              <span className="text-xl font-bold bg-linear-to-r from-white to-blue-400 bg-clip-text text-transparent">
-                GeorgeEditPro
+              <span className="text-xl font-bold text-foreground">
+                George<span className="text-accent-text">EditPro</span>
               </span>
             </Link>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-muted text-sm leading-relaxed">
               Crafting visual stories that captivate, inspire, and leave lasting impressions. Professional video editing for creators and brands.
             </p>
-            <div className="flex gap-4">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.href}
-                  aria-label={social.name}
-                  className="size-11 rounded-full bg-blue-500/10 border border-blue-500/40 flex items-center justify-center text-gray-400 hover:text-blue-400 hover:border-blue-500 hover:bg-blue-500/20 transition-all duration-200 hover:scale-105"
-                >
-                  <social.icon className="w-5 h-5" />
-                </a>
-              ))}
-            </div>
+            {/* Only real profiles are shown; see SOCIAL_LINKS in src/lib/site.js. */}
+            {SOCIAL_LINKS.length > 0 && (
+              <div className="flex gap-3">
+                {SOCIAL_LINKS.map((social) => {
+                  const Icon = ICONS[social.label];
+                  return (
+                    <a
+                      key={social.url}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={social.label}
+                      className="size-11 rounded-full bg-accent/10 border border-line-strong flex items-center justify-center text-muted hover:text-accent-text hover:border-accent-text transition-colors duration-200"
+                    >
+                      {Icon && <Icon className="w-5 h-5" />}
+                    </a>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
-          {/* Links */}
-          {footerLinks.map((section) => (
-            <div key={section.title}>
-              <h3 className="text-white font-semibold mb-4">{section.title}</h3>
-              <ul className="space-y-3">
-                {section.links.map((link) => (
-                  <li key={link.name}>
-                    <Link
-                      href={link.href}
-                      className="text-gray-400 hover:text-blue-400 transition-colors duration-300 text-sm"
-                    >
-                      {link.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-
-          {/* Newsletter */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Stay Updated</h3>
-            <p className="text-gray-400 text-sm mb-4">
-              Subscribe to receive updates on latest projects and editing tips.
+            <h3 className="text-foreground font-semibold mb-4">Navigation</h3>
+            <ul className="space-y-3">
+              {ROUTES.map((link) => (
+                <li key={link.path}>
+                  <Link href={link.path} className="text-muted hover:text-accent-text transition-colors duration-300 text-sm">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-foreground font-semibold mb-4">Services</h3>
+            <ul className="space-y-3">
+              {SERVICES.map((service) => (
+                <li key={service.name}>
+                  <Link href="/about" className="text-muted hover:text-accent-text transition-colors duration-300 text-sm">
+                    {service.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Replaces a newsletter form that had no handler and just reloaded the page. */}
+          <div>
+            <h3 className="text-foreground font-semibold mb-4">Have footage that needs a story?</h3>
+            <p className="text-muted text-sm mb-4">
+              Get a ballpark price in a minute, or book a quick call.
             </p>
-            <form className="space-y-3">
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="w-full pl-10 pr-4 py-3 bg-blue-500/5 border border-gray-500 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400 transition-colors duration-200"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 hover:shadow-lg hover:shadow-blue-500/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+            <div className="flex flex-col gap-3">
+              <Link
+                href="/quote"
+                className="w-full py-3 bg-accent hover:bg-accent-hover text-white font-medium rounded-lg text-center transition-colors duration-200"
               >
-                Subscribe
-              </button>
-            </form>
+                Get a quote
+              </Link>
+              <a
+                href={CALENDLY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-3 inline-flex items-center justify-center gap-2 border border-line-strong hover:border-accent-text text-foreground font-medium rounded-lg transition-colors duration-200"
+              >
+                <CalendarDays className="w-4 h-4" aria-hidden="true" /> Book a call
+                <span className="sr-only">(opens Calendly in a new tab)</span>
+              </a>
+              <a href={`mailto:${AUTHOR.email}`} className="inline-flex items-center gap-2 text-sm text-muted hover:text-accent-text transition-colors">
+                <Mail className="w-4 h-4" aria-hidden="true" /> {AUTHOR.email}
+              </a>
+            </div>
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="mt-16 pt-8 border-t border-blue-500/10 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-400 text-sm">
+        <div className="mt-16 pt-8 border-t border-line flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-muted text-sm">
             © {new Date().getFullYear()} GeorgeEditPro. All rights reserved.
           </p>
-          <div className="flex gap-6 text-sm text-gray-400">
-            <a href="#" className="hover:text-blue-400 transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-blue-400 transition-colors">Terms of Service</a>
-          </div>
+          <Link href="/contact" className="text-sm text-muted hover:text-accent-text transition-colors">Contact</Link>
         </div>
       </div>
     </footer>

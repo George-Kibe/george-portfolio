@@ -1,4 +1,5 @@
 import ProjectsSection from "@/components/ProjectsSection";
+import { getPublishedProjects } from "@/lib/queries";
 
 export const metadata = {
   title: "Portfolio — Commercials, Music Videos & Docs",
@@ -15,6 +16,11 @@ export const metadata = {
   },
 };
 
-export default function ProjectsPage() {
-  return <ProjectsSection />;
+// Projects come from MongoDB: cached, refreshed every five minutes and
+// immediately when one is saved in the admin panel.
+export const revalidate = 300;
+
+export default async function ProjectsPage() {
+  const projects = await getPublishedProjects();
+  return <ProjectsSection projects={projects} />;
 }

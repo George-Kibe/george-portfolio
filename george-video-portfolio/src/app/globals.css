@@ -1,21 +1,54 @@
 @import "tailwindcss";
 
-/* This site is fixed-dark (see `colorScheme: "dark"` in the root layout), so the
-   page background can't depend on the OS setting. It used to default to white
-   and only go dark under `prefers-color-scheme: dark`, which left white bands
-   on light-mode devices wherever a section didn't cover the page. */
+/* Light/dark theme. The class on <html> is set before first paint by the
+   inline script in the root layout (dark unless the visitor picked light) and
+   toggled by ThemeToggle. Components use the semantic colours below
+   (bg-background, text-muted, border-line, text-accent-text…) rather than raw
+   black/white, so both themes come from one set of classes. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --muted: #4b5563; /* gray-600: 7.56:1 on white */
+  --card: #f5f7fb;
+  --card-strong: #eef2f9;
+  --line: rgb(37 99 235 / 0.18);
+  --line-strong: #6b7280; /* form field borders, 4.83:1 */
+  --accent: #2563eb; /* blue-600: buttons */
+  --accent-hover: #1d4ed8;
+  --accent-text: #1d4ed8; /* blue-700: 6.70:1 on white */
+  --glow: rgb(37 99 235 / 0.08);
+}
+
+.dark {
   --background: #000000;
   --foreground: #ededed;
+  --muted: #9ca3af; /* gray-400: 8.07:1 on black */
+  --card: #0b1220;
+  --card-strong: #0f1a2e;
+  --line: rgb(59 130 246 / 0.2);
+  --line-strong: #6b7280;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-text: #60a5fa; /* blue-400: 8.03:1 on black */
+  --glow: rgb(59 130 246 / 0.1);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-card-strong: var(--card-strong);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-text: var(--accent-text);
+  --color-glow: var(--glow);
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
 
-  /* `animate-float` and `animate-fade-in-up` were used on the home page but
-     never defined, so those elements sat static. */
   --animate-float: float 6s ease-in-out infinite;
   --animate-fade-in-up: fade-in-up 300ms cubic-bezier(0.2, 0, 0, 1) both;
   --animate-grow-x: grow-x 300ms cubic-bezier(0.2, 0, 0, 1) both;
@@ -31,8 +64,6 @@
   }
 }
 
-/* Skill bars grow from the left. Using transform (not width) keeps the
-   animation off the layout path. */
 @keyframes grow-x {
   from {
     transform: scaleX(0);
@@ -53,9 +84,53 @@
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
+@layer base {
+  html.dark {
+    color-scheme: dark;
+    accent-color: #3b82f6;
+  }
+  html.light {
+    color-scheme: light;
+    accent-color: #2563eb;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+  }
+  ::selection {
+    background-color: rgb(59 130 246 / 0.35);
+  }
+  /* Theme changes fade colours only, and never during the view transition
+     (the circular reveal is the transition). */
+  body,
+  body * {
+    transition-property: color, background-color, border-color, fill, stroke;
+    transition-duration: 200ms;
+    transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  }
+  .theme-switching,
+  .theme-switching * {
+    transition: none !important;
+  }
+}
+
+/* Theme switch reveal: ThemeToggle sets --theme-x/-y/-r and wraps the class
+   change in a view transition. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-new(root) {
+  animation: theme-reveal 450ms cubic-bezier(0.2, 0, 0, 1);
+}
+@keyframes theme-reveal {
+  from {
+    clip-path: circle(0 at var(--theme-x, 50%) var(--theme-y, 0));
+  }
+  to {
+    clip-path: circle(var(--theme-r, 150%) at var(--theme-x, 50%) var(--theme-y, 0));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -65,5 +140,137 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Article bodies: sanitised HTML from the Tiptap editor, shown on
+   /articles/[slug] and inside the admin editor. There's no typography plugin,
+   so the handful of elements posts use are styled here. */
+@layer components {
+  .article-body {
+    font-size: 1.0625rem;
+    line-height: 1.8;
+  }
+  .article-body > * + * {
+    margin-top: 1.25em;
+  }
+  .article-body h2 {
+    margin-top: 2em;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+  .article-body h3 {
+    margin-top: 1.6em;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+  .article-body a {
+    color: var(--accent-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+    .article-body ul,
+  .article-body ol {
+    padding-left: 1.4em;
+  }
+  .article-body ul { list-style: disc; }
+  .article-body ol { list-style: decimal; }
+  .article-body li + li { margin-top: 0.4em; }
+  .article-body blockquote {
+    border-left: 3px solid var(--accent-text);
+    padding-left: 1em;
+    font-style: italic;
+    opacity: 0.85;
+  }
+  .article-body code {
+    border-radius: 0.375rem;
+    background: color-mix(in oklab, currentColor 10%, transparent);
+    padding: 0.1em 0.35em;
+    font-size: 0.9em;
+  }
+  .article-body pre {
+    overflow-x: auto;
+    border-radius: 0.75rem;
+    background: #111;
+    color: #f5f5f5;
+    padding: 1rem 1.25rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+  .article-body pre code {
+    background: none;
+    padding: 0;
+  }
+  .article-body img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.75rem;
+  }
+  .article-body table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95em;
+  }
+  .article-body th,
+  .article-body td {
+    border: 1px solid color-mix(in oklab, currentColor 20%, transparent);
+    padding: 0.5em 0.75em;
+    text-align: left;
+  }
+}
+
+/* Tiptap editor (admin): the empty-state placeholder and a visible outline on
+   the selected image. */
+@layer components {
+  .ProseMirror p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+    opacity: 0.55;
+  }
+  .ProseMirror img.ProseMirror-selectednode {
+    outline: 3px solid var(--accent-text);
+    outline-offset: 2px;
+  }
+}
+
+/* Brand marquee (BrandMarquee.jsx): the track holds the list twice and slides
+   left by half its width, then repeats, which reads as one endless row. The
+   edges fade out with a mask. */
+@layer components {
+  .marquee {
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  }
+  .marquee-track {
+    animation: marquee var(--marquee-duration, 30s) linear infinite;
+  }
+  .marquee:hover .marquee-track,
+  .marquee:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee {
+      mask-image: none;
+    }
+    .marquee-track {
+      width: auto;
+      animation: none;
+      justify-content: center;
+    }
+    .marquee-track > ul:first-child {
+      flex-wrap: wrap;
+      justify-content: center;
+      row-gap: 1rem;
+    }
+    .marquee-copy {
+      display: none;
+    }
   }
 }

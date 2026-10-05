@@ -1,6 +1,9 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import ContactSection from "./ContactSection";
+
+// The form calls a server action, which pulls in server-only mail code.
+vi.mock("@/app/actions/contact", () => ({ sendContactMessage: vi.fn(async () => ({ ok: true })) }));
 
 describe("contact form accessibility", () => {
   it("associates every visible field with its label", () => {

@@ -51,15 +51,24 @@ export const SERVICES = [
   { name: "Motion Graphics", description: "Dynamic titles, lower thirds, and visual effects." },
 ];
 
-// TODO: replace with real profile URLs — these drive the Person schema's
-// sameAs, which is how search engines link this site to the same person
-// elsewhere. Empty until the real handles are known; inventing them would
-// point search engines at the wrong accounts.
-export const SOCIAL_PROFILES = [];
+// Social profiles: shown in the footer and contact page, and used for the
+// Person schema's sameAs. TODO: add the real URLs, e.g.
+//   { label: "Instagram", url: "https://www.instagram.com/<handle>" }
+// Labels must be one of Instagram, YouTube, LinkedIn, X (they pick the icon).
+// Empty until the real handles are known; inventing them would send visitors
+// and search engines to accounts that may not be George's.
+export const SOCIAL_LINKS = [];
 
+export const SOCIAL_PROFILES = SOCIAL_LINKS.map((link) => link.url);
+
+// Indexable routes: the sitemap, the header nav (`nav: true`) and the footer.
 export const ROUTES = [
-  { path: "/", priority: 1.0, changeFrequency: "monthly" },
-  { path: "/about", priority: 0.8, changeFrequency: "monthly" },
-  { path: "/projects", priority: 0.9, changeFrequency: "weekly" },
-  { path: "/contact", priority: 0.7, changeFrequency: "yearly" },
+  { path: "/", label: "Home", nav: true, priority: 1.0, changeFrequency: "monthly" },
+  { path: "/about", label: "About", nav: true, priority: 0.8, changeFrequency: "monthly" },
+  { path: "/projects", label: "Projects", nav: true, priority: 0.9, changeFrequency: "weekly" },
+  { path: "/articles", label: "Blog", nav: true, priority: 0.7, changeFrequency: "weekly" },
+  { path: "/contact", label: "Contact", nav: true, priority: 0.7, changeFrequency: "yearly" },
+  { path: "/quote", label: "Get a Quote", priority: 0.7, changeFrequency: "monthly" },
 ];
+
+export const CALENDLY_URL = "https://calendly.com/georgekibe";

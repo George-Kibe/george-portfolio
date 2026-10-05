@@ -2,9 +2,8 @@
 //
 // CSP notes: the root layout inlines a JSON-LD <script>, and Next injects its
 // own inline bootstrap scripts, so 'unsafe-inline' is required for scripts
-// today. A nonce would mean rendering the layout dynamically on every request,
-// giving up static prerendering on every route -- not worth it for a static
-// marketing site with no auth, cookies or user data.
+// today. A nonce would mean rendering every page dynamically, giving up static
+// prerendering for the public pages.
 //
 // 'unsafe-eval' is deliberately NOT included.
 const CSP = [
@@ -16,9 +15,13 @@ const CSP = [
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self' data:",
-  // Project thumbnails are served from Unsplash through next/image.
+  // Thumbnails and covers come from Cloudinary and YouTube.
   "img-src 'self' data: blob: https:",
-  "connect-src 'self' https://api.emailjs.com",
+  // Email is sent from the server; the browser only talks to Cloudinary, for
+  // admin image uploads.
+  "connect-src 'self' https://api.cloudinary.com",
+  // Project videos play in YouTube (privacy-enhanced) and Vimeo embeds.
+  "frame-src https://www.youtube-nocookie.com https://player.vimeo.com",
   "upgrade-insecure-requests",
 ].join("; ");
 
