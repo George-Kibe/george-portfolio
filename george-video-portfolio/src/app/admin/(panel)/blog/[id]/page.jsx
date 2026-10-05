@@ -15,23 +15,23 @@ import '@/models/User'
 export const metadata = { title: 'Edit post' }
 
 export default async function EditPostPage({ params, searchParams }) {
- await requireAdminPage()
- const { id } = await params
- const { saved } = await searchParams
- if (!isValidObjectId(id)) notFound()
- await connectDB()
- const [post, comments] = await Promise.all([
+  await requireAdminPage()
+  const { id } = await params
+  const { saved } = await searchParams
+  if (!isValidObjectId(id)) notFound()
+  await connectDB()
+  const [post, comments] = await Promise.all([
     Post.findById(id).lean().then(serialize),
     Comment.find({ post: id }).sort({ createdAt: -1 }).populate('user', 'name email').lean().then(serialize),
   ])
- if (!post) notFound()
+  if (!post) notFound()
 
- return (
+  return (
     <div className="flex flex-col gap-6">
       <Link href="/admin/blog" className="text-sm font-semibold underline underline-offset-4">← Blog</Link>
       <PageHeader title={post.title}
- description={post.published ? <Link href={`/articles/${post.slug}`} className="underline underline-offset-4">View on site</Link> : 'Draft: not visible on the site.'}
- action={<DeleteButton action={deletePost.bind(null, id)} redirectTo="/admin/blog" label="Delete post" />} />
+        description={post.published ? <Link href={`/articles/${post.slug}`} className="underline underline-offset-4">View on site</Link> : 'Draft: not visible on the site.'}
+        action={<DeleteButton action={deletePost.bind(null, id)} redirectTo="/admin/blog" label="Delete post" />} />
       <SavedNotice show={saved === '1'}>Post created.</SavedNotice>
 
       <Panel>

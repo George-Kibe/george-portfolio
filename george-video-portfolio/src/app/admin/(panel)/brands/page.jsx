@@ -10,15 +10,15 @@ import Brand from '@/models/Brand'
 export const metadata = { title: 'Brands' }
 
 export default async function BrandsPage({ searchParams }) {
- await requireAdminPage()
- const { saved } = await searchParams
- await connectDB()
- const brands = serialize(await Brand.find().sort({ order: 1, name: 1 }).lean())
+  await requireAdminPage()
+  const { saved } = await searchParams
+  await connectDB()
+  const brands = serialize(await Brand.find().sort({ order: 1, name: 1 }).lean())
 
- return (
+  return (
     <div className="flex flex-col gap-6">
       <PageHeader title="Brands" description="Companies you've worked with, scrolling across the home page."
- action={<NewButton href="/admin/brands/new">Add brand</NewButton>} />
+        action={<NewButton href="/admin/brands/new">Add brand</NewButton>} />
       <SavedNotice show={saved === '1'}>Brand added.</SavedNotice>
 
       {brands.length === 0 ? (

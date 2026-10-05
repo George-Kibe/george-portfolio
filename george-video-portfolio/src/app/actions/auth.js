@@ -189,10 +189,19 @@ export async function resetPassword(_prev, formData) {
     user.emailVerifiedAt ??= new Date()
     await user.save()
     attempts.delete(user.email)
-    await createSession(user)
   } catch (error) {
     reportError(error, { where: 'resetPassword' })
     return { message: 'Something went wrong. Please try again.' }
+  }
+
+  // The new password is saved at this point. If signing in automatically
+  // fails (e.g. a misconfigured SESSION_SECRET), say so honestly and send
+  // them to sign in, rather than reporting the reset itself as failed.
+  try {
+    await createSession(user)
+  } catch (error) {
+    reportError(error, { where: 'resetPassword.createSession' })
+    redirect(user.role === 'admin' ? '/admin/login?reset=1' : '/login?reset=1')
   }
   redirect(user.role === 'admin' ? '/admin' : '/articles?reset=1')
 }

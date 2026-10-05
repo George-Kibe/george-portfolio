@@ -15,7 +15,7 @@ const BrandFields = ({ brand = {} }) => (
     <div>
       <p className="mb-1.5 text-sm font-semibold">Logo</p>
       <CoverImageField name="logo" target="brands" contain defaultValue={brand.logo}
- emptyText="No logo yet. The name is shown as a wordmark instead." />
+        emptyText="No logo yet. The name is shown as a wordmark instead." />
       <p className="mt-1 text-xs text-muted">A transparent PNG or SVG works best. It&apos;s shown in greyscale until hovered.</p>
     </div>
     <div className="grid gap-4 sm:grid-cols-2">

@@ -5,8 +5,8 @@ import { ResetPasswordForm } from '@/components/PasswordForms'
 export const metadata = { title: 'Choose a new password', robots: { index: false, follow: false } }
 
 export default async function ResetPasswordPage({ searchParams }) {
- const { token = '' } = await searchParams
- return (
+  const { token = '' } = await searchParams
+  return (
     <AuthCard title="Choose a new password">
       {token ? (
         <ResetPasswordForm token={token} />

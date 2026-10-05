@@ -11,7 +11,9 @@ import User from '@/models/User'
 // power (admin) is re-checked against the database on every use, so demoting
 // or deleting an account takes effect immediately.
 
-const COOKIE = 'session'
+// Distinct per app: both run on localhost in development, where cookies are
+// shared across ports, so a shared name made each app sign the other out.
+const COOKIE = 'gk_session'
 const MAX_AGE_DAYS = 7
 
 const key = () => {

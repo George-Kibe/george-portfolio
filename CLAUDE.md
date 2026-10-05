@@ -17,7 +17,7 @@ One git repo holding **two independent Next.js portfolio sites** for George Kibe
 | Animation | `framer-motion` 13 | CSS animations + transitions |
 | Font | Poppins (`next/font/google`, weights 300–700) | Poppins (`next/font/google`, weights 300–700) |
 | Package manager | npm (`package-lock.json`) | bun (`bun.lock`) |
-| Backend | MongoDB (Mongoose), Cloudinary, Nodemailer/Gmail, JWT sessions | none (EmailJS from the browser) |
+| Backend | MongoDB (Mongoose), Cloudinary, Nodemailer/Gmail, JWT sessions | same stack, own code and own database (`GKVideoPortfolio`) |
 
 Both were upgraded to Next 16.3.4 together; before that the root app was on Next 13 / React 18 / Tailwind v3.
 
@@ -33,20 +33,26 @@ npm run build
 npm run start
 npm run lint     # eslint (flat config in eslint.config.mjs)
 npm test         # vitest (pure helpers: quote pricing, slugs, tokens, HTML, Cloudinary URLs)
-npm run seed     # admin from ADMIN_EMAIL/ADMIN_PASSWORD, starter posts (with covers), brands, testimonial drafts
+npm run seed     # starter posts (with covers), brands, testimonial drafts — never touches accounts
+npm run make-admin -- you@example.com   # create/promote an admin with no password; set it via "Forgot password?"
 ```
 
 Env vars are documented in `.env.example` (MONGODB_URI, CLOUDINARY_URL, SENDER_EMAIL,
-EMAIL_PASSWORD, SESSION_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD). `MAIL_DRY_RUN=1` logs emails
+EMAIL_PASSWORD, SESSION_SECRET, optional NOTIFY_EMAIL). There are no admin credentials in env:
+admins are made with `make-admin` and set their password through the reset flow. A missing or
+short `SESSION_SECRET` breaks sign-in and the end of a password reset — it is the first thing to check. `MAIL_DRY_RUN=1` logs emails
 instead of sending them; use it for any local testing so nothing goes out from the real Gmail.
 
 **Video portfolio:**
 ```bash
 cd george-video-portfolio
 bun install
-bun run dev      # → http://localhost:3000 (conflicts with the other app; use -p to change)
+bun run dev      # → http://localhost:3001 (the developer site uses 3000)
 bun run build
 bun run lint     # eslint (flat config, eslint-config-next core-web-vitals)
+bunx vitest run  # tests (quote pricing, video embeds, tokens, HTML, contact form)
+bun run seed     # 6 posts with covers, testimonial + project drafts — never touches accounts
+bun run make-admin -- you@example.com
 ```
 
 Next 16 removed `next lint`, so both projects call the ESLint CLI directly. The root
@@ -94,8 +100,8 @@ Conventions in this app:
 - **Routes:** public pages are in the `src/app/(site)` route group (its layout adds Navbar/Footer). The admin panel is `src/app/admin/(panel)` with its own layout; `/admin/login` sits outside that group so the auth check can't redirect it to itself.
 - **Data:** `src/lib/db.js` caches one Mongoose connection on `globalThis`. Models in `src/models/` (User, Quote, Post, Comment, Testimonial, Brand) are registered through `defineModel()`, which rebuilds a model in development when its schema changes. Don't go back to `mongoose.models.X || mongoose.model(...)`: after a schema edit the dev server kept the old schema and silently dropped new fields (password-reset tokens were emailed but never saved). Public reads go through `src/lib/queries.js`, which returns empty results instead of throwing, so a DB outage or a build without `MONGODB_URI` degrades to empty sections.
 - **Writes are server actions** in `src/app/actions/` (auth, quotes, content, contact). Every admin action calls `assertAdmin()`; every admin page calls `requireAdminPage()` (layouts don't re-run on client navigation, so the layout check alone isn't enough). Admin rights are re-read from the DB on each request, not trusted from the JWT.
-- **Auth:** `src/lib/session.js` — HS256 JWT in an httpOnly cookie (`SESSION_SECRET`), 7 days. Passwords use bcrypt via `bcryptjs` (cost 12). Email verification and password reset use random tokens stored only as SHA-256 hashes (`src/lib/tokens.js`), 24h and 1h expiry. Verification is optional: unverified members can sign in and comment. Verify → welcome email. Failed logins lock an email for 15 min after 5 tries (in memory).
-- **Email:** `src/lib/mailer.js` (Nodemailer, Gmail SMTP with an app password). Links use the request's origin (`siteOrigin()`), so dev emails point at localhost. Notifications go to `ADMIN_EMAIL`. Mail failures are logged via `sendSafely` and never fail the action that triggered them.
+- **Auth:** `src/lib/session.js` — HS256 JWT in an httpOnly cookie (`SESSION_SECRET`), 7 days. The cookie is `gk_session` here and `gkv_session` in the video app: cookies are shared across localhost ports, so a common name made each app sign the other out. Passwords use bcrypt via `bcryptjs` (cost 12). Email verification and password reset use random tokens stored only as SHA-256 hashes (`src/lib/tokens.js`), 24h and 1h expiry. Verification is optional: unverified members can sign in and comment. Verify → welcome email. Failed logins lock an email for 15 min after 5 tries (in memory).
+- **Email:** `src/lib/mailer.js` (Nodemailer, Gmail SMTP with an app password). Links use the request's origin (`siteOrigin()`), so dev emails point at localhost. Notifications go to `NOTIFY_EMAIL`, else `AUTHOR.email`. Reset/verify email subjects name the site, so links from the two apps can't be confused. Mail failures are logged via `sendSafely` and never fail the action that triggered them.
 - **Blog:** posts are HTML from the Tiptap editor (`components/admin/RichTextEditor.jsx`), sanitised with `sanitize-html` on save and again on render (`src/lib/html.js`). `/articles` is ISR (5 min) and revalidated on every admin save; `/articles/[slug]` is dynamic because of comments. Starter posts live in `scripts/seed-posts.mjs` as Markdown and are converted with `marked` when seeded.
 - **Images:** uploads go straight from the browser to Cloudinary with a signature from `getUploadSignature()` (admin only; folder `gk-portfolio/blog`), which is why the CSP allows `connect-src https://api.cloudinary.com`. Display goes through `src/lib/cloudinaryUrl.js` (`f_auto,q_auto`, width/crop) and `components/CloudImage.jsx` (next/image with a Cloudinary loader, blurred 40px placeholder, fade-in).
 - **Blog lists** are paginated and searchable: `/articles?q=&page=` (9 per page, featured post only on the unfiltered first page) and `/admin/blog` (20 per page), both via `postSearchFilter()` and `components/Pagination.jsx` (server-rendered links, works without JS).
@@ -105,28 +111,16 @@ Conventions in this app:
 
 ## Video portfolio — structure
 
-```
-src/app/          layout.js, page.js, globals.css + about/ projects/ contact/
-                  (each page.jsx is a thin server component exporting metadata)
-                  sitemap.js, robots.js, opengraph-image.jsx  <- SEO route handlers
-src/components/   Header/, Footer/, BrandIcons.jsx,
-                  Hero.jsx, AboutSection.jsx, ProjectsSection.jsx, ContactSection.jsx
-src/lib/site.js   URLs, author details, keywords, services, routes
-public/           only the default create-next-app SVGs
-AGENTS.md         Next.js-version warning; CLAUDE.md there is just "@AGENTS.md"
-```
+The video app now mirrors the developer portfolio's features with its own copy of the code (never imports across the boundary): public pages in `src/app/(site)/` (home, about, projects, articles, contact, quote, login/signup/forgot/reset/verify), admin in `src/app/admin/(panel)` (projects, quotes, testimonials, blog, brands) with `/admin/login` outside it, server actions in `src/app/actions/`, models in `src/models/` (adds `Project`), libs in `src/lib/` (same db/session/mailer/cloudinary/html helpers as the root app, plus `video.js` for YouTube/Vimeo embeds and video-specific pricing in `quote.js`).
 
 Conventions in this app:
-- Routes are server components that export `metadata` and render a matching section component from `src/components/`. The sections were originally the route files themselves and were all `"use client"`, which made per-page metadata impossible. `Hero`, `Footer` and `AboutSection` need no hooks and are server components; `Header` (scroll state), `ProjectsSection` (category filter) and `ContactSection` (form state) stay client.
-- Fixed dark theme: black backgrounds, blue-500/600 accents, gradient text. Not user-switchable.
-- Tailwind v4: all theming is in `src/app/globals.css` via `@import "tailwindcss"` and `@theme inline`. There is **no `tailwind.config.js`** — do not create one; add design tokens to `@theme` instead.
-- Reveals are CSS animations (`animate-fade-in-up`, `animate-grow-x` in `globals.css`) with a staggered inline `animationDelay`. They previously used `useState(isVisible)` + `IntersectionObserver` + `opacity-0` classes, which left the skills, service cards, project cards and contact form invisible until JS hydrated — and permanently invisible without it. Don't reintroduce JS-gated opacity; the reduced-motion block at the end of `globals.css` already neutralises these animations.
-- Motion defaults: 200–300ms, `cubic-bezier(0.2, 0, 0, 1)`, 60ms stagger. The ambient Hero animations (`animate-float`, `animate-pulse`, `animate-bounce`) are deliberately slow and looping. A CSS animation needs an inline `animationDelay` — Tailwind's `delay-*` sets `transition-delay` and does nothing here.
-- The page background is fixed dark: `--background`/`--foreground` in `:root` are the dark values with no `prefers-color-scheme` switch, matching `colorScheme: "dark"` in the root layout. Don't reintroduce a light default — it showed white bands wherever a section didn't cover the page on light-mode devices.
-- Project data (`projects` array in `projects/page.jsx`) and stats are hardcoded placeholders with Unsplash thumbnails.
-- `AGENTS.md` warns that this Next.js version differs from training data — consult `node_modules/next/dist/docs/` before writing framework-level code. That directory is the authoritative, version-matched Next docs and is worth reading for both projects, since they are on the same Next version.
-- `lucide-react` v1 removed every brand/social glyph, so Instagram / X / YouTube / LinkedIn live in `src/components/BrandIcons.jsx` as local filled SVGs (paths from simple-icons). They take colour from `currentColor` and ignore stroke utilities, unlike lucide's stroked icons.
-- `next.config.mjs` sets `outputFileTracingRoot` because this project is nested inside another Next app; without it Next infers the parent directory as the workspace root and traces the wrong files.
+- **Theme:** light/dark toggle (`components/DarkModeToggle.jsx` + `context/ThemeContext.jsx`), dark by default, applied before paint by the script in the root layout. Colours are semantic tokens in `globals.css` (`bg-background`, `text-foreground`, `text-muted`, `bg-card`, `border-line`, `border-line-strong`, `bg-accent`, `text-accent-text`, `--glow`), redefined under `.dark`. Use them rather than raw black/white/gray so both themes keep working; `text-accent-text` is blue-700 on light and blue-400 on dark for contrast.
+- **Projects** come from MongoDB (`/admin/projects`): YouTube/Vimeo link, Cloudinary thumbnail (falls back to the YouTube thumbnail), category, client, duration, year, featured/published. Cards (`ProjectGrid.jsx`) open the video in a native `<dialog>`; the CSP allows `frame-src` for youtube-nocookie.com and player.vimeo.com. The card title's `::after` covers the card and needs `z-10` to sit above the thumbnail overlay. Featured projects appear on the home page.
+- Home: Hero, brand marquee (renders only with brands), featured projects, testimonials carousel, `ProjectCta`. About: intro + services, `Process` (editing workflow, CSS-only), `Toolbox`, CTA. The old percentage skill bars and the unverified awards strip / "Awards Won" stat were removed.
+- Reveals stay CSS animations (`animate-fade-in-up` with inline `animationDelay`); no framer-motion in this app. Icons are lucide (copied components import lucide icons under their old `Tb*` names as aliases).
+- Social links: `SOCIAL_LINKS` in `src/lib/site.js` (empty until real URLs are known); footer and contact render nothing when it's empty, and `sameAs` derives from it.
+- Seeded content: 6 blog posts with Cloudinary covers (`scripts/blog-covers.json`, `gk-video/blog/cover-<slug>`), 5 testimonial drafts and the 6 old Unsplash placeholder projects — both seeded **hidden**; they are not real work or real quotes.
+- `next.config.mjs` sets `outputFileTracingRoot` because this project is nested inside another Next app.
 
 ## SEO
 
@@ -145,16 +139,14 @@ Both apps follow the same pattern, so changes should be mirrored:
 Do not silently "fix" these while doing unrelated work; they are listed so you recognise them as pre-existing.
 
 Developer portfolio:
-- The video app still sends its contact form through EmailJS with the ids committed in source (`@emailjs/browser` v4). The developer portfolio no longer uses EmailJS.
+- Neither app uses EmailJS any more; all email goes through Nodemailer on the server.
 - `npm run lint` is clean. Next 16 no longer lints during `next build`, so run it explicitly.
 
 Video portfolio:
-- Gradients all use the v4 `bg-linear-to-*` spelling; the old `bg-gradient-to-*` aliases have been removed.
 - `bun run lint` is clean.
-- **Social links are still `href="#"`** in `Footer/index.jsx` and `ContactSection.jsx`, and `SOCIAL_PROFILES` in `src/lib/site.js` is an empty array. Real profile URLs are needed in both places — `sameAs` is how search engines tie this site to the same person elsewhere. Left empty on purpose: guessing handles would point users and crawlers at accounts that may not be George's.
-- The footer newsletter `<form>` has no submit handler, so subscribing reloads the page.
-- Project data in `ProjectsSection.jsx` is still placeholder content with Unsplash thumbnails, and the per-project links point at `#`. Real work and real URLs would matter more for ranking than any further metadata tuning.
-- Contact page email and phone are hardcoded rather than read from `src/lib/site.js`.
+- **Social links are empty** (`SOCIAL_LINKS` in `src/lib/site.js`) until real profile URLs are provided; guessing handles would send people to accounts that may not be George's.
+- The real project list is empty: the seeded placeholders are hidden drafts with stock images (one Unsplash image, "Tech Forward", no longer exists). Add real videos in `/admin/projects`.
+- Quote prices in `src/lib/quote.js` are placeholder USD rates.
 
 ## Working rules
 
@@ -164,4 +156,14 @@ Video portfolio:
 - ESLint is pinned to 9.x in both projects. ESLint 10 installs cleanly but crashes (`scopeManager.addGlobals is not a function`) against the plugins `eslint-config-next` 16.3.4 pulls in. Re-test before bumping.
 - `framer-motion` v13 deprecated `motion(Component)`; use `motion.create(Component)` (already done in `Logo.jsx` and `FramerImage.jsx`).
 - Run `npm run lint` / `bun run lint` in the affected project after changes; there is nothing else to verify against.
-- Secrets live in `.env.local` (git-ignored); `.env.example` lists them. The video app's EmailJS ids are still in source; if you touch that code, move them to `NEXT_PUBLIC_*` env vars.
+- Secrets live in each app's `.env.local` (git-ignored); each app's `.env.example` lists them.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

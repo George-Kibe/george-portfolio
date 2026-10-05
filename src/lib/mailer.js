@@ -25,8 +25,9 @@ const getTransport = () => {
   return transporter
 }
 
-// Where admin notifications go: ADMIN_EMAIL, falling back to the sender.
-const inbox = () => process.env.ADMIN_EMAIL || process.env.SENDER_EMAIL
+// Where quote and contact notifications go: NOTIFY_EMAIL if set, otherwise
+// the site's public address (AUTHOR.email in src/lib/site.js).
+const inbox = () => process.env.NOTIFY_EMAIL || AUTHOR.email
 
 // Links in emails must point at the site the visitor is actually using
 // (localhost in development, the real domain in production).
@@ -86,7 +87,7 @@ export async function sendSafely(where, message) {
 
 export const verificationEmail = (user, link) => ({
   to: user.email,
-  subject: 'Confirm your email address',
+  subject: `Confirm your email for ${SITE_NAME}`,
   text: `Hi ${user.name},\n\nConfirm your email address for ${SITE_NAME}:\n${link}\n\nThe link expires in 24 hours. You can keep commenting in the meantime.`,
   html: layout({
     heading: `Confirm your email, ${user.name.split(' ')[0]}`,
@@ -109,7 +110,7 @@ export const welcomeEmail = (user, origin) => ({
 
 export const resetEmail = (user, link) => ({
   to: user.email,
-  subject: 'Reset your password',
+  subject: `Reset your ${SITE_NAME} password`,
   text: `Hi ${user.name},\n\nReset your password here:\n${link}\n\nThe link expires in 1 hour. If you didn't ask for this, ignore this email; your password won't change.`,
   html: layout({
     heading: 'Reset your password',

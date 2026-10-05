@@ -1,52 +1,24 @@
-// Seeds the database: the admin account, starter blog posts (with covers),
-// testimonial drafts and the old placeholder projects as hidden drafts.
+// Seeds content: starter blog posts (with covers), testimonial drafts and the
+// old placeholder projects as hidden drafts. Admin accounts are not seeded;
+// use `bun run make-admin -- <email>`.
 //
-//   bun run seed                 # safe to re-run; never overwrites edits
-//   bun run seed -- --reset-admin   # also resets the admin password from ADMIN_PASSWORD
+//   bun run seed
 //
-// The admin account is only created if it doesn't exist yet, so changing your
-// password with "Forgot password?" is never undone by a later seed. Posts,
-// testimonials and projects are inserted only if missing.
+// Safe to re-run: everything is inserted only if missing, so edits made in the
+// admin panel are never overwritten.
 import mongoose from 'mongoose'
-import bcrypt from 'bcryptjs'
 import { marked } from 'marked'
 import { readFile } from 'node:fs/promises'
-import User from '../src/models/User.js'
 import Post from '../src/models/Post.js'
 import Testimonial from '../src/models/Testimonial.js'
 import Project from '../src/models/Project.js'
 import { POSTS } from './seed-posts.mjs'
 import { TESTIMONIALS, PROJECT_DRAFTS } from './seed-home.mjs'
 
-const { MONGODB_URI, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env
-const resetAdmin = process.argv.includes('--reset-admin')
-
+const { MONGODB_URI } = process.env
 if (!MONGODB_URI) throw new Error('MONGODB_URI is not set (see .env.example).')
 await mongoose.connect(MONGODB_URI)
-await Promise.all([User.init(), Post.init()]) // build unique indexes before inserting
-
-// ---- Admin -----------------------------------------------------------------
-const email = ADMIN_EMAIL?.trim().toLowerCase()
-if (!email) {
-  console.log('Admin: skipped (ADMIN_EMAIL not set).')
-} else {
-  const existing = await User.findOne({ email })
-  if (existing && !resetAdmin) {
-    if (existing.role !== 'admin') await User.updateOne({ _id: existing._id }, { role: 'admin' })
-    console.log(`Admin: ${email} already exists (password unchanged).`)
-  } else {
-    if (!ADMIN_PASSWORD || ADMIN_PASSWORD.length < 12) {
-      throw new Error('ADMIN_PASSWORD (12+ characters) is needed to create or reset the admin account.')
-    }
-    const passwordHash = await bcrypt.hash(ADMIN_PASSWORD, 12)
-    await User.updateOne(
-      { email },
-      { $set: { role: 'admin', passwordHash }, $setOnInsert: { name: 'George Kibe', email, emailVerifiedAt: new Date() } },
-      { upsert: true }
-    )
-    console.log(`Admin: ${email} ${existing ? 'password reset' : 'created'}.`)
-  }
-}
+await Post.init() // build unique indexes before inserting
 
 // ---- Content -----------------------------------------------------------------
 // Cover images already uploaded to Cloudinary (gk-video/blog/cover-<slug>).

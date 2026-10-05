@@ -45,13 +45,13 @@ export const Panel = ({ children, className = '' }) => (
 )
 
 const STATUS_TONE = {
- new: 'bg-accent/15 text-accent-text',
- contacted: 'bg-amber-500/15 text-amber-800 dark:text-amber-300',
- quoted: 'bg-violet-500/15 text-violet-800 dark:text-violet-300',
- won: 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-300',
- lost: 'bg-foreground/10 text-muted  ',
- published: 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-300',
- draft: 'bg-foreground/10 text-muted  ',
+  new: 'bg-accent/15 text-accent-text',
+  contacted: 'bg-amber-500/15 text-amber-800 dark:text-amber-300',
+  quoted: 'bg-violet-500/15 text-violet-800 dark:text-violet-300',
+  won: 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-300',
+  lost: 'bg-foreground/10 text-muted  ',
+  published: 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-300',
+  draft: 'bg-foreground/10 text-muted  ',
 }
 
 export const Badge = ({ tone, children }) => (
@@ -67,11 +67,11 @@ export const Empty = ({ children }) => (
 )
 
 export const SavedNotice = ({ show, children = 'Saved.' }) =>
- show ? (
+  show ? (
     <p role="status" className="rounded-lg bg-emerald-500/15 px-3 py-2 text-sm font-medium text-emerald-800 dark:text-emerald-300">
       {children}
     </p>
   ) : null
 
 export const formatDate = (iso) =>
- new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+  new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })

@@ -16,10 +16,10 @@ export const metadata = { title: 'Dashboard' }
 const typeLabel = (id) => PROJECT_TYPES.find((t) => t.id === id)?.label ?? id
 
 export default async function AdminDashboard() {
- await requireAdminPage()
- await connectDB()
+  await requireAdminPage()
+  await connectDB()
 
- const [newQuotes, quotes, published, drafts, testimonials, comments, members, brands, projects, recent] = await Promise.all([
+  const [newQuotes, quotes, published, drafts, testimonials, comments, members, brands, projects, recent] = await Promise.all([
     Quote.countDocuments({ status: 'new' }),
     Quote.countDocuments(),
     Post.countDocuments({ published: true }),
@@ -32,7 +32,7 @@ export default async function AdminDashboard() {
     Quote.find().sort({ createdAt: -1 }).limit(5).lean().then(serialize),
   ])
 
- const stats = [
+  const stats = [
     { label: 'New quotes', value: newQuotes, href: '/admin/quotes?status=new' },
     { label: 'All quotes', value: quotes, href: '/admin/quotes' },
     { label: 'Published posts', value: published, href: '/admin/blog' },
@@ -43,21 +43,21 @@ export default async function AdminDashboard() {
     { label: 'Members', value: members },
   ]
 
- return (
+  return (
     <div className="flex flex-col gap-8">
       <PageHeader title="Dashboard" description="Projects, quote requests, testimonials and the blog at a glance." />
 
       <dl className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
         {stats.map(({ label, value, href }) => {
- const body = (
+          const body = (
             <>
               <dt className="text-sm font-medium text-muted">{label}</dt>
               <dd className="mt-1 text-3xl font-bold tabular-nums">{value}</dd>
             </>
           )
- return href ? (
+          return href ? (
             <Link key={label} href={href} className="rounded-2xl border border-line bg-card p-4 transition-colors
- hover:border-foreground/15">{body}</Link>
+              hover:border-foreground/15">{body}</Link>
           ) : (
             <div key={label} className="rounded-2xl border border-line bg-card p-4">{body}</div>
           )

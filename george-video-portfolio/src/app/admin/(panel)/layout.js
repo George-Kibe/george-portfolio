@@ -5,19 +5,19 @@ import { requireAdminPage } from '@/lib/session'
 import { logout } from '@/app/actions/auth'
 
 export const metadata = {
- title: { default: 'Admin', template: '%s · Admin' },
- robots: { index: false, follow: false },
+  title: { default: 'Admin', template: '%s · Admin' },
+  robots: { index: false, follow: false },
 }
 
 // Every page under here also calls requireAdminPage(): layouts don't re-run
 // on client-side navigation, so the layout check alone isn't enough.
 export default async function AdminLayout({ children }) {
- const admin = await requireAdminPage()
+  const admin = await requireAdminPage()
 
- return (
+  return (
     <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 p-4 lg:flex-row lg:gap-10">
       <aside className="flex flex-col gap-4 border-b border-line pb-4
- lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)] lg:w-56 lg:shrink-0 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-6">
+        lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)] lg:w-56 lg:shrink-0 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-6">
         <div className="flex items-center justify-between gap-3">
           <Link href="/admin" className="text-lg font-bold">GeorgeEditPro <span className="text-accent-text">Admin</span></Link>
           <DarkModeToggle />

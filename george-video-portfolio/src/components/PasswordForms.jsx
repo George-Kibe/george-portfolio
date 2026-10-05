@@ -10,25 +10,25 @@ const submitClass =
   ' cursor-pointer'
 
 const FieldError = ({ id, error }) =>
- error ? <p id={id} className="mt-1.5 text-sm text-red-600 dark:text-red-400">{error}</p> : null
+  error ? <p id={id} className="mt-1.5 text-sm text-red-600 dark:text-red-400">{error}</p> : null
 
 export const ForgotPasswordForm = () => {
- const [state, action, pending] = useActionState(requestPasswordReset, undefined)
- if (state?.ok) {
- return (
+  const [state, action, pending] = useActionState(requestPasswordReset, undefined)
+  if (state?.ok) {
+    return (
       <div role="status" className="flex flex-col gap-4">
         <p className="rounded-lg bg-emerald-500/15 px-4 py-3 font-medium text-emerald-800 dark:text-emerald-300">{state.message}</p>
         <Link href="/login" className="font-semibold text-accent-text underline underline-offset-4">Back to sign in</Link>
       </div>
     )
   }
- return (
+  return (
     <form action={action} className="flex flex-col gap-5" noValidate>
       <div>
         <label htmlFor="forgot-email" className="mb-1.5 block text-sm font-semibold">Email</label>
         <input id="forgot-email" name="email" type="email" autoComplete="email" required className={fieldClass}
- defaultValue={state?.values?.email} aria-invalid={Boolean(state?.errors?.email)}
- aria-describedby={state?.errors?.email ? 'forgot-email-error' : undefined} />
+          defaultValue={state?.values?.email} aria-invalid={Boolean(state?.errors?.email)}
+          aria-describedby={state?.errors?.email ? 'forgot-email-error' : undefined} />
         <FieldError id="forgot-email-error" error={state?.errors?.email} />
       </div>
       <button type="submit" disabled={pending} className={submitClass}>{pending ? 'Sending…' : 'Send reset link'}</button>
@@ -40,15 +40,15 @@ export const ForgotPasswordForm = () => {
 }
 
 export const ResetPasswordForm = ({ token }) => {
- const [state, action, pending] = useActionState(resetPassword, undefined)
- return (
+  const [state, action, pending] = useActionState(resetPassword, undefined)
+  return (
     <form action={action} className="flex flex-col gap-5" noValidate>
       <input type="hidden" name="token" value={token} />
       <div>
         <label htmlFor="reset-password" className="mb-1.5 block text-sm font-semibold">New password</label>
         <input id="reset-password" name="password" type="password" autoComplete="new-password" minLength={8} required
- className={fieldClass} aria-invalid={Boolean(state?.errors?.password)}
- aria-describedby={state?.errors?.password ? 'reset-password-error' : 'reset-password-hint'} />
+          className={fieldClass} aria-invalid={Boolean(state?.errors?.password)}
+          aria-describedby={state?.errors?.password ? 'reset-password-error' : 'reset-password-hint'} />
         {state?.errors?.password
           ? <FieldError id="reset-password-error" error={state.errors.password} />
           : <p id="reset-password-hint" className="mt-1.5 text-xs text-muted">At least 8 characters.</p>}
@@ -56,7 +56,7 @@ export const ResetPasswordForm = ({ token }) => {
       <div>
         <label htmlFor="reset-confirm" className="mb-1.5 block text-sm font-semibold">Confirm new password</label>
         <input id="reset-confirm" name="confirm" type="password" autoComplete="new-password" required className={fieldClass}
- aria-invalid={Boolean(state?.errors?.confirm)} aria-describedby={state?.errors?.confirm ? 'reset-confirm-error' : undefined} />
+          aria-invalid={Boolean(state?.errors?.confirm)} aria-describedby={state?.errors?.confirm ? 'reset-confirm-error' : undefined} />
         <FieldError id="reset-confirm-error" error={state?.errors?.confirm} />
       </div>
       {state?.message && (

@@ -9,15 +9,15 @@ import Testimonial from '@/models/Testimonial'
 export const metadata = { title: 'Testimonials' }
 
 export default async function TestimonialsPage({ searchParams }) {
- await requireAdminPage()
- const { saved } = await searchParams
- await connectDB()
- const items = serialize(await Testimonial.find().sort({ order: 1, createdAt: -1 }).lean())
+  await requireAdminPage()
+  const { saved } = await searchParams
+  await connectDB()
+  const items = serialize(await Testimonial.find().sort({ order: 1, createdAt: -1 }).lean())
 
- return (
+  return (
     <div className="flex flex-col gap-6">
       <PageHeader title="Testimonials" description="Published ones appear on the home page under “What clients say”."
- action={<NewButton href="/admin/testimonials/new">Add testimonial</NewButton>} />
+        action={<NewButton href="/admin/testimonials/new">Add testimonial</NewButton>} />
       <SavedNotice show={saved === '1'}>Testimonial added.</SavedNotice>
 
       {items.length === 0 ? (

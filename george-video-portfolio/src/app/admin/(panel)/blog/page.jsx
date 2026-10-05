@@ -12,36 +12,36 @@ export const metadata = { title: 'Blog' }
 const PER_PAGE = 20
 
 export default async function BlogAdminPage({ searchParams }) {
- await requireAdminPage()
- const params = await searchParams
- const q = String(params.q ?? '').trim().slice(0, 100)
- await connectDB()
+  await requireAdminPage()
+  const params = await searchParams
+  const q = String(params.q ?? '').trim().slice(0, 100)
+  await connectDB()
 
- const filter = postSearchFilter(q)
- const total = await Post.countDocuments(filter)
- const pages = Math.max(1, Math.ceil(total / PER_PAGE))
- const page = Math.min(Math.max(1, Number.parseInt(params.page, 10) || 1), pages)
- const [posts, counts] = await Promise.all([
+  const filter = postSearchFilter(q)
+  const total = await Post.countDocuments(filter)
+  const pages = Math.max(1, Math.ceil(total / PER_PAGE))
+  const page = Math.min(Math.max(1, Number.parseInt(params.page, 10) || 1), pages)
+  const [posts, counts] = await Promise.all([
     Post.find(filter).sort({ createdAt: -1, _id: -1 }).skip((page - 1) * PER_PAGE).limit(PER_PAGE).select('-content').lean().then(serialize),
     Comment.aggregate([{ $group: { _id: '$post', n: { $sum: 1 } } }]),
   ])
- const href = (n) => {
- const sp = new URLSearchParams()
- if (q) sp.set('q', q)
- if (n > 1) sp.set('page', String(n))
- const qs = sp.toString()
- return qs ? `/admin/blog?${qs}` : '/admin/blog'
+  const href = (n) => {
+    const sp = new URLSearchParams()
+    if (q) sp.set('q', q)
+    if (n > 1) sp.set('page', String(n))
+    const qs = sp.toString()
+    return qs ? `/admin/blog?${qs}` : '/admin/blog'
   }
- const commentCount = Object.fromEntries(counts.map((c) => [String(c._id), c.n]))
+  const commentCount = Object.fromEntries(counts.map((c) => [String(c._id), c.n]))
 
- return (
+  return (
     <div className="flex flex-col gap-6">
       <PageHeader title="Blog" description="Published posts appear on the Articles page."
- action={<NewButton href="/admin/blog/new">New post</NewButton>} />
+        action={<NewButton href="/admin/blog/new">New post</NewButton>} />
       <form role="search" className="flex flex-wrap items-center gap-2">
         <label htmlFor="post-search" className="sr-only">Search posts</label>
         <input id="post-search" name="q" type="search" defaultValue={q} placeholder="Search title, excerpt or tag"
- className={`${inputClass} md:w-80`} />
+          className={`${inputClass} md:w-80`} />
         <button type="submit" className="h-11 rounded-lg border-2 border-line px-4 font-semibold cursor-pointer">Search</button>
         {q && <Link href="/admin/blog" className="text-sm font-semibold underline underline-offset-4">Clear</Link>}
         <span className="ml-auto text-sm text-muted">{total} post{total === 1 ? '' : 's'}</span>

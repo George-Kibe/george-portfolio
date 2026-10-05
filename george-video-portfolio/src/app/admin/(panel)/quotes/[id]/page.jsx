@@ -14,20 +14,20 @@ import Quote from '@/models/Quote'
 export const metadata = { title: 'Quote' }
 
 export default async function QuotePage({ params, searchParams }) {
- await requireAdminPage()
- const { id } = await params
- const { saved } = await searchParams
- if (!isValidObjectId(id)) notFound()
- await connectDB()
- const quote = serialize(await Quote.findById(id).lean())
- if (!quote) notFound()
+  await requireAdminPage()
+  const { id } = await params
+  const { saved } = await searchParams
+  if (!isValidObjectId(id)) notFound()
+  await connectDB()
+  const quote = serialize(await Quote.findById(id).lean())
+  if (!quote) notFound()
 
- return (
+  return (
     <div className="flex flex-col gap-6">
       <Link href="/admin/quotes" className="text-sm font-semibold underline underline-offset-4">← Quotes</Link>
       <PageHeader title={quote.name}
- description={<>{quote.reference} · received {formatDate(quote.createdAt)}{quote.source === 'admin' ? ' · added by you' : ''}</>}
- action={<Badge tone={quote.status} />} />
+        description={<>{quote.reference} · received {formatDate(quote.createdAt)}{quote.source === 'admin' ? ' · added by you' : ''}</>}
+        action={<Badge tone={quote.status} />} />
       <SavedNotice show={saved === '1'}>Quote created.</SavedNotice>
 
       <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_20rem]">
@@ -51,8 +51,8 @@ export default async function QuotePage({ params, searchParams }) {
               ))}
             </ul>
             <a href={`mailto:${quote.email}?subject=${encodeURIComponent(`Your quote ${quote.reference}`)}`}
- className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-lg border-2 border-foreground font-semibold
- hover:bg-foreground hover:text-background">
+              className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-lg border-2 border-foreground font-semibold
+                hover:bg-foreground hover:text-background">
               Email {quote.name.split(' ')[0]}
             </a>
           </Panel>

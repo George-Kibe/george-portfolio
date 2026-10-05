@@ -9,23 +9,23 @@ export const metadata = { title: 'Confirm your email', robots: { index: false, f
 export const dynamic = 'force-dynamic'
 
 const COPY = {
- verified: { title: 'Email confirmed', body: 'Thanks! Your email address is confirmed and a welcome email is on its way.' },
- already: { title: 'Already confirmed', body: 'This email address was confirmed earlier. You’re all set.' },
- invalid: { title: 'Link expired', body: 'This confirmation link is invalid or has expired.' },
+  verified: { title: 'Email confirmed', body: 'Thanks! Your email address is confirmed and a welcome email is on its way.' },
+  already: { title: 'Already confirmed', body: 'This email address was confirmed earlier. You’re all set.' },
+  invalid: { title: 'Link expired', body: 'This confirmation link is invalid or has expired.' },
 }
 
 export default async function VerifyEmailPage({ searchParams }) {
- const { token = '' } = await searchParams
- let result = 'invalid'
- try {
- result = await verifyEmailToken(token)
+  const { token = '' } = await searchParams
+  let result = 'invalid'
+  try {
+    result = await verifyEmailToken(token)
   } catch (error) {
- reportError(error, { where: 'VerifyEmailPage' })
+    reportError(error, { where: 'VerifyEmailPage' })
   }
- const user = result === 'invalid' ? await getCurrentUser() : null
- const { title, body } = COPY[result]
+  const user = result === 'invalid' ? await getCurrentUser() : null
+  const { title, body } = COPY[result]
 
- return (
+  return (
     <AuthCard title={title} intro={body}>
       {user && !user.verified ? (
         <VerifyBanner email={user.email} />

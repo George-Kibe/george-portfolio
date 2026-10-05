@@ -1,16 +1,12 @@
-// Seeds the database: the admin account, starter blog posts, brands and
-// testimonial drafts.
+// Seeds content: starter blog posts (with covers), brands and testimonial
+// drafts. Admin accounts are not seeded; use `npm run make-admin -- <email>`.
 //
 //   npm run seed
 //
-// Reads MONGODB_URI, ADMIN_EMAIL and ADMIN_PASSWORD from .env.local. Safe to
-// re-run: the admin account is created or has its password reset, and posts
-// are inserted only if their slug doesn't exist yet, so edits made in the
-// admin panel are never overwritten.
+// Reads MONGODB_URI from .env.local. Safe to re-run: everything is inserted
+// only if missing, so edits made in the admin panel are never overwritten.
 import mongoose from 'mongoose'
-import bcrypt from 'bcryptjs'
 import { marked } from 'marked'
-import User from '../src/models/User.js'
 import Post from '../src/models/Post.js'
 import Brand from '../src/models/Brand.js'
 import Testimonial from '../src/models/Testimonial.js'
@@ -18,23 +14,11 @@ import { POSTS } from './seed-posts.mjs'
 import { BRANDS, TESTIMONIALS } from './seed-home.mjs'
 import { readFile } from 'node:fs/promises'
 
-const { MONGODB_URI, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env
-
+const { MONGODB_URI } = process.env
 if (!MONGODB_URI) throw new Error('MONGODB_URI is not set (see .env.example).')
-if (!ADMIN_EMAIL || !ADMIN_PASSWORD) throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD must be set.')
-if (ADMIN_PASSWORD.length < 12) throw new Error('ADMIN_PASSWORD must be at least 12 characters.')
 
 await mongoose.connect(MONGODB_URI)
-await Promise.all([User.init(), Post.init()]) // build unique indexes before inserting
-
-const email = ADMIN_EMAIL.trim().toLowerCase()
-const passwordHash = await bcrypt.hash(ADMIN_PASSWORD, 12)
-const admin = await User.findOneAndUpdate(
-  { email },
-  { $set: { role: 'admin', passwordHash }, $setOnInsert: { name: 'George Kibe', email, emailVerifiedAt: new Date() } },
-  { upsert: true, returnDocument: 'after' }
-)
-console.log(`Admin ready: ${admin.email}`)
+await Post.init() // build unique indexes before inserting
 
 // Cover images already uploaded to Cloudinary (gk-portfolio/blog/cover-<slug>).
 const COVERS = JSON.parse(await readFile(new URL('./blog-covers.json', import.meta.url), 'utf8'))

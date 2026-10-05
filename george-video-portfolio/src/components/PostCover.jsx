@@ -10,7 +10,7 @@ const PostCover = ({ post, priority = false, sizes = '(min-width: 1024px) 33vw, 
       <CloudImage src={post.coverImage} alt="" priority={priority} sizes={sizes} />
     ) : (
       <div aria-hidden="true"
- className="flex size-full flex-col justify-between bg-[linear-gradient(135deg,#1d4ed8,#0b1a3a)] p-5 text-white md:p-6">
+        className="flex size-full flex-col justify-between bg-[linear-gradient(135deg,#1d4ed8,#0b1a3a)] p-5 text-white md:p-6">
         <span className="self-start rounded-full bg-card/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
           {post.tags?.[0] ?? 'Article'}
         </span>

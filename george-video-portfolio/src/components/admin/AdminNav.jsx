@@ -15,14 +15,14 @@ const LINKS = [
 ]
 
 const AdminNav = () => {
- const pathname = usePathname()
- return (
+  const pathname = usePathname()
+  return (
     <nav aria-label="Admin" className="flex gap-1 overflow-x-auto lg:flex-col">
       {LINKS.map(({ href, label, icon: Icon, exact }) => {
- const active = exact ? pathname === href : pathname.startsWith(href)
- return (
+        const active = exact ? pathname === href : pathname.startsWith(href)
+        return (
           <Link key={href} href={href} aria-current={active ? 'page' : undefined}
- className={`flex h-11 shrink-0 items-center gap-3 rounded-lg px-3 font-medium transition-colors
+            className={`flex h-11 shrink-0 items-center gap-3 rounded-lg px-3 font-medium transition-colors
               ${active
                 ? 'bg-accent text-white'
                 : 'text-muted hover:bg-foreground/5'}`}>

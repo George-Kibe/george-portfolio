@@ -74,7 +74,7 @@ export default function ProjectGrid({ projects, priorityFirst = false }) {
                     <button
                       type="button"
                       onClick={() => setPlaying(project)}
-                      className="text-left after:absolute after:inset-0 hover:text-accent-text focus-visible:outline-none cursor-pointer"
+                      className="text-left after:absolute after:inset-0 after:z-10 hover:text-accent-text focus-visible:outline-none cursor-pointer"
                     >
                       {project.title}
                       <span className="sr-only"> (play video)</span>

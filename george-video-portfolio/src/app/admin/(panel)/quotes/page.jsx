@@ -12,31 +12,31 @@ const typeLabel = (id) => PROJECT_TYPES.find((t) => t.id === id)?.label ?? id
 const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
 export default async function QuotesPage({ searchParams }) {
- await requireAdminPage()
- const { status = 'all', q = '' } = await searchParams
- await connectDB()
+  await requireAdminPage()
+  const { status = 'all', q = '' } = await searchParams
+  await connectDB()
 
- const filter = {}
- if (STATUSES.includes(status) && status !== 'all') filter.status = status
- const term = q.trim().slice(0, 100)
- if (term) {
- const rx = new RegExp(escapeRegex(term), 'i')
- filter.$or = [{ name: rx }, { email: rx }, { reference: rx }]
+  const filter = {}
+  if (STATUSES.includes(status) && status !== 'all') filter.status = status
+  const term = q.trim().slice(0, 100)
+  if (term) {
+    const rx = new RegExp(escapeRegex(term), 'i')
+    filter.$or = [{ name: rx }, { email: rx }, { reference: rx }]
   }
- const quotes = serialize(await Quote.find(filter).sort({ createdAt: -1 }).limit(200).lean())
+  const quotes = serialize(await Quote.find(filter).sort({ createdAt: -1 }).limit(200).lean())
 
- const tabHref = (s) => `/admin/quotes?${new URLSearchParams({ ...(s !== 'all' && { status: s }), ...(term && { q: term }) })}`
+  const tabHref = (s) => `/admin/quotes?${new URLSearchParams({ ...(s !== 'all' && { status: s }), ...(term && { q: term }) })}`
 
- return (
+  return (
     <div className="flex flex-col gap-6">
       <PageHeader title="Quotes" description="Every request from the Get a Quote page, newest first."
- action={<NewButton href="/admin/quotes/new">Add quote</NewButton>} />
+        action={<NewButton href="/admin/quotes/new">Add quote</NewButton>} />
 
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <nav aria-label="Filter by status" className="flex flex-wrap gap-2">
           {STATUSES.map((s) => (
             <Link key={s} href={tabHref(s)} aria-current={status === s ? 'page' : undefined}
- className={`rounded-full px-3 py-1.5 text-sm font-semibold capitalize
+              className={`rounded-full px-3 py-1.5 text-sm font-semibold capitalize
                 ${status === s ? 'bg-accent text-white' : 'bg-foreground/5 hover:bg-foreground/10'}`}>
               {s}
             </Link>

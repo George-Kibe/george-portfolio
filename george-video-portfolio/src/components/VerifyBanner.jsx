@@ -6,15 +6,15 @@ import { resendVerification } from '@/app/actions/auth'
 // Gentle reminder for members who haven't confirmed their email. Nothing is
 // blocked by it; it just offers to resend the link.
 const VerifyBanner = ({ email }) => {
- const [result, setResult] = useState(null)
- const [pending, startTransition] = useTransition()
- return (
+  const [result, setResult] = useState(null)
+  const [pending, startTransition] = useTransition()
+  return (
     <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm">
       <p>
         Please confirm <strong>{email}</strong> using the link we emailed you.{' '}
         <button type="button" disabled={pending}
- onClick={() => startTransition(async () => setResult(await resendVerification()))}
- className="font-semibold underline underline-offset-4 disabled:opacity-60 cursor-pointer">
+          onClick={() => startTransition(async () => setResult(await resendVerification()))}
+          className="font-semibold underline underline-offset-4 disabled:opacity-60 cursor-pointer">
           {pending ? 'Sending…' : 'Resend the link'}
         </button>
       </p>

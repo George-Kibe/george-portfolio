@@ -11,8 +11,8 @@ import { inputClass } from './ui'
 
 const ToolButton = ({ label, active = false, disabled = false, onClick, children }) => (
   <button type="button" onClick={onClick} disabled={disabled} aria-label={label} title={label}
- aria-pressed={active}
- className={`flex size-9 items-center justify-center rounded-md transition-colors disabled:opacity-40 cursor-pointer
+    aria-pressed={active}
+    className={`flex size-9 items-center justify-center rounded-md transition-colors disabled:opacity-40 cursor-pointer
       ${active ? 'bg-accent text-white' : 'hover:bg-foreground/10'}`}>
     {children}
   </button>
@@ -24,103 +24,103 @@ const Divider = () => <span aria-hidden="true" className="mx-1 h-6 w-px bg-foreg
 // surrounding <form> submits it like any other field; the server sanitises it
 // (lib/html.js) before saving. Images upload straight to Cloudinary.
 const RichTextEditor = ({ name, defaultValue = '', labelledBy }) => {
- const [html, setHtml] = useState(defaultValue)
- const [linkOpen, setLinkOpen] = useState(false)
- const [linkUrl, setLinkUrl] = useState('')
- const [upload, setUpload] = useState({ busy: false, error: '' })
- const fileRef = useRef(null)
- const editorRef = useRef(null)
+  const [html, setHtml] = useState(defaultValue)
+  const [linkOpen, setLinkOpen] = useState(false)
+  const [linkUrl, setLinkUrl] = useState('')
+  const [upload, setUpload] = useState({ busy: false, error: '' })
+  const fileRef = useRef(null)
+  const editorRef = useRef(null)
 
- const insertFiles = async (files) => {
- const images = [...files].filter((f) => f.type.startsWith('image/'))
- if (!images.length) return false
- setUpload({ busy: true, error: '' })
- try {
- for (const file of images) {
- const { url } = await uploadImage(file)
- editorRef.current?.chain().focus().setImage({ src: url, alt: '' }).run()
+  const insertFiles = async (files) => {
+    const images = [...files].filter((f) => f.type.startsWith('image/'))
+    if (!images.length) return false
+    setUpload({ busy: true, error: '' })
+    try {
+      for (const file of images) {
+        const { url } = await uploadImage(file)
+        editorRef.current?.chain().focus().setImage({ src: url, alt: '' }).run()
       }
- setUpload({ busy: false, error: '' })
+      setUpload({ busy: false, error: '' })
     } catch (error) {
- setUpload({ busy: false, error: error.message })
+      setUpload({ busy: false, error: error.message })
     }
- return true
+    return true
   }
 
- const editor = useEditor({
- extensions: [
+  const editor = useEditor({
+    extensions: [
       StarterKit.configure({
- heading: { levels: [2, 3, 4] },
- link: { openOnClick: false, autolink: true, protocols: ['https', 'http', 'mailto'] },
+        heading: { levels: [2, 3, 4] },
+        link: { openOnClick: false, autolink: true, protocols: ['https', 'http', 'mailto'] },
       }),
       Image.configure({ HTMLAttributes: { loading: 'lazy' } }),
       Placeholder.configure({ placeholder: 'Start writing… Paste or drop images straight in.' }),
     ],
- content: defaultValue,
+    content: defaultValue,
     // Render on the client only; SSR would mismatch the editor's DOM.
- immediatelyRender: false,
- editorProps: {
- attributes: {
- class: 'article-body min-h-[24rem] px-4 py-4 focus:outline-none md:px-6',
+    immediatelyRender: false,
+    editorProps: {
+      attributes: {
+        class: 'article-body min-h-[24rem] px-4 py-4 focus:outline-none md:px-6',
         ...(labelledBy && { 'aria-labelledby': labelledBy }),
         'aria-multiline': 'true',
- role: 'textbox',
+        role: 'textbox',
       },
- handlePaste: (_view, event) => {
- const files = event.clipboardData?.files
- if (files?.length && [...files].some((f) => f.type.startsWith('image/'))) {
- insertFiles(files)
- return true
+      handlePaste: (_view, event) => {
+        const files = event.clipboardData?.files
+        if (files?.length && [...files].some((f) => f.type.startsWith('image/'))) {
+          insertFiles(files)
+          return true
         }
- return false
+        return false
       },
- handleDrop: (_view, event) => {
- const files = event.dataTransfer?.files
- if (files?.length && [...files].some((f) => f.type.startsWith('image/'))) {
- event.preventDefault()
- insertFiles(files)
- return true
+      handleDrop: (_view, event) => {
+        const files = event.dataTransfer?.files
+        if (files?.length && [...files].some((f) => f.type.startsWith('image/'))) {
+          event.preventDefault()
+          insertFiles(files)
+          return true
         }
- return false
+        return false
       },
     },
- onCreate: ({ editor }) => { editorRef.current = editor },
- onUpdate: ({ editor }) => setHtml(editor.isEmpty ? '' : editor.getHTML()),
+    onCreate: ({ editor }) => { editorRef.current = editor },
+    onUpdate: ({ editor }) => setHtml(editor.isEmpty ? '' : editor.getHTML()),
   })
 
   // Re-render the toolbar only when these states actually change.
- const state = useEditorState({
- editor,
- selector: ({ editor: e }) => e && ({
- bold: e.isActive('bold'), italic: e.isActive('italic'), underline: e.isActive('underline'),
- strike: e.isActive('strike'), h2: e.isActive('heading', { level: 2 }), h3: e.isActive('heading', { level: 3 }),
- bullet: e.isActive('bulletList'), ordered: e.isActive('orderedList'), quote: e.isActive('blockquote'),
- code: e.isActive('codeBlock'), link: e.isActive('link'),
- canUndo: e.can().undo(), canRedo: e.can().redo(),
+  const state = useEditorState({
+    editor,
+    selector: ({ editor: e }) => e && ({
+      bold: e.isActive('bold'), italic: e.isActive('italic'), underline: e.isActive('underline'),
+      strike: e.isActive('strike'), h2: e.isActive('heading', { level: 2 }), h3: e.isActive('heading', { level: 3 }),
+      bullet: e.isActive('bulletList'), ordered: e.isActive('orderedList'), quote: e.isActive('blockquote'),
+      code: e.isActive('codeBlock'), link: e.isActive('link'),
+      canUndo: e.can().undo(), canRedo: e.can().redo(),
     }),
   })
 
- const run = (fn) => () => editor && fn(editor.chain().focus()).run()
+  const run = (fn) => () => editor && fn(editor.chain().focus()).run()
 
- const openLink = () => {
- setLinkUrl(editor?.getAttributes('link').href ?? '')
- setLinkOpen(true)
+  const openLink = () => {
+    setLinkUrl(editor?.getAttributes('link').href ?? '')
+    setLinkOpen(true)
   }
- const applyLink = () => {
- const url = linkUrl.trim()
- const chain = editor.chain().focus().extendMarkRange('link')
- if (!url) chain.unsetLink().run()
- else chain.setLink({ href: /^(https?:|mailto:|\/)/.test(url) ? url : `https://${url}` }).run()
- setLinkOpen(false)
+  const applyLink = () => {
+    const url = linkUrl.trim()
+    const chain = editor.chain().focus().extendMarkRange('link')
+    if (!url) chain.unsetLink().run()
+    else chain.setLink({ href: /^(https?:|mailto:|\/)/.test(url) ? url : `https://${url}` }).run()
+    setLinkOpen(false)
   }
 
- return (
+  return (
     <div className="overflow-hidden rounded-lg border border-line bg-background
- has-[.ProseMirror-focused]:outline-2 has-[.ProseMirror-focused]:outline-accent-text">
+      has-[.ProseMirror-focused]:outline-2 has-[.ProseMirror-focused]:outline-accent-text">
       <input type="hidden" name={name} value={html} />
 
       <div role="toolbar" aria-label="Formatting"
- className="sticky top-0 z-10 flex flex-wrap items-center gap-0.5 border-b border-line bg-card/95 p-1.5 backdrop-blur">
+        className="sticky top-0 z-10 flex flex-wrap items-center gap-0.5 border-b border-line bg-card/95 p-1.5 backdrop-blur">
         <ToolButton label="Heading 2" active={state?.h2} onClick={run((c) => c.toggleHeading({ level: 2 }))}><TbH2 className="size-5" /></ToolButton>
         <ToolButton label="Heading 3" active={state?.h3} onClick={run((c) => c.toggleHeading({ level: 3 }))}><TbH3 className="size-5" /></ToolButton>
         <Divider />
@@ -140,7 +140,7 @@ const RichTextEditor = ({ name, defaultValue = '', labelledBy }) => {
           {upload.busy ? <TbLoader2 className="size-5 motion-safe:animate-spin" /> : <TbPhoto className="size-5" />}
         </ToolButton>
         <input ref={fileRef} type="file" accept="image/*" multiple hidden
- onChange={(e) => { insertFiles(e.target.files); e.target.value = '' }} />
+          onChange={(e) => { insertFiles(e.target.files); e.target.value = '' }} />
         <Divider />
         <ToolButton label="Undo" disabled={!state?.canUndo} onClick={run((c) => c.undo())}><TbArrowBackUp className="size-5" /></ToolButton>
         <ToolButton label="Redo" disabled={!state?.canRedo} onClick={run((c) => c.redo())}><TbArrowForwardUp className="size-5" /></ToolButton>
@@ -150,11 +150,11 @@ const RichTextEditor = ({ name, defaultValue = '', labelledBy }) => {
         <div className="flex flex-wrap items-center gap-2 border-b border-line p-2">
           <label htmlFor="editor-link" className="sr-only">Link URL</label>
           <input id="editor-link" autoFocus value={linkUrl} onChange={(e) => setLinkUrl(e.target.value)}
- onKeyDown={(e) => {
- if (e.key === 'Enter') { e.preventDefault(); applyLink() }
- if (e.key === 'Escape') setLinkOpen(false)
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') { e.preventDefault(); applyLink() }
+              if (e.key === 'Escape') setLinkOpen(false)
             }}
- placeholder="https://… (leave empty to remove the link)" className={`${inputClass} h-9 flex-1 py-1`} />
+            placeholder="https://… (leave empty to remove the link)" className={`${inputClass} h-9 flex-1 py-1`} />
           <button type="button" onClick={applyLink} className="h-9 rounded-md bg-accent px-3 text-sm font-semibold text-white cursor-pointer">Apply</button>
           <button type="button" onClick={() => setLinkOpen(false)} className="h-9 px-2 text-sm font-semibold underline cursor-pointer">Cancel</button>
         </div>
@@ -167,10 +167,10 @@ const RichTextEditor = ({ name, defaultValue = '', labelledBy }) => {
       )}
 
       {/* Until the editor mounts (client only), show the same content in the
- same box so the page doesn't jump when it appears. */}
+          same box so the page doesn't jump when it appears. */}
       {editor ? <EditorContent editor={editor} /> : (
         <div aria-hidden="true" className="article-body min-h-[24rem] px-4 py-4 opacity-70 md:px-6"
- dangerouslySetInnerHTML={{ __html: defaultValue }} />
+          dangerouslySetInnerHTML={{ __html: defaultValue }} />
       )}
     </div>
   )

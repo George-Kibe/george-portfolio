@@ -6,17 +6,16 @@ import Pagination from '@/components/Pagination'
 import { getPublishedPostsPage } from '@/lib/queries'
 
 export const metadata = {
- title: 'Articles on Web Development',
- description:
-    'Articles and technical write-ups by George Kibe on React, Next.js, mobile ' +
-    'development, data engineering and automation.',
- alternates: { canonical: '/articles' },
- openGraph: {
- type: 'website',
- url: '/articles',
- title: 'Articles on Web Development by George Kibe',
- description:
-      'Technical writing by George Kibe on React, Next.js, React Native and data engineering.',
+  title: 'Blog — Video Editing Tips & Workflow',
+  description:
+    'Articles by GeorgeEditPro on video editing, colour grading, sound design, motion ' +
+    'graphics and editing for social media.',
+  alternates: { canonical: '/articles' },
+  openGraph: {
+    type: 'website',
+    url: '/articles',
+    title: 'The GeorgeEditPro Blog',
+    description: 'Video editing tips, workflow and behind-the-scenes from GeorgeEditPro.',
   },
 }
 
@@ -25,7 +24,7 @@ export const metadata = {
 const PER_PAGE = 9
 
 const formatDate = (iso) =>
- new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+  new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
 
 const Meta = ({ post }) => (
   <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-medium text-muted">
@@ -54,7 +53,7 @@ const FeaturedPost = ({ post }) => (
 
 const PostCard = ({ post }) => (
   <li className="group relative flex flex-col gap-4 rounded-2xl border border-line bg-card p-4 transition-colors
- hover:border-foreground/20">
+    hover:border-foreground/20">
     <PostCover post={post} />
     <div className="flex flex-col gap-2 px-1 pb-1">
       <Meta post={post} />
@@ -69,23 +68,23 @@ const PostCard = ({ post }) => (
 )
 
 const ArticlesPage = async ({ searchParams }) => {
- const params = await searchParams
- const q = String(params.q ?? '').trim().slice(0, 100)
- const requested = Number.parseInt(params.page, 10) || 1
- const { posts, total, page, pages } = await getPublishedPostsPage({ page: requested, perPage: PER_PAGE, q })
+  const params = await searchParams
+  const q = String(params.q ?? '').trim().slice(0, 100)
+  const requested = Number.parseInt(params.page, 10) || 1
+  const { posts, total, page, pages } = await getPublishedPostsPage({ page: requested, perPage: PER_PAGE, q })
 
   // The newest post is featured only on the unfiltered first page.
- const showFeatured = page === 1 && !q && posts.length > 0
- const [featured, ...rest] = showFeatured ? posts : [null, ...posts]
- const href = (n) => {
- const sp = new URLSearchParams()
- if (q) sp.set('q', q)
- if (n > 1) sp.set('page', String(n))
- const qs = sp.toString()
- return qs ? `/articles?${qs}` : '/articles'
+  const showFeatured = page === 1 && !q && posts.length > 0
+  const [featured, ...rest] = showFeatured ? posts : [null, ...posts]
+  const href = (n) => {
+    const sp = new URLSearchParams()
+    if (q) sp.set('q', q)
+    if (n > 1) sp.set('page', String(n))
+    const qs = sp.toString()
+    return qs ? `/articles?${qs}` : '/articles'
   }
 
- return (
+  return (
     <div className="mx-auto flex max-w-7xl flex-col items-center justify-center px-4 pt-32 sm:px-6 lg:px-8">
       <div className="w-full mb-16 flex flex-col">
         <h1 className="text-center text-4xl sm:text-5xl font-bold text-foreground">The <span className="text-accent-text">Blog</span></h1>
@@ -96,7 +95,7 @@ const ArticlesPage = async ({ searchParams }) => {
           <div className="relative flex-1">
             <TbSearch className="pointer-events-none absolute left-3.5 top-1/2 size-5 -translate-y-1/2 text-muted" aria-hidden="true" />
             <input id="article-search" name="q" type="search" defaultValue={q} placeholder="Search articles, e.g. colour grading"
- className="h-12 w-full rounded-lg border border-line bg-card pl-11 pr-4 text-foreground placeholder:text-muted" />
+              className="h-12 w-full rounded-lg border border-line bg-card pl-11 pr-4 text-foreground placeholder:text-muted" />
           </div>
           <button type="submit" className="h-12 rounded-lg bg-accent px-5 font-semibold text-white cursor-pointer">
             Search

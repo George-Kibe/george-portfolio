@@ -6,8 +6,8 @@ import { buttonClass } from './ui'
 // A form bound to a server action that returns { ok, error?, message? }.
 // Create actions redirect on success instead of returning.
 const ActionForm = ({ action, submitLabel = 'Save', children, className = '' }) => {
- const [state, formAction, pending] = useActionState(action, undefined)
- return (
+  const [state, formAction, pending] = useActionState(action, undefined)
+  return (
     <form action={formAction} className={`flex flex-col gap-5 ${className}`}>
       {children}
       <div className="flex flex-wrap items-center gap-3">
