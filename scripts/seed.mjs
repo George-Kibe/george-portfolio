@@ -1,5 +1,5 @@
-// Seeds content: starter blog posts (with covers), brands and testimonial
-// drafts. Admin accounts are not seeded; use `npm run make-admin -- <email>`.
+// Seeds content: starter blog posts (with covers), brands, projects and
+// testimonial drafts. Admin accounts are not seeded; use `npm run make-admin -- <email>`.
 //
 //   npm run seed
 //
@@ -10,8 +10,9 @@ import { marked } from 'marked'
 import Post from '../src/models/Post.js'
 import Brand from '../src/models/Brand.js'
 import Testimonial from '../src/models/Testimonial.js'
+import Project from '../src/models/Project.js'
 import { POSTS } from './seed-posts.mjs'
-import { BRANDS, TESTIMONIALS } from './seed-home.mjs'
+import { BRANDS, PROJECTS, TESTIMONIALS } from './seed-home.mjs'
 import { readFile } from 'node:fs/promises'
 
 const { MONGODB_URI } = process.env
@@ -47,6 +48,15 @@ const upsertByName = async (Model, items, extra) => {
   return n
 }
 console.log(`Brands: ${await upsertByName(Brand, BRANDS, { published: true })} added.`)
+// Project images already uploaded to Cloudinary (gk-portfolio/projects/<key>).
+const PROJECT_IMAGES = JSON.parse(await readFile(new URL('./project-images.json', import.meta.url), 'utf8'))
+let projects = 0
+for (const { imageKey, ...project } of PROJECTS) {
+  const doc = { ...project, image: PROJECT_IMAGES[imageKey] ?? '', published: true }
+  const r = await Project.updateOne({ title: project.title }, { $setOnInsert: doc }, { upsert: true })
+  if (r.upsertedCount) projects++
+}
+console.log(`Projects: ${projects} added.`)
 console.log(`Testimonials: ${await upsertByName(Testimonial, TESTIMONIALS, { published: false })} added as hidden drafts.`)
 
 await mongoose.disconnect()

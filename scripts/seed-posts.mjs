@@ -8,7 +8,7 @@ export const POSTS = [
     tags: ['React Native', 'Mobile', 'Release'],
     publishedAt: '2026-09-22',
     excerpt: 'Getting an app approved on the App Store and Google Play is its own project. This is the checklist I run before every release.',
-    content: `Writing the app is only half the job. The other half is getting it through two review processes that each have their own rules, tooling and surprises. After shipping apps like PearlMarilyn to both stores, this is the list I go through before every release.
+    content: `Writing the app is only half the job. The other half is getting it through two review processes that each have their own rules, tooling and surprises. After shipping apps like myIcebreaker and Realhive to both stores, this is the list I go through before every release.
 
 ## Before you build
 

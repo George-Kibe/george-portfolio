@@ -21,7 +21,7 @@ function configure() {
 
 // Folders an admin upload may target. The client picks one by key; anything
 // else falls back to the blog folder.
-export const UPLOAD_FOLDERS = { blog: 'gk-portfolio/blog', brands: 'gk-portfolio/brands' }
+export const UPLOAD_FOLDERS = { blog: 'gk-portfolio/blog', brands: 'gk-portfolio/brands', projects: 'gk-portfolio/projects' }
 
 // Parameters for a signed upload straight from the browser to Cloudinary, so
 // large images never pass through a server action (and its body size limit).

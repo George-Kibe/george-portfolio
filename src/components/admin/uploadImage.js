@@ -3,7 +3,7 @@ import { getUploadSignature } from '@/app/actions/content'
 const MAX_BYTES = 10 * 1024 * 1024
 
 // Uploads an image straight from the browser to Cloudinary using a signature
-// from the server. `target` picks the Cloudinary folder ('blog' | 'brands').
+// from the server. `target` picks the Cloudinary folder ('blog' | 'brands' | 'projects').
 // Resolves to { url, width, height }.
 export async function uploadImage(file, target = 'blog') {
   if (!file?.type?.startsWith('image/')) throw new Error('Please choose an image file.')

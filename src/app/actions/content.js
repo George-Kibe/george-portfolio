@@ -7,10 +7,12 @@ import { assertAdmin, getCurrentUser } from '@/lib/session'
 import { slugify } from '@/lib/slug'
 import { sanitizePostHtml, stripHtml } from '@/lib/html'
 import { signImageUpload } from '@/lib/cloudinary'
+import { isCloudinary } from '@/lib/cloudinaryUrl'
 import Post from '@/models/Post'
 import Comment from '@/models/Comment'
 import Testimonial from '@/models/Testimonial'
 import Brand from '@/models/Brand'
+import Project from '@/models/Project'
 
 const clean = (v, max) => String(v ?? '').trim().slice(0, max)
 
@@ -234,4 +236,66 @@ export async function deleteBrand(id) {
   await connectDB()
   await Brand.findByIdAndDelete(id)
   refreshHome()
+}
+
+// ---- Projects (admin) -----------------------------------------------------
+
+const refreshProjects = () => {
+  revalidatePath('/projects')
+  revalidatePath('/admin', 'layout')
+}
+
+function readProject(formData) {
+  return {
+    title: clean(formData.get('title'), 160),
+    type: clean(formData.get('type'), 80),
+    summary: clean(formData.get('summary'), 1000),
+    image: clean(formData.get('image'), 500),
+    link: clean(formData.get('link'), 300),
+    github: clean(formData.get('github'), 300),
+    order: Number(formData.get('order')) || 0,
+    featured: formData.get('featured') === 'on',
+    published: formData.get('published') === 'on',
+  }
+}
+
+const validateProject = (data) => {
+  if (!data.title) return 'Title is required.'
+  if (!data.summary) return 'Summary is required.'
+  if (data.link && !/^https?:\/\//.test(data.link)) return 'Live link must start with https:// (or http://).'
+  if (data.github && !/^https?:\/\//.test(data.github)) return 'GitHub link must start with https:// (or http://).'
+  // Uploads only: Cloudinary does the resizing, format and blur placeholder.
+  if (data.image && !isCloudinary(data.image)) return 'Upload the image here so it is served from Cloudinary.'
+  return null
+}
+
+export async function createProject(_prev, formData) {
+  await assertAdmin()
+  const data = readProject(formData)
+  const error = validateProject(data)
+  if (error) return { ok: false, error }
+
+  await connectDB()
+  await Project.create(data)
+  refreshProjects()
+  redirect('/admin/projects?saved=1')
+}
+
+export async function updateProject(id, _prev, formData) {
+  await assertAdmin()
+  const data = readProject(formData)
+  const error = validateProject(data)
+  if (error) return { ok: false, error }
+
+  await connectDB()
+  await Project.findByIdAndUpdate(id, data)
+  refreshProjects()
+  return { ok: true, message: 'Saved.' }
+}
+
+export async function deleteProject(id) {
+  await assertAdmin()
+  await connectDB()
+  await Project.findByIdAndDelete(id)
+  refreshProjects()
 }

@@ -5,6 +5,7 @@ import Post from '@/models/Post'
 import Comment from '@/models/Comment'
 import Testimonial from '@/models/Testimonial'
 import Brand from '@/models/Brand'
+import Project from '@/models/Project'
 import '@/models/User' // registers the model for populate()
 
 // Public reads. They return empty results instead of throwing, so a database
@@ -38,6 +39,10 @@ export const getPublishedTestimonials = () =>
 export const getPublishedBrands = () =>
   safely('getPublishedBrands', [], () =>
     Brand.find({ published: true }).sort({ order: 1, name: 1 }).lean())
+
+export const getPublishedProjects = () =>
+  safely('getPublishedProjects', [], () =>
+    Project.find({ published: true }).sort({ order: 1, createdAt: -1 }).lean())
 
 const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 

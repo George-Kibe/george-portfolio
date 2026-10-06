@@ -34,10 +34,10 @@ const CustomMobileLink = ({href, title, className="", toggle}) => {
   }
 
   return(
-    <button className={`${className} relative group py-2 font-bold text-2xl text-light dark:text-black`} onClick={handleClick}>
+    <button className={`${className} relative group py-2 font-bold text-2xl text-dark dark:text-light`} onClick={handleClick}>
       <span className="relative">
         {title}
-        <span aria-hidden="true" className={`${underline(pathname === href)} bg-light dark:bg-dark`} />
+        <span aria-hidden="true" className={`${underline(pathname === href)} bg-dark dark:bg-light`} />
       </span>
     </button>
   )
@@ -73,6 +73,7 @@ const Navbar = () => {
         <nav className='flex items-center gap-5 lg:gap-8'>
           <CustomLink href={"/"} title={"Home"}/>
           <CustomLink href={"/about"} title={"About"}/>
+          <CustomLink href={"/services"} title={"Services"}/>
           <CustomLink href={"/projects"} title={"Projects"}/>
           <CustomLink href={"/contacts"} title={"Contact"}/>
           <CustomLink href={"/articles"} title={"Articles"}/>
@@ -82,7 +83,9 @@ const Navbar = () => {
           <SocialLinks sizeClass={DESKTOP_SIZE} />
         </nav>
       </div>
-      {/* mobile menu */}
+      {/* mobile menu: follows the theme like the rest of the page (light panel
+          on light, dark on dark), so the theme toggle and links inside it keep
+          their normal colours. */}
       <AnimatePresence>
       {
         isOpen ?
@@ -93,11 +96,13 @@ const Navbar = () => {
           exit={{scale:0.96, opacity:0, x:"-50%", y:"-50%", transition:{duration:0.15, ease:"easeIn"}}}
           transition={{duration:0.2, ease:[0.2, 0, 0, 1]}}
           className="min-w-[80vw] flex py-8 flex-col justify-between items-center fixed z-50 top-1/3 left-1/2
-          bg-dark/90 dark:bg-light/90 rounded-2xl backdrop-blur-md md:hidden gap-6
+          bg-light/90 dark:bg-dark/90 text-dark dark:text-light border border-dark/15 dark:border-light/15
+          shadow-xl shadow-dark/10 dark:shadow-black/40 rounded-2xl backdrop-blur-md md:hidden gap-6
         ">
           <nav className='flex items-center justify-center flex-col gap-2'>
             <CustomMobileLink href={"/"} title={"Home"}  toggle={handleClick} className=''/>
             <CustomMobileLink href={"/about"} title={"About"}  toggle={handleClick} className=''/>
+            <CustomMobileLink href={"/services"} title={"Services"}  toggle={handleClick} className=''/>
             <CustomMobileLink href={"/projects"} title={"Projects"}  toggle={handleClick} className=''/>
             <CustomMobileLink href={"/contacts"} title={"Contact"} toggle={handleClick} className=''/>
             <CustomMobileLink href={"/articles"} title={"Articles"} toggle={handleClick} className=''/>

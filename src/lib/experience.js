@@ -23,7 +23,7 @@ export const EXPERIENCE = [
       "Build sales and marketing automation workflows in n8n.",
     ],
     links: [
-      { label: "PearlMarilyn on the App Store", url: "https://apps.apple.com/us/app/pearlmarilyn/id6747705508" },
+      { label: "myIcebreaker on the App Store", url: "https://apps.apple.com/us/app/myicebreaker/" },
     ],
   },
   {

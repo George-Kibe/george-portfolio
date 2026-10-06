@@ -3,11 +3,12 @@
 import Link from 'next/link'
 import React from 'react'
 import { usePathname } from 'next/navigation'
-import { TbArticle, TbBuildingStore, TbFileInvoice, TbLayoutDashboard, TbMessageStar } from 'react-icons/tb'
+import { TbArticle, TbBuildingStore, TbBriefcase, TbFileInvoice, TbLayoutDashboard, TbMessageStar } from 'react-icons/tb'
 
 const LINKS = [
   { href: '/admin', label: 'Dashboard', icon: TbLayoutDashboard, exact: true },
   { href: '/admin/quotes', label: 'Quotes', icon: TbFileInvoice },
+  { href: '/admin/projects', label: 'Projects', icon: TbBriefcase },
   { href: '/admin/testimonials', label: 'Testimonials', icon: TbMessageStar },
   { href: '/admin/blog', label: 'Blog', icon: TbArticle },
   { href: '/admin/brands', label: 'Brands', icon: TbBuildingStore },

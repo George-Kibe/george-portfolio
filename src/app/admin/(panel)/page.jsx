@@ -9,6 +9,7 @@ import Testimonial from '@/models/Testimonial'
 import Comment from '@/models/Comment'
 import User from '@/models/User'
 import Brand from '@/models/Brand'
+import Project from '@/models/Project'
 
 export const metadata = { title: 'Dashboard' }
 
@@ -18,7 +19,7 @@ export default async function AdminDashboard() {
   await requireAdminPage()
   await connectDB()
 
-  const [newQuotes, quotes, published, drafts, testimonials, comments, members, brands, recent] = await Promise.all([
+  const [newQuotes, quotes, published, drafts, testimonials, comments, members, brands, projects, recent] = await Promise.all([
     Quote.countDocuments({ status: 'new' }),
     Quote.countDocuments(),
     Post.countDocuments({ published: true }),
@@ -27,6 +28,7 @@ export default async function AdminDashboard() {
     Comment.countDocuments(),
     User.countDocuments({ role: 'user' }),
     Brand.countDocuments(),
+    Project.countDocuments(),
     Quote.find().sort({ createdAt: -1 }).limit(5).lean().then(serialize),
   ])
 
@@ -37,6 +39,7 @@ export default async function AdminDashboard() {
     { label: 'Drafts', value: drafts, href: '/admin/blog' },
     { label: 'Testimonials', value: testimonials, href: '/admin/testimonials' },
     { label: 'Comments', value: comments, href: '/admin/blog' },
+    { label: 'Projects', value: projects, href: '/admin/projects' },
     { label: 'Brands', value: brands, href: '/admin/brands' },
     { label: 'Members', value: members },
   ]

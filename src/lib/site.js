@@ -61,6 +61,7 @@ export const TWITTER_HANDLE = "@kibegeorge_";
 export const ROUTES = [
   { path: "/", label: "Home", priority: 1.0, changeFrequency: "monthly" },
   { path: "/about", label: "About", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/services", label: "Services", priority: 0.8, changeFrequency: "monthly" },
   { path: "/projects", label: "Projects", priority: 0.9, changeFrequency: "monthly" },
   { path: "/articles", label: "Articles", priority: 0.7, changeFrequency: "weekly" },
   { path: "/contacts", label: "Contact", priority: 0.6, changeFrequency: "yearly" },

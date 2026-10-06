@@ -2,6 +2,7 @@ import Link from 'next/link'
 import React from 'react'
 import SocialLinks from './SocialLinks'
 import { AUTHOR, ROUTES } from '@/lib/site'
+import { SERVICES } from '@/lib/services'
 
 // Muted body copy, full-strength headings. Both clear 4.5:1 in either theme
 // (dark/75 on #f5f5f5 is 7.22, light/75 on black is 10.56).
@@ -51,21 +52,11 @@ const Footer = () => {
         <nav aria-labelledby='footer-services'>
           <h2 id='footer-services' className={headingClass}>Services</h2>
           <ul className='flex flex-col gap-3 text-sm'>
-            <li>
-              Mobile development
-            </li>
-            <li>
-              Web development
-            </li>
-            <li>
-              Data engineering
-            </li>
-            <li>
-              Cloud Computing
-            </li>   
-            <li>
-              Ai Automations
-            </li>         
+            {SERVICES.map(({id, name}) => (
+              <li key={id}>
+                <Link href={`/services#${id}`} className={linkClass}>{name}</Link>
+              </li>
+            ))}
           </ul>
         </nav>
 

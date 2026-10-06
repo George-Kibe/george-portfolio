@@ -63,7 +63,7 @@ The root app has Vitest unit tests; the video app has its own. There is no CI an
 ## Developer portfolio — structure
 
 ```
-src/app/          layout.js, globals.css; public pages in (site)/ (page.jsx, about/ projects/ articles/ contacts/ quote/
+src/app/          layout.js, globals.css; public pages in (site)/ (page.jsx, about/ services/ projects/ articles/ contacts/ quote/
                   login/ signup/ forgot-password/ reset-password/ verify-email/); admin/ panel; actions/ (server actions)
                   (each route has a page.jsx and a loading.jsx)
                   sitemap.js, robots.js, opengraph-image.jsx  <- SEO route handlers
@@ -75,7 +75,7 @@ src/lib/experience.js  tech roles from the CV (banking/valuation roles left out 
 src/utils/        Article, FramerImage
 src/context/      ThemeContext (client-side dark/light provider)
 src/lib/site.js   URLs, author details, keywords, routes — used by metadata + JSON-LD
-public/           images/ (profile, projects, articles, svgs) + George-Kibe-Resume.pdf
+public/           images/ (profile, articles, svgs) + George-Kibe-Resume.pdf
 ```
 
 Conventions in this app:
@@ -92,13 +92,14 @@ Conventions in this app:
 - `DarkModeToggle` is a round sun/moon button with a fixed "Dark mode" label plus `aria-pressed`. Where `document.startViewTransition` exists (and Reduce Motion is off) it reveals the new theme as a circle from the button; the keyframes and the `.theme-switching` transition kill-switch are in `globals.css`.
 - `Skills` positions chips as % offsets inside a box capped at `max-w-3xl` (square on phones, 5:4 from `sm`). Don't go back to vw offsets: the orbit grew to ~1150px tall on desktop.
 - `CareerGraph` plots main roles as a stepped line; roles with `alongside: true` (e.g. the Explore internship during Dowell) get their own lane under it. It rounds "now" to the start of the month so server and client agree on path coordinates; the path is drawn in measured pixels (ResizeObserver), not a stretched viewBox.
-- The Projects page mirrors the RealHive Consultants portfolio (`/mnt/extra/Projects/RealHive-Website`, same copy and images in `public/images/projects/`) plus PearlMarilyn, whose card image is a composite of three screenshots from the `pearl-maddison` app. Data is the `PROJECTS` array in `projects/page.jsx`; `featured` entries take a full row, the rest pair up.
+- Projects come from MongoDB (`models/Project.js`, `/admin/projects`): title, type, summary, image (Cloudinary only — the save action rejects anything else; folder `gk-portfolio/projects`), live link, GitHub, order, featured/published. `/projects` is ISR (5 min) and revalidated on save; `featured` entries take a full row, the rest pair up. Cards render through `CloudImage` (16:9 `c_fill,g_auto`, `f_auto,q_auto`, blur placeholder); the first is preloaded and the page preconnects to `res.cloudinary.com`. The seed adds the five original projects (published) with image URLs from `scripts/project-images.json`; the original files are backed up in the git-ignored `backups/images/projects/`.
+- `/services` renders `SERVICES` from `src/lib/services.js`; the footer's Services column reads the same list and links to `/services#<id>`.
 - `ProjectCta` (home + contacts) offers "Book a consultation" (`CALENDLY_URL` in `site.js`, new tab) and "Get a quote" (`/quote`). The quote builder asks three things (type, features, timeline) plus name/email; prices live in `src/lib/quote.js` (placeholder USD rates, covered by `quote.test.js`).
 
 ## Developer portfolio — backend
 
 - **Routes:** public pages are in the `src/app/(site)` route group (its layout adds Navbar/Footer). The admin panel is `src/app/admin/(panel)` with its own layout; `/admin/login` sits outside that group so the auth check can't redirect it to itself.
-- **Data:** `src/lib/db.js` caches one Mongoose connection on `globalThis`. Models in `src/models/` (User, Quote, Post, Comment, Testimonial, Brand) are registered through `defineModel()`, which rebuilds a model in development when its schema changes. Don't go back to `mongoose.models.X || mongoose.model(...)`: after a schema edit the dev server kept the old schema and silently dropped new fields (password-reset tokens were emailed but never saved). Public reads go through `src/lib/queries.js`, which returns empty results instead of throwing, so a DB outage or a build without `MONGODB_URI` degrades to empty sections.
+- **Data:** `src/lib/db.js` caches one Mongoose connection on `globalThis`. Models in `src/models/` (User, Quote, Post, Comment, Testimonial, Brand, Project) are registered through `defineModel()`, which rebuilds a model in development when its schema changes. Don't go back to `mongoose.models.X || mongoose.model(...)`: after a schema edit the dev server kept the old schema and silently dropped new fields (password-reset tokens were emailed but never saved). Public reads go through `src/lib/queries.js`, which returns empty results instead of throwing, so a DB outage or a build without `MONGODB_URI` degrades to empty sections.
 - **Writes are server actions** in `src/app/actions/` (auth, quotes, content, contact). Every admin action calls `assertAdmin()`; every admin page calls `requireAdminPage()` (layouts don't re-run on client navigation, so the layout check alone isn't enough). Admin rights are re-read from the DB on each request, not trusted from the JWT.
 - **Auth:** `src/lib/session.js` — HS256 JWT in an httpOnly cookie (`SESSION_SECRET`), 7 days. The cookie is `gk_session` here and `gkv_session` in the video app: cookies are shared across localhost ports, so a common name made each app sign the other out. Passwords use bcrypt via `bcryptjs` (cost 12). Email verification and password reset use random tokens stored only as SHA-256 hashes (`src/lib/tokens.js`), 24h and 1h expiry. Verification is optional: unverified members can sign in and comment. Verify → welcome email. Failed logins lock an email for 15 min after 5 tries (in memory).
 - **Email:** `src/lib/mailer.js` (Nodemailer, Gmail SMTP with an app password). Links use the request's origin (`siteOrigin()`), so dev emails point at localhost. Notifications go to `NOTIFY_EMAIL`, else `AUTHOR.email`. Reset/verify email subjects name the site, so links from the two apps can't be confused. Mail failures are logged via `sendSafely` and never fail the action that triggered them.
