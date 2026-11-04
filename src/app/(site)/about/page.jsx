@@ -31,7 +31,7 @@ export const metadata = {
 const STATS = [
   { value: 25, label: 'Satisfied clients' },
   { value: 30, label: 'Completed projects' },
-  { value: 4, label: 'Years of experience' },
+  { value: 5, label: 'Years of experience' },
 ]
 
 const OFF_THE_CLOCK = [

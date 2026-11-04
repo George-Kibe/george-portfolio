@@ -12,7 +12,7 @@ export const EXPERIENCE = [
     position: "Mobile Developer",
     company: "MyIcebreaker PTY Limited",
     short: "MyIcebreaker",
-    companyLink: "",
+    companyLink: "https://myicebreaker.com.au/",
     location: "Australia",
     start: "2024-09",
     end: null,
@@ -23,7 +23,7 @@ export const EXPERIENCE = [
       "Build sales and marketing automation workflows in n8n.",
     ],
     links: [
-      { label: "myIcebreaker on the App Store", url: "https://apps.apple.com/us/app/myicebreaker/" },
+      { label: "myIcebreaker on the App Store", url: "https://testflight.apple.com/join/qn7JpSgp" },
     ],
   },
   {
