@@ -1,15 +1,20 @@
 import 'server-only'
 import nodemailer from 'nodemailer'
+import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2'
 import { headers } from 'next/headers'
 import { AUTHOR, CALENDLY_URL, SITE_NAME, SITE_URL } from '@/lib/site'
 import { formatMoney } from '@/lib/quote'
 import { reportError } from '@/lib/reportError'
 
-// Outgoing email through Gmail SMTP. SENDER_EMAIL is the Gmail address and
-// EMAIL_PASSWORD a Google *app password* (Google Account > Security > App
-// passwords), not the account's normal password.
+// Outgoing email through the Amazon SES API (not SMTP), from a no-reply
+// address on the verified realhiveconsultants.com domain. AWS_SES_ACCESS_KEY_ID
+// and AWS_SES_SECRET_ACCESS_KEY are an IAM key allowed to call ses:SendEmail;
+// AWS_SES_REGION is the region the domain is verified in. They use their own
+// names so they never collide with the AWS_* variables Vercel manages.
 //
 // Set MAIL_DRY_RUN=1 to log messages instead of sending them (local testing).
+
+const FROM = { name: "George Kibe's Video Portfolio site", address: 'no-reply@realhiveconsultants.com' }
 
 let transporter
 const getTransport = () => {
@@ -17,10 +22,14 @@ const getTransport = () => {
   if (process.env.MAIL_DRY_RUN === '1') {
     transporter = nodemailer.createTransport({ jsonTransport: true })
   } else {
-    const user = process.env.SENDER_EMAIL
-    const pass = process.env.EMAIL_PASSWORD
-    if (!user || !pass) throw new Error('SENDER_EMAIL and EMAIL_PASSWORD must be set to send email.')
-    transporter = nodemailer.createTransport({ service: 'gmail', auth: { user, pass } })
+    const accessKeyId = process.env.AWS_SES_ACCESS_KEY_ID
+    const secretAccessKey = process.env.AWS_SES_SECRET_ACCESS_KEY
+    const region = process.env.AWS_SES_REGION
+    if (!accessKeyId || !secretAccessKey || !region) {
+      throw new Error('AWS_SES_ACCESS_KEY_ID, AWS_SES_SECRET_ACCESS_KEY and AWS_SES_REGION must be set to send email.')
+    }
+    const sesClient = new SESv2Client({ region, credentials: { accessKeyId, secretAccessKey } })
+    transporter = nodemailer.createTransport({ SES: { sesClient, SendEmailCommand } })
   }
   return transporter
 }
@@ -65,7 +74,7 @@ const layout = ({ heading, body, cta }) => `<!doctype html>
 
 async function send({ to, subject, html, text, replyTo }) {
   const info = await getTransport().sendMail({
-    from: `"${SITE_NAME}" <${process.env.SENDER_EMAIL ?? 'no-reply@localhost'}>`,
+    from: FROM,
     to, subject, html, text, replyTo,
   })
   if (process.env.MAIL_DRY_RUN === '1') console.log('[mail:dry-run]', info.message)

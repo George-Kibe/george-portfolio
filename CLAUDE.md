@@ -17,7 +17,7 @@ One git repo holding **two independent Next.js portfolio sites** for George Kibe
 | Animation | `framer-motion` 13 | CSS animations + transitions |
 | Font | Poppins (`next/font/google`, weights 300–700) | Poppins (`next/font/google`, weights 300–700) |
 | Package manager | npm (`package-lock.json`) | bun (`bun.lock`) |
-| Backend | MongoDB (Mongoose), Cloudinary, Nodemailer/Gmail, JWT sessions | same stack, own code and own database (`GKVideoPortfolio`) |
+| Backend | MongoDB (Mongoose), Cloudinary, Nodemailer over Amazon SES, JWT sessions | same stack, own code and own database (`GKVideoPortfolio`) |
 
 Both were upgraded to Next 16.3.4 together; before that the root app was on Next 13 / React 18 / Tailwind v3.
 
@@ -37,11 +37,12 @@ npm run seed     # starter posts (with covers), brands, testimonial drafts — n
 npm run make-admin -- you@example.com   # create/promote an admin with no password; set it via "Forgot password?"
 ```
 
-Env vars are documented in `.env.example` (MONGODB_URI, CLOUDINARY_URL, SENDER_EMAIL,
-EMAIL_PASSWORD, SESSION_SECRET, optional NOTIFY_EMAIL). There are no admin credentials in env:
+Env vars: MONGODB_URI, CLOUDINARY_URL, AWS_SES_ACCESS_KEY_ID, AWS_SES_SECRET_ACCESS_KEY,
+AWS_SES_REGION, SESSION_SECRET, optional NOTIFY_EMAIL (both apps use the same names). There are no admin credentials in env:
 admins are made with `make-admin` and set their password through the reset flow. A missing or
 short `SESSION_SECRET` breaks sign-in and the end of a password reset — it is the first thing to check. `MAIL_DRY_RUN=1` logs emails
-instead of sending them; use it for any local testing so nothing goes out from the real Gmail.
+instead of sending them; use it for any local testing so nothing goes out through SES.
+For a real send without emailing anyone, address it to `success@simulator.amazonses.com`.
 
 **Video portfolio:**
 ```bash
@@ -102,7 +103,7 @@ Conventions in this app:
 - **Data:** `src/lib/db.js` caches one Mongoose connection on `globalThis`. Models in `src/models/` (User, Quote, Post, Comment, Testimonial, Brand, Project) are registered through `defineModel()`, which rebuilds a model in development when its schema changes. Don't go back to `mongoose.models.X || mongoose.model(...)`: after a schema edit the dev server kept the old schema and silently dropped new fields (password-reset tokens were emailed but never saved). Public reads go through `src/lib/queries.js`, which returns empty results instead of throwing, so a DB outage or a build without `MONGODB_URI` degrades to empty sections.
 - **Writes are server actions** in `src/app/actions/` (auth, quotes, content, contact). Every admin action calls `assertAdmin()`; every admin page calls `requireAdminPage()` (layouts don't re-run on client navigation, so the layout check alone isn't enough). Admin rights are re-read from the DB on each request, not trusted from the JWT.
 - **Auth:** `src/lib/session.js` — HS256 JWT in an httpOnly cookie (`SESSION_SECRET`), 7 days. The cookie is `gk_session` here and `gkv_session` in the video app: cookies are shared across localhost ports, so a common name made each app sign the other out. Passwords use bcrypt via `bcryptjs` (cost 12). Email verification and password reset use random tokens stored only as SHA-256 hashes (`src/lib/tokens.js`), 24h and 1h expiry. Verification is optional: unverified members can sign in and comment. Verify → welcome email. Failed logins lock an email for 15 min after 5 tries (in memory).
-- **Email:** `src/lib/mailer.js` (Nodemailer, Gmail SMTP with an app password). Links use the request's origin (`siteOrigin()`), so dev emails point at localhost. Notifications go to `NOTIFY_EMAIL`, else `AUTHOR.email`. Reset/verify email subjects name the site, so links from the two apps can't be confused. Mail failures are logged via `sendSafely` and never fail the action that triggered them.
+- **Email:** `src/lib/mailer.js` (Nodemailer with its SES transport and `@aws-sdk/client-sesv2`, i.e. the SES API, not SMTP). Every email comes from `no-reply@realhiveconsultants.com` (domain verified in SES, eu-west-1, DKIM passing) with the display name "George Kibe's Portfolio site"; the video app uses "George Kibe's Video Portfolio site". The SES key uses `AWS_SES_*` names so it can't collide with Vercel's own `AWS_*` variables. The domain's custom MAIL FROM (`mail.realhiveconsultants.com`) is unverified, so SES falls back to its default MAIL FROM; DKIM still aligns for DMARC. Links use the request's origin (`siteOrigin()`), so dev emails point at localhost. Notifications go to `NOTIFY_EMAIL`, else `AUTHOR.email`. Reset/verify email subjects name the site, so links from the two apps can't be confused. Mail failures are logged via `sendSafely` and never fail the action that triggered them.
 - **Blog:** posts are HTML from the Tiptap editor (`components/admin/RichTextEditor.jsx`), sanitised with `sanitize-html` on save and again on render (`src/lib/html.js`). `/articles` is ISR (5 min) and revalidated on every admin save; `/articles/[slug]` is dynamic because of comments. Starter posts live in `scripts/seed-posts.mjs` as Markdown and are converted with `marked` when seeded.
 - **Images:** uploads go straight from the browser to Cloudinary with a signature from `getUploadSignature()` (admin only; folder `gk-portfolio/blog`), which is why the CSP allows `connect-src https://api.cloudinary.com`. Display goes through `src/lib/cloudinaryUrl.js` (`f_auto,q_auto`, width/crop) and `components/CloudImage.jsx` (next/image with a Cloudinary loader, blurred 40px placeholder, fade-in).
 - **Blog lists** are paginated and searchable: `/articles?q=&page=` (9 per page, featured post only on the unfiltered first page) and `/admin/blog` (20 per page), both via `postSearchFilter()` and `components/Pagination.jsx` (server-rendered links, works without JS).
@@ -140,7 +141,7 @@ Both apps follow the same pattern, so changes should be mirrored:
 Do not silently "fix" these while doing unrelated work; they are listed so you recognise them as pre-existing.
 
 Developer portfolio:
-- Neither app uses EmailJS any more; all email goes through Nodemailer on the server.
+- Neither app uses EmailJS or Gmail any more; all email goes through Amazon SES from the server.
 - `npm run lint` is clean. Next 16 no longer lints during `next build`, so run it explicitly.
 
 Video portfolio:

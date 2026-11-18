@@ -13,6 +13,7 @@
     "make-admin": "node --env-file=.env.local scripts/make-admin.mjs"
   },
   "dependencies": {
+    "@aws-sdk/client-sesv2": "^3.1171.0",
     "@tiptap/extension-image": "^3.31.4",
     "@tiptap/extensions": "^3.31.4",
     "@tiptap/pm": "^3.31.4",

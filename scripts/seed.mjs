@@ -11,7 +11,8 @@ import Post from '../src/models/Post.js'
 import Brand from '../src/models/Brand.js'
 import Testimonial from '../src/models/Testimonial.js'
 import Project from '../src/models/Project.js'
-import { POSTS } from './seed-posts.mjs'
+import { POSTS as STARTER_POSTS } from './seed-posts.mjs'
+import { SERVICE_POSTS } from './seed-service-posts.mjs'
 import { BRANDS, PROJECTS, TESTIMONIALS } from './seed-home.mjs'
 import { readFile } from 'node:fs/promises'
 
@@ -22,6 +23,8 @@ await mongoose.connect(MONGODB_URI)
 await Post.init() // build unique indexes before inserting
 
 // Cover images already uploaded to Cloudinary (gk-portfolio/blog/cover-<slug>).
+const POSTS = [...STARTER_POSTS, ...SERVICE_POSTS]
+
 const COVERS = JSON.parse(await readFile(new URL('./blog-covers.json', import.meta.url), 'utf8'))
 
 let added = 0

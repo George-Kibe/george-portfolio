@@ -30,7 +30,7 @@ const ContactForm = () => {
       return
     }
 
-    // Each message sends a real email from the site's Gmail account, so the
+    // Each message sends a real email through Amazon SES, so the
     // send quota is worth protecting. Bots get dropped silently; humans get
     // told to wait.
     if (guard.isBot({ website: formEl.website?.value })) {

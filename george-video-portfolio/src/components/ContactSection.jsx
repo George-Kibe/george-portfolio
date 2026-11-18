@@ -25,7 +25,7 @@ export default function ContactSection() {
   const sendEmail = async(e) => {
     e.preventDefault();
 
-    // Every message is a real email from the site's Gmail account, so the send
+    // Every message is a real email sent through Amazon SES, so the send
     // quota is worth protecting. Bots are dropped silently; humans are told to wait.
     if (guard.isBot({ website: e.target.website?.value })) {
       return
